@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    
+    #Custom Admin Platform
+    'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -131,3 +135,16 @@ MEDIA_ROOT       = os.path.join(BASE_DIR,'media')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+#Jazzmin settings
+
+JAZZMIN_SETTINGS = {    
+    'site_logo'  : 'images/logo.png',
+    'site_brand' : 'TEFERET',
+    'copyright': "TEFERET"
+
+
+}
