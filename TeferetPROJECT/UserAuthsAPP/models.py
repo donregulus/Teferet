@@ -13,8 +13,8 @@ class TeferetUser(models.Model):
     user          = models.OneToOneField(User, on_delete=models.CASCADE)
     id            = models.AutoField(primary_key=True)    
     dateOfBirth   = models.DateField()
-    phoneNumber   = models.CharField(verbose_name="Phone Number",max_length=150 ,null=True, blank=True)
-    bio           = models.TextField(blank=True)
+    phoneNumber   = models.CharField(verbose_name="Phone Number",max_length=150 ,null=True, blank=False)
+    bio           = models.TextField(blank=False)
 
     address       = models.CharField(verbose_name="Address"  ,max_length=150 ,null=True, blank=True)
     town          = models.CharField(verbose_name="Town/City",max_length=150 ,null=True, blank=True)

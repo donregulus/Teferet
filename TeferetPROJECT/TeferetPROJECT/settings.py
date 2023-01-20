@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     #Custom APP
     'CoreAPP',
-    'UserAuths',
+    'UserAuthsAPP',
 ]
 
 MIDDLEWARE = [
