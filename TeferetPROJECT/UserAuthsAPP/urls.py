@@ -7,7 +7,8 @@ app_name = "UserAuthsAPP"
 
 urlpatterns = [
     
-     path(''                ,views.Register   ,name='sign-up')
+     path('Register'                ,views.Register   ,name='Register')
+    ,path('Login'           ,views.Login  ,name='Login')
     # ,path('follow'          ,views.follow  ,name='follow')
    
 ]

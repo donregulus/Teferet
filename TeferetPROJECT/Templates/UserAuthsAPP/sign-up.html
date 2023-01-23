@@ -14,7 +14,7 @@
 	<div class="form-container sign-up-container">
 
         
-		<form id="signup" action="" method="post"  >
+		<form id="signup" action="{% url 'UserAuthsAPP:Register' %}" method="post"  >
 			<h1>Create Account</h1>
 			<div class="social-container">
                 <a href="#" class="social-link">
@@ -37,10 +37,12 @@
                         color: red;
                     }
                 </style>
-                {% for message in messages%}
-                <h5>{{message}}</h5>
-                {% endfor %}
-            </div>                   
+                {% if signUpView %}
+                    {% for message in messages%}
+                    <h5>{{message}}</h5>
+                    {% endfor %}
+                {% endif %}
+            </div>             
             
             <div class="input-control">                
                 {{form.first_name}}  
@@ -84,7 +86,22 @@
 
 
 	<div class="form-container sign-in-container">
-		<form action="#">
+		<form action="{% url 'UserAuthsAPP:Login' %}" method="post">
+            {% csrf_token %}
+
+            <div>
+                <style>
+                    h5{
+                        color: red;
+                    }
+                </style>
+                {% if  signUpView != True %}
+                    {% for message in messages%}
+                    <h5>{{message}}</h5>
+                    {% endfor %}
+                {% endif %}
+            </div>  
+
 			<h1>Sign in</h1>
 			<div class="social-container">
                 <a href="#" class="social-link">
@@ -99,20 +116,20 @@
 			</div>
 			<span>or use your account</span>
             
-            <div class="input-control">                
-                <input type="email" placeholder="Email" id="id_emailLogin"/>
+            <div class="input-control">      
+                {{loginForm.username}}                
                 <div class="error"></div>
             </div>			
 			
-            <div class="input-control">                
-                <input type="password" placeholder="Password" id="id_password"/>
+            <div class="input-control">                                
+                {{loginForm.password}}
                 <i class="far fa-eye" id="togglePasswordLogin"></i>             
                 <div class="error"></div>   
             </div>    
 			<a href="#">Forgot your password?</a>
 			
             
-            <button type="button" class="btn btn-primary dropdown" id="SigninButton">
+            <button type="submit" class="btn btn-primary dropdown" id="SigninButton">
                 Sign In
             </button>
 		</form>

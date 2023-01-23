@@ -229,15 +229,15 @@ confirmpassword.addEventListener('input', checkConfirmPassword);
 //Input Validations signin
 const SigninButton = document.getElementById('SigninButton');
 SigninButton.disabled = true;
-const emailLogin = document.querySelector('#id_emailLogin');
+const usernameLogin = document.querySelector('#id_usernameLogin');
 const passwordLogin = document.querySelector('#id_password');
 
-let checkEmailLoginValid = false;   
+let checkusernameLoginValid = false;   
 let checkPasswordLoginValid = false;
 
 const enableButtonLogin = () => {
 
-    if(checkEmailLoginValid&&checkPasswordLoginValid)
+    if(checkusernameLoginValid&&checkPasswordLoginValid)
     {
         SigninButton.disabled = false;
     }
@@ -247,20 +247,20 @@ const enableButtonLogin = () => {
     }
 }
 
-const checkEmailLogin = () => {
+const checkusernameLogin = () => {
     let valid = false;
-    const emailv = emailLogin.value.trim();
-   if (!isEmailValid(emailv)) {
-        setError(emailLogin, 'Email is not valid.')
-        checkEmailLoginValid = false;   
+    const emailv = usernameLogin.value.trim();
+   if (!isRequired(emailv)) {
+        setError(usernameLogin, 'Username can not be blank.')
+        checkusernameLoginValid = false;   
         enableButtonLogin()
     } else {
-        setSuccess(emailLogin);
-        checkEmailLoginValid = true;   
+        setSuccess(usernameLogin);
+        checkusernameLoginValid = true;   
         enableButtonLogin()
     }    
 }
-emailLogin.addEventListener('input', checkEmailLogin);
+usernameLogin.addEventListener('input', checkusernameLogin);
 
 const checkPasswordLogin = () => {
     let valid = false;
