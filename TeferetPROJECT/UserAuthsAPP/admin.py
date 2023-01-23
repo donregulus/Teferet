@@ -3,10 +3,10 @@ from . import models
 
 
 # Register your models here.
-class TeferetUserAdmin(admin.ModelAdmin):
+class UserProfileAdmin(admin.ModelAdmin):
     
      fieldsets = [
         ('Information',               {'fields': ['dateOfBirth','phoneNumber','bio']}),
         ('Location', {'fields': ['address','town','county','country','post_code','longitude','latitude']}),
     ]
-admin.site.register(models.TeferetUser,TeferetUserAdmin)
+admin.site.register(models.UserProfile,UserProfileAdmin)

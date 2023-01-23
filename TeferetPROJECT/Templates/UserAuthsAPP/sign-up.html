@@ -1,0 +1,168 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block extend_head %}
+	<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section-content ">
+<div class="containerSign" id="containerSign" >
+	<div class="form-container sign-up-container">
+
+        
+		<form id="signup" action="" method="post"  >
+			<h1>Create Account</h1>
+			<div class="social-container">
+                <a href="#" class="social-link">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+                <a href="#" class="social-link">
+                    <ion-icon name="logo-google"></ion-icon>
+                </a>
+                <a href="#" class="social-link">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                </a>
+			</div>
+			<span>or use your email for registration</span>
+
+            {% csrf_token %}
+
+            <div>
+                <style>
+                    h5{
+                        color: red;
+                    }
+                </style>
+                {% for message in messages%}
+                <h5>{{message}}</h5>
+                {% endfor %}
+            </div>                   
+            
+            <div class="input-control">                
+                {{form.first_name}}  
+                <div class="error"></div>
+            </div>
+            
+
+            <div class="input-control">                
+                {{form.last_name}}    
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">                
+                {{form.email}}      
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">                
+                {{form.username}}        
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">                
+                {{form.password1}}   
+                <i class="far fa-eye" id="togglePasswordSignup"></i>
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">                
+                {{form.password2}}                
+                <i class="far fa-eye" id="togglePasswordConfirm"></i>
+                <div class="error"></div>
+            </div>              
+            <br>
+            <button type="submit"  class="btn btn-primary dropdown" id="SignupButton" style="margin-top: 10px;">
+                Register
+            </button>
+
+		</form>
+	</div>
+
+
+	<div class="form-container sign-in-container">
+		<form action="#">
+			<h1>Sign in</h1>
+			<div class="social-container">
+                <a href="#" class="social-link">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+                <a href="#" class="social-link">
+                    <ion-icon name="logo-google"></ion-icon>
+                </a>
+                <a href="#" class="social-link">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                </a>
+			</div>
+			<span>or use your account</span>
+            
+            <div class="input-control">                
+                <input type="email" placeholder="Email" id="id_emailLogin"/>
+                <div class="error"></div>
+            </div>			
+			
+            <div class="input-control">                
+                <input type="password" placeholder="Password" id="id_password"/>
+                <i class="far fa-eye" id="togglePasswordLogin"></i>             
+                <div class="error"></div>   
+            </div>    
+			<a href="#">Forgot your password?</a>
+			
+            
+            <button type="button" class="btn btn-primary dropdown" id="SigninButton">
+                Sign In
+            </button>
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Welcome Back!</h1>
+				<p>To keep connected with us please login with your personal info</p>
+				
+                <button type="button" class="btn btn-primary dropdown "  id="signIn">
+                    Sign In
+                </button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Hello, Friend!</h1>
+				<p>Enter your personal details and start journey with us</p>
+				
+                <button type="button" class="btn btn-primary dropdown"  id="signUp">
+                    REGISTER
+                </button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+</section>
+
+
+
+{% endblock %}
+
+{% block extend_footer %}
+
+
+<script>
+        var signUpView     = "{{signUpView|safe}}";
+        if(signUpView)
+        {
+            const container = document.getElementById('containerSign');
+	        container.classList.add("right-panel-active");
+
+        }
+</script>
+
+
+<script src="{% static 'js/UserAuthsAPP/formValidators.js' %}"></script>
+
+
+
+
+{% endblock %}

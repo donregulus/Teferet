@@ -71,6 +71,7 @@ color: var(--battleship-gray);
 background-repeat: no-repeat;
 background-size: 100%;
 background-position: top;
+background-image: url('../images/footer-bg.jpg');
 }
 
 .footer-top {

@@ -1,18 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from datetime import datetime
+
 
 
 # Create your models here.
 
-class TeferetUser(models.Model):
+class UserProfile(models.Model):
     """
     @class UserProfile
     This class extend the User model for auth
     """
-    user          = models.OneToOneField(User, on_delete=models.CASCADE)
+    user          = models.OneToOneField(User, on_delete=models.CASCADE)        
     id            = models.AutoField(primary_key=True)    
-    dateOfBirth   = models.DateField()
+    dateOfBirth   = models.DateField(default=datetime.now)
     phoneNumber   = models.CharField(verbose_name="Phone Number",max_length=150 ,null=True, blank=False)
     bio           = models.TextField(blank=False)
 
