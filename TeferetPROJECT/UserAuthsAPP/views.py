@@ -3,11 +3,22 @@ from django.contrib.auth.models import User, auth
 from django.shortcuts import render, redirect
 
 
+# Verification email
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.core.mail import EmailMessage
+
+
 from UserAuthsAPP.forms import RegisterForm,LoginForm
 from UserAuthsAPP.models import UserProfile
 
-# Create your views here.
 
+
+
+# Create your views here.
 def Register(request):
     
     if request.method == "POST":        
@@ -98,3 +109,66 @@ def Login(request):
                         
             }
         return render(request,'UserAuthsAPP/sign-up.html',context)
+
+
+def ForgotPassword(request):
+    if request.method == 'POST':        
+        UserEmail = request.POST['email']
+        if User.objects.filter(email=UserEmail).exists():           
+            user = User.objects.get(email__exact=UserEmail)      
+
+            # Reset password email
+            current_site = get_current_site(request)
+            mail_subject = 'Reset Your Password'
+            message = render_to_string('UserAuthsAPP/EmailResetPassword.html', {
+                'user': user,
+                'domain': current_site,
+                'site_name' : 'Teferet',
+                'protocol' : 'https',
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })                        
+            UserEmail = "stroalgo@gmail.com"
+            send_email = EmailMessage(mail_subject, message,from_email="noreply@Teferet.com", to=[UserEmail],)
+            send_email.send()
+
+            messages.success(request, 'An Email has been sent to your email address.')
+            return render(request,'UserAuthsAPP/ResetPasswordEmailSend.html')
+        else:
+            messages.error(request, 'Account does not exist!')
+            return render(request, 'UserAuthsAPP/ForgotPassword.html')
+    else:
+        return render(request, 'UserAuthsAPP/ForgotPassword.html')
+
+
+def EmailResetPassword(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid        
+        return redirect('UserAuthsAPP:ResetPassword')
+    else:
+        messages.error(request, 'This link has been expired!')
+        return redirect('UserAuthsAPP:Login')
+
+
+def ResetPassword(request):
+    if request.method == 'POST':
+        password = request.POST['password1']
+        confirm_password = request.POST['password2']
+
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = User.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()            
+            return redirect('UserAuthsAPP:Login')
+        else:
+            messages.error(request, 'Password do not match!')
+            return redirect('UserAuthsAPP:ResetPassword')
+    else:
+        return render(request, 'UserAuthsAPP/ResetPassword.html')       

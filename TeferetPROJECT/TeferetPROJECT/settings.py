@@ -149,3 +149,12 @@ JAZZMIN_SETTINGS = {
 
 
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'stronguy.peter.allogho@gmail.com'
+EMAIL_HOST_PASSWORD = 'oakwdnebxthtxnfu'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+# DEFAULT_FROM_EMAIL = 'Teferet Customer Team <noreply@Teferet.com>'

@@ -126,10 +126,10 @@
                 <i class="far fa-eye" id="togglePasswordLogin"></i>             
                 <div class="error"></div>   
             </div>    
-			<a href="#">Forgot your password?</a>
+			<a href="{% url 'UserAuthsAPP:ForgotPassword' %}">Forgot your password?</a>
 			
             
-            <button type="submit" class="btn btn-primary dropdown" id="SigninButton">
+            <button type="submit" class="btn btn-primary dropdown" id="SigninButton" style="margin-top: 30px;">
                 Sign In
             </button>
 		</form>
@@ -163,6 +163,7 @@
 
 {% endblock %}
 
+
 {% block extend_footer %}
 
 
@@ -177,7 +178,7 @@
 </script>
 
 
-<script src="{% static 'js/UserAuthsAPP/formValidators.js' %}"></script>
+<script src="{% static 'js/UserAuthsAPP/LoginRegisterValidators.js' %}"></script>
 
 
 
