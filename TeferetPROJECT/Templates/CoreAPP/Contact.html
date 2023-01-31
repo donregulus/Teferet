@@ -1,0 +1,74 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block extend_head %}
+<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>
+<title>Teferet | Contact</title>
+{% endblock %}
+
+
+{% block content %}
+ 
+<div style="margin-top: 150px;">
+	<!-- Title page -->
+	<section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover" style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
+		<h2 class="ltext-105 cl0 txt-center">
+			CONTACT
+		</h2>
+	</section>	
+	
+
+<section class="section-content ">
+    <div class="containerSign" id="containerSign" >
+          
+    
+        <div class="form-container sign-in-container">
+            <form action="{% url 'UserAuthsAPP:ResetPassword' %}" method="post">
+                {% csrf_token %}
+               
+                <h1> Send A Message	</h1>
+
+				<div class="input-control">                                
+                    <input type="email"  placeholder="* Your Email Address..." name="email" id= "id_EmailResetPassword" required>                      
+                    <div class="error"></div>   
+                </div>    
+    
+                <div class="input-control">     
+                    <div class="bor19 m-b-20">
+                        <textarea class="stext-111 cl2 plh3 size-120 p-lr-18 p-tb-15" style= "background-color: #eee;" name="Comment" placeholder="* Your Comment..."></textarea>
+                    </div>
+                </div>         
+                               
+                <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;">
+                    Send
+                </button>
+            </form>
+            
+        </div>
+
+
+        <div class="overlay-container" >
+            <div class="overlay ContactMessage" >             
+                <div class="overlay-panel overlay-right" >
+                    <h1>Hello, Friend</h1>
+					<h4>We are here for you</h4>       	                
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+    
+    </section>
+    
+</div>
+
+
+{% endblock %}
+
+
+{% block extend_footer %}
+
+
+{% endblock %}

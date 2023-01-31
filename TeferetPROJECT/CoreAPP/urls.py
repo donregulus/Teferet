@@ -6,7 +6,10 @@ app_name = "CoreAPP"
 
 urlpatterns = [
     
-     path(''                ,views.index   ,name='index')
+      path(''                ,views.index   ,name='index')
+     ,path('Contact/'                ,views.contact   ,name='Contact')
+     ,path('About/'                ,views.about   ,name='About')
+
     # ,path('follow'          ,views.follow  ,name='follow')
    
 ]

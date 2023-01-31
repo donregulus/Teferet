@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     #Custom APP
     'CoreAPP',
     'UserAuthsAPP',
+    'ShopAPP',
+    'OrderAPP',
+    'BlogAPP',
 ]
 
 MIDDLEWARE = [

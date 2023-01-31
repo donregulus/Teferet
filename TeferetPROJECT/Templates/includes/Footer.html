@@ -17,9 +17,9 @@
 
         <div class="footer-brand">
 
-          <!-- <a href="#" class="">Kitter</a> -->
+          
 		  <a href="" class="logo">
-			<img  src="{% static './images/logo.png' %}" width="110px">
+			<img  src="{% static 'images/icons/logo.png' %}" width="110px">
 		  </a> <!-- brand-wrap.// -->
           <ul class="contact-list">
 
@@ -72,15 +72,15 @@
         <ul class="footer-list">
 
           <li>
-            <p class="footer-list-title">Corporate</p>
+            <p class="footer-list-title">CORPORATE</p>
           </li>
 
           <li>
-            <a href="#" class="footer-link">About Us</a>
+            <a href="{% url 'CoreAPP:About' %}" class="footer-link">About Us</a>
           </li>
 
           <li>
-            <a href="#" class="footer-link">Contact Us</a>
+            <a  href="{% url 'CoreAPP:Contact' %}" class="footer-link">Contact Us</a>
           </li>
 
           <li>
@@ -93,7 +93,7 @@
         <ul class="footer-list">
 
           <li>
-            <p class="footer-list-title">Information</p>
+            <p class="footer-list-title">INFORMATION</p>
           </li>
         
           <li>
@@ -118,9 +118,9 @@
 	
         
 
+        <hr>
       </div>
     </div>
-
     <div class="footer-bottom">
       <div class="container">
 
@@ -128,20 +128,10 @@
           &copy; 2023 Made with ♥ by <a href="#" class="copyright-link">TEFERET</a>
         </p>
 
-        <img src="{% static './images/payment.png' %}" width="193" height="32" loading="lazy" alt="payment method" class="img">
+        <img src="{% static './images/icons/payment.png' %}" width="193" height="32" loading="lazy" alt="payment method" class="img">
 
       </div>
     </div>
 
   </footer>
-
-  <!-- ========================= FOOTER END // ========================= -->
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-	$(document).ready(function(){
-		$('.thumb a').click(function(e){
-			e.preventDefault();
-			$('.mainImage img').attr('src', $(this).attr("href"));
-		})
-	})
-</script> -->
+ 

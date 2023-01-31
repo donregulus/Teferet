@@ -16,7 +16,7 @@ Bootstrap with custom variables
   --red: #fa3434;
   --orange: #ff9017;
   --yellow: #ffc107;
-  --green: #00b517;
+  --green: #0d6305;
   --teal: #20c997;
   --cyan: #17a2b8;
   --white: #fff;
@@ -2386,13 +2386,13 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: green;
-  border-color: green;
+  background-color: var(--green);
+  border-color: var(--green);
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: green;
-  border-color: green;
+  background-color: var(--green);
+  border-color: var(--green);
 }
 .btn-primary:focus, .btn-primary.focus {
   box-shadow: 0 0 0 0.2rem rgba(80, 126, 238, 0.5);
