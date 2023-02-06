@@ -1,16 +1,39 @@
 from django.shortcuts import render
 
-from django.http import HttpResponse
+
+
+from UserAuthsAPP.models import UserProfile
 
 # Create your views here.
-def index(request):
-    return render(request, "CoreAPP/Index.html")
+def Index(request):
+
+    if request.user.is_authenticated:        
+        LoggedUserProfile = UserProfile.objects.get(user=request.user)
+        context = {
+                    "userProfile": LoggedUserProfile,
+                }   
+        return render(request, "CoreAPP/Index.html",context)
+    else:
+        return render(request, "CoreAPP/Index.html")
 
 
+def Contact(request):
+    if request.user.is_authenticated:        
+        LoggedUserProfile = UserProfile.objects.get(user=request.user)
+        context = {
+                    "userProfile": LoggedUserProfile,
+                }   
+        return render(request, "CoreAPP/Contact.html",context)
+    else:
+        return render(request, "CoreAPP/Contact.html")
 
-def contact(request):
-    return render(request, "CoreAPP/Contact.html")
 
-
-def about(request):
-    return render(request, "CoreAPP/About.html")
+def About(request):
+    if request.user.is_authenticated:        
+        LoggedUserProfile = UserProfile.objects.get(user=request.user)
+        context = {
+                    "userProfile": LoggedUserProfile,
+                }   
+        return render(request, "CoreAPP/About.html",context)
+    else:
+        return render(request, "CoreAPP/About.html")

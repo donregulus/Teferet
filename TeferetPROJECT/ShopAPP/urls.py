@@ -6,8 +6,8 @@ app_name = "ShopAPP"
 
 urlpatterns = [    
       
-      path('ProductDetails/'          ,views.productDetails   ,name='ProductDetails')
-     ,path('Products/'                ,views.products         ,name='Products')
+      path('ProductDetails/'          ,views.ProductDetails   ,name='ProductDetails')
+     ,path('Products/'                ,views.Products         ,name='Products')
      
 
     # ,path('follow'          ,views.follow  ,name='follow')

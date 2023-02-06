@@ -12,6 +12,8 @@ urlpatterns = [
     ,path('ForgotPassword'                      ,views.ForgotPassword     ,name='ForgotPassword')
     ,path('EmailResetPassword/<uidb64>/<token>/', views.EmailResetPassword,name='EmailResetPassword')
     ,path('ResetPassword'                       ,views.ResetPassword      ,name='ResetPassword')
+    ,path('Logout'                              ,views.Logout             ,name='Logout')
+    ,path('DashBoard'                           ,views.DashBoard          ,name='DashBoard')
 
 
 

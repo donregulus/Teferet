@@ -73,28 +73,23 @@
 							<i class="zmdi zmdi-favorite-outline"></i>							
 						</a>  
 
-<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 account-menu">
-
-    <li>                               
-    <i class="zmdi zmdi-account-circle"></i>                        
-                            
-                            {% if True %}
-                            <ul class="sub-menu">
-                                <li><a href="{% url 'UserAuthsAPP:Login' %}">Sign In</a></li>                                
-                                <li><a href="{% url 'UserAuthsAPP:Register' %}">Register</a></li>
-                            </ul>
-                            {% else %}
-                            <ul class="sub-menu">
-                                <li><a href="#">Dashboard</a></li>
-                                <li><a href="#">Logout</a></li>                                
-                            </ul>
-                            {% endif %}
-                        </li>
-                    
-</div>
-
-
-
+                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 account-menu">
+                            <li>                                                 
+                                {% if userProfile %}
+                                    <img src="{{userProfile.profileImg.url}}" style="width: 30px;">              
+                                    <ul class="sub-menu">
+                                        <li><a href="{% url 'UserAuthsAPP:DashBoard' %}">Dashboard</a></li>
+                                        <li><a href="{% url 'UserAuthsAPP:Logout' %}">Logout</a></li>                                
+                                    </ul>                            
+                                {% else %}
+                                    <i class="zmdi zmdi-account-circle"></i>                                 
+                                    <ul class="sub-menu">
+                                        <li><a href="{% url 'UserAuthsAPP:Login' %}">Sign In</a></li>                                
+                                        <li><a href="{% url 'UserAuthsAPP:Register' %}">Register</a></li>
+                                    </ul>                           
+                                {% endif %}
+                            </li>                                            
+                        </div>
 					</div>
 				</nav>
 			</div>	

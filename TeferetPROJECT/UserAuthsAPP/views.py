@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required 
 
 
 # Verification email
@@ -14,9 +15,6 @@ from django.core.mail import EmailMessage
 
 from UserAuthsAPP.forms import RegisterForm,LoginForm
 from UserAuthsAPP.models import UserProfile
-
-
-
 
 # Create your views here.
 def Register(request):
@@ -34,7 +32,7 @@ def Register(request):
                     'signUpView' : True
                 }
                 messages.error(request,"Email already used")
-                return render(request,'UserAuthsAPP/sign-up.html',context)   
+                return render(request,'UserAuthsAPP/Sign-up.html',context)   
                 
             form.save()            
             userCreatedName     = form.cleaned_data.get("username")            
@@ -57,7 +55,7 @@ def Register(request):
                     'signUpView' : True
             }
             messages.error(request,form.errors)
-            return render(request,'UserAuthsAPP/sign-up.html',context)   
+            return render(request,'UserAuthsAPP/Sign-up.html',context)   
                 
     else :         
         print("---------------Can not registered user")
@@ -68,15 +66,15 @@ def Register(request):
                     'loginForm' : loginForm,
                     'signUpView' : True
         }
-        return render(request,'UserAuthsAPP/sign-up.html',context)
+        return render(request,'UserAuthsAPP/Sign-up.html',context)
 
 
-def Login(request):
+def Login(request):    
 
-    print("login session")  
+    if request.user.is_authenticated:
+        return redirect("CoreAPP:index")
 
-    if request.method == "POST":                
-        print("request post")
+    if request.method == "POST":                        
         form      = RegisterForm(data=None)
         loginForm = LoginForm(data= request.POST or None)
         context = {
@@ -88,18 +86,22 @@ def Login(request):
             userCreatedName     = loginForm.cleaned_data.get("username")            
             userCreatedPassword = loginForm.cleaned_data.get("password")            
             
-            #Authentificate user in and redirect to profile page            
-            NewUserlogin = auth.authenticate(username=userCreatedName,password=userCreatedPassword) 
-            if NewUserlogin is not None:
-                auth.login(request,NewUserlogin)    
-                return redirect("CoreAPP:index")
+            #Authentificate user and redirect to profile page            
+            LoggedUser = auth.authenticate(username=userCreatedName,password=userCreatedPassword) 
+            if LoggedUser is not None:
+                auth.login(request,LoggedUser)   
+                LoggedUser = User.objects.get(username=userCreatedName)
+                LoggedUserProfile = UserProfile.objects.get(user=LoggedUser)
+                context = {
+                    "userProfile": LoggedUserProfile,
+                }
+                return render(request,"CoreAPP/Index.html",context)
             else:
                 messages.error(request,"Credential Failed: Enter a correct username and password")    
-                return render(request,'UserAuthsAPP/sign-up.html',context)
+                return render(request,'UserAuthsAPP/Sign-up.html',context)
         else:                      
-            messages.error(request,"Credential Failed: Enter a correct username and password")    
-            print(loginForm.errors)
-            return render(request,'UserAuthsAPP/sign-up.html',context)   
+            messages.error(request,"Credential Failed: Enter a correct username and password")                
+            return render(request,'UserAuthsAPP/Sign-up.html',context)   
     else:    
         form      = RegisterForm(data=None)        
         loginForm = LoginForm(data= request.POST or None)
@@ -108,7 +110,19 @@ def Login(request):
                         'loginForm' : loginForm,
                         
             }
-        return render(request,'UserAuthsAPP/sign-up.html',context)
+        return render(request,'UserAuthsAPP/Sign-up.html',context)
+
+
+@login_required(login_url="Login")
+def Logout(request):        
+    auth.logout(request)
+    return redirect("UserAuthsAPP:Login")
+
+
+@login_required(login_url="Login")
+def DashBoard(request):
+    return 0
+
 
 
 def ForgotPassword(request):
