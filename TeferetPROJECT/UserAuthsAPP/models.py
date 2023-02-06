@@ -17,6 +17,8 @@ class UserProfile(models.Model):
     dateOfBirth   = models.DateField(default=datetime.now)
     phoneNumber   = models.CharField(verbose_name="Phone Number",max_length=150 ,null=True, blank=False)
     bio           = models.TextField(blank=False)
+    profileImg    = models.ImageField(upload_to='profile_images', default="blank-profile-picture.png")
+
 
     address       = models.CharField(verbose_name="Address"  ,max_length=150 ,null=True, blank=True)
     town          = models.CharField(verbose_name="Town/City",max_length=150 ,null=True, blank=True)
