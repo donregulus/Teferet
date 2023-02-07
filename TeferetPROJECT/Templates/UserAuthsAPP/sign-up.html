@@ -39,20 +39,7 @@
 			</div>
 			<span>or use your email for registration</span>
 
-            {% csrf_token %}
-
-            <div>
-                <style>
-                    h5{
-                        color: red;
-                    }
-                </style>
-                {% if signUpView %}
-                    {% for message in messages%}
-                    <h5>{{message}}</h5>
-                    {% endfor %}
-                {% endif %}
-            </div>             
+            {% csrf_token %}       
             
             <div class="input-control">                
                 {{form.first_name}}  
@@ -99,19 +86,7 @@
 		<form action="{% url 'UserAuthsAPP:Login' %}" method="post">
             {% csrf_token %}
 
-            <div>
-                <style>
-                    h5{
-                        color: red;
-                    }
-                </style>
-                {% if  signUpView != True %}
-                    {% for message in messages%}
-                    <h5>{{message}}</h5>
-                    {% endfor %}
-                {% endif %}
-            </div>  
-
+           
 			<h1>Sign in</h1>
 			<div class="social-container">
                 <a href="#" class="social-link">

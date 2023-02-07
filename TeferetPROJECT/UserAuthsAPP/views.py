@@ -46,7 +46,8 @@ def Register(request):
             NewUser     = User.objects.get(username=userCreatedName)
             NewUserProfile = UserProfile.objects.create(user=NewUser,id=NewUser.id)
             NewUserProfile.save()     
-            return redirect("CoreAPP:index")
+            messages.success(request,"Logged in succefully !")  
+            return redirect("CoreAPP:Index")
 
         else:
             context = {
@@ -72,7 +73,7 @@ def Register(request):
 def Login(request):    
 
     if request.user.is_authenticated:
-        return redirect("CoreAPP:index")
+        return redirect("CoreAPP:Index")
 
     if request.method == "POST":                        
         form      = RegisterForm(data=None)
@@ -95,6 +96,7 @@ def Login(request):
                 context = {
                     "userProfile": LoggedUserProfile,
                 }
+                messages.success(request,"Logged in succefully !")  
                 return render(request,"CoreAPP/Index.html",context)
             else:
                 messages.error(request,"Credential Failed: Enter a correct username and password")    
@@ -116,6 +118,7 @@ def Login(request):
 @login_required(login_url="Login")
 def Logout(request):        
     auth.logout(request)
+    messages.success(request,"Logged out succefully !")  
     return redirect("UserAuthsAPP:Login")
 
 
@@ -147,7 +150,7 @@ def ForgotPassword(request):
             send_email.send()
 
             messages.success(request, 'An Email has been sent to your email address.')
-            return render(request,'UserAuthsAPP/ResetPasswordEmailSend.html')
+            return redirect("UserAuthsAPP:Login")
         else:
             messages.error(request, 'Account does not exist!')
             return render(request, 'UserAuthsAPP/ForgotPassword.html')
