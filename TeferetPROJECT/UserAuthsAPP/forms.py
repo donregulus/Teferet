@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.forms import EmailInput, TextInput, PasswordInput
+from django.forms import EmailInput, TextInput, PasswordInput, ModelForm
 
 from django.contrib.auth.models import User
+from .models import UserProfile
 
 
 class RegisterForm(UserCreationForm):
@@ -58,3 +59,30 @@ class LoginForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ('email','password',)
+
+
+
+
+class ProfileInfoForm(ModelForm):
+
+    """
+    @class UserForm
+    This class handle user creation
+    """
+
+    country     = forms.CharField(max_length=30, required= True,widget=  TextInput(attrs={"placeholder": "*Your Country..."}))
+
+    town        = forms.CharField(max_length=30, required= True,widget=  TextInput(attrs={"placeholder": "*Your Town..."}))
+
+    post_code   = forms.CharField(max_length=30, required= True,widget=  TextInput(attrs={"placeholder": "*Your Post Code..."}))
+
+    address     = forms.CharField(max_length=300, required= True,widget= TextInput(attrs={"placeholder": "*Your Address..."}))
+
+    phoneNumber = forms.CharField(max_length=300, required= True,widget= TextInput(attrs={"placeholder": "*Your Phone Number...","type":"number"}))
+
+    dateOfBirth = forms.DateField(required=True,widget= TextInput(attrs={"placeholder": "*Your Date of Birth...","type":"date"}))
+    
+
+    class Meta:
+        model  = UserProfile
+        fields = ('dateOfBirth','phoneNumber','address','town','country','post_code')

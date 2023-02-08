@@ -13,7 +13,7 @@ from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
 
-from UserAuthsAPP.forms import RegisterForm,LoginForm
+from UserAuthsAPP.forms import RegisterForm,LoginForm,ProfileInfoForm
 from UserAuthsAPP.models import UserProfile
 
 # Create your views here.
@@ -240,3 +240,31 @@ def DashBoard(request):
                     "userProfile": LoggedUserProfile,
                 }
     return render(request,"UserAuthsAPP/DashBoard.html",context)
+
+
+@login_required(login_url="UserAuthsAPP:Login")
+def EditProfile(request):
+    if request.method == 'POST':   
+        userLogged            = User.objects.get(username=request.user)        
+        userLogged.first_name = request.POST["first_name"]
+        userLogged.last_name  = request.POST["last_name"]
+        userLogged.username   = request.POST["username"]
+        userLogged.email      = request.POST["email"]        
+        userLogged.save()      
+        messages.success(request, 'Your Profile Informations has been updated.')
+        return redirect('UserAuthsAPP:DashBoard')  
+    else:        
+        Userform    = RegisterForm()            
+        context = {
+                        'form' : Userform,
+            }
+        return render(request,"UserAuthsAPP/EditProfile.html",context)
+
+
+@login_required(login_url="UserAuthsAPP:Login")
+def EditAddress(request):    
+    ProfileForm = ProfileInfoForm()
+    context = {                        
+                        'ProfileForm' : ProfileForm,                        
+            }
+    return render(request,"UserAuthsAPP/EditAddress.html",context)

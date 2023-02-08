@@ -3,7 +3,7 @@
 
 {% block extend_head %}
 	<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>    
-    <title>Teferet | Reset Password</title>
+    <title>Teferet | Dashboard</title>
 {% endblock %}
 
 
@@ -64,23 +64,33 @@
             <div class="overlay ChangePassword" >             
                 <div class="overlay-panel overlay-right" >
                     <h1>ACTIONS</h1>
-                    <a style="margin-top: 20px;">
-                        <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;">
-                            EDIT PROFILE
-                        </button>
-                    </a>
 
-                    <a style="margin-top: 20px;">
-                        <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;">
-                            VIEW MY ORDERS
-                        </button>        
-                    </a>
-                    
+
                     <a href="{% url 'UserAuthsAPP:ChangePassword' %}" style="margin-top: 20px;">
                         <button type="submit" class="btn btn-primary dropdown" id="ChangePasswordButton" style="margin-top: 10px;">
                             CHANGE PASSWORD
                         </button>
                     </a>
+
+                    <a  href="{% url 'UserAuthsAPP:EditProfile' %}" style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;width:180px">
+                            EDIT PROFILE
+                        </button>
+                    </a>
+
+                    <a  href="{% url 'UserAuthsAPP:EditAddress' %}" style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;width:180px">
+                            VIEW MY ADDRESS
+                        </button>
+                    </a>
+
+                    <a style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;width:180px">
+                            VIEW MY ORDERS
+                        </button>        
+                    </a>
+                    
+                    
     
     
                     

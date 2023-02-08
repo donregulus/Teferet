@@ -4,7 +4,7 @@
 {% block extend_head %}
 	<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">  
-    <title>Teferet | Change Password</title>  
+    <title>Teferet | Edit Profil</title>  
 {% endblock %}
 
 
@@ -14,7 +14,7 @@
 <div style="margin-top: 150px;">
     <section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover" style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
         <h2 class="ltext-105 cl0 txt-center">
-            CHANGE PASSWORD
+            EDIT PROFIL
         </h2>
     </section>	
 <section class="section-content ">
@@ -22,36 +22,44 @@
           
     
         <div class="form-container sign-in-container">
-            <form action="{% url 'UserAuthsAPP:ChangePassword' %}" method="post">
+            <form action="{% url 'UserAuthsAPP:EditProfile' %}" method="post">
                 {% csrf_token %}
                
-                <h1 style="font-size: 36px;">Change Password</h1>
+                <h1 style="font-size: 30px;">Update Information</h1>
 
                 <div class="input-control">                
-                    <input type="password"  placeholder="* New Password..." name="password1" id= "id_password1" class="password" required maxlength="300">                                          
-                    <i class="far fa-eye" id="togglePassword"></i>
+                    {{form.first_name}}  
+                    <div class="error"></div>
+                </div>                
+    
+                <div class="input-control">                
+                    {{form.last_name}}    
                     <div class="error"></div>
                 </div>
     
                 <div class="input-control">                
-                    <input type="password"  placeholder="* Confirm Password..." name="password2" id= "id_password2" class="password" required maxlength="300">                                                   
-                    <i class="far fa-eye" id="togglePasswordConfirm"></i>
+                    {{form.email}}      
                     <div class="error"></div>
-                </div>            
-                               
-                <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;">
-                    Reset
+                </div>
+    
+                <div class="input-control">                
+                    {{form.username}}        
+                    <div class="error"></div>
+                </div>   
+
+    
+                <button type="submit"  class="btn btn-primary dropdown" id="SignupButton" style="margin-top: 10px;">
+                    Update
                 </button>
             </form>
             
         </div>
 
-
         <div class="overlay-container" >
-            <div class="overlay ForgotPassword" >             
+            <div class="overlay ChangePassword" >             
                 <div class="overlay-panel overlay-right" >
-                    <h1>Security is a great Key!</h1>
-                    <p>Change your Password oftenly</p>            
+                    <h1>What's new about you ?</h1>
+                    <p>Update your personal Informations</p>            
                   
                 </div>
             </div>
