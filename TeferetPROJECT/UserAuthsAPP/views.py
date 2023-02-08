@@ -69,7 +69,6 @@ def Register(request):
         }
         return render(request,'UserAuthsAPP/Sign-up.html',context)
 
-
 def Login(request):    
 
     if request.user.is_authenticated:
@@ -114,19 +113,11 @@ def Login(request):
             }
         return render(request,'UserAuthsAPP/Sign-up.html',context)
 
-
-@login_required(login_url="Login")
+@login_required(login_url="UserAuthsAPP:Login")
 def Logout(request):        
     auth.logout(request)
     messages.success(request,"Logged out succefully !")  
     return redirect("UserAuthsAPP:Login")
-
-
-@login_required(login_url="Login")
-def DashBoard(request):
-    return 0
-
-
 
 def ForgotPassword(request):
     if request.method == 'POST':        
@@ -157,7 +148,6 @@ def ForgotPassword(request):
     else:
         return render(request, 'UserAuthsAPP/ForgotPassword.html')
 
-
 def EmailResetPassword(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -172,12 +162,10 @@ def EmailResetPassword(request, uidb64, token):
         messages.error(request, 'This link has been expired!')
         return redirect('UserAuthsAPP:Login')
 
-
-def ResetPassword(request):
+def ResetPassword(request):   
     if request.method == 'POST':
         password = request.POST['password1']
         confirm_password = request.POST['password2']
-
         if password == confirm_password:
             uid = request.session.get('uid')
             user = User.objects.get(pk=uid)
@@ -188,4 +176,67 @@ def ResetPassword(request):
             messages.error(request, 'Password do not match!')
             return redirect('UserAuthsAPP:ResetPassword')
     else:
-        return render(request, 'UserAuthsAPP/ResetPassword.html')       
+        return render(request, 'UserAuthsAPP/ResetPassword.html')
+
+   
+
+
+@login_required(login_url="UserAuthsAPP:Login")
+def ChangePassword(request):
+        
+        if request.method == 'POST':
+        
+            password = request.POST['password1']
+            confirm_password = request.POST['password2']
+            user = User.objects.get(username=request.user)                                   
+
+            if password == confirm_password:    
+                print("password 1 and 2 differ")                  
+                if not (user.check_password(password)):
+                    user.set_password(password)
+                    user.save()
+                    #Authentificate user and redirect to profile page            
+                    LoggedUser = auth.authenticate(username=user.username,password=password)
+                    if LoggedUser is not None:
+                        auth.login(request,LoggedUser)            
+                        messages.success(request, 'Password Changed Succefully !')
+                        LoggedUserProfile = UserProfile.objects.get(user=request.user)
+                        context = {
+                            "userProfile": LoggedUserProfile,
+                            }   
+                        return redirect("UserAuthsAPP:DashBoard")
+                    else:                        
+                        messages.error(request, "Failed to login after changing the password")
+                        return redirect("CoreAPP:Index")
+                else:
+                    messages.error(request, 'New Password must be different from the current Password')
+                    LoggedUserProfile = UserProfile.objects.get(user=request.user)
+                    context = {
+                            "userProfile": LoggedUserProfile,
+                        }   
+                    return render(request, "UserAuthsAPP/ChangePassword.html",context)   
+
+            else:
+                messages.error(request, 'Password do not match!')
+                LoggedUserProfile = UserProfile.objects.get(user=request.user)
+                context = {
+                        "userProfile": LoggedUserProfile,
+                    }   
+                return render(request, "UserAuthsAPP/ChangePassword.html",context)   
+        else:    
+            print("request not post")
+            LoggedUserProfile = UserProfile.objects.get(user=request.user)
+            context = {
+                        "userProfile": LoggedUserProfile,
+                    }   
+            return render(request, "UserAuthsAPP/ChangePassword.html",context)
+ 
+
+
+@login_required(login_url="UserAuthsAPP:Login")
+def DashBoard(request):    
+    LoggedUserProfile = UserProfile.objects.get(user=request.user)
+    context = {
+                    "userProfile": LoggedUserProfile,
+                }
+    return render(request,"UserAuthsAPP/DashBoard.html",context)

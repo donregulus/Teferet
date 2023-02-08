@@ -14,6 +14,7 @@ urlpatterns = [
     ,path('ResetPassword'                       ,views.ResetPassword      ,name='ResetPassword')
     ,path('Logout'                              ,views.Logout             ,name='Logout')
     ,path('DashBoard'                           ,views.DashBoard          ,name='DashBoard')
+    ,path('ChangePassword'                      ,views.ChangePassword     ,name='ChangePassword')
 
 
 

@@ -1,0 +1,108 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block extend_head %}
+	<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>    
+    <title>Teferet | Reset Password</title>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Title page -->
+<div style="margin-top: 150px;">
+    <section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover" style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
+        <h2 class="ltext-105 cl0 txt-center">
+            DASHBOARD
+        </h2>
+    </section>	
+<section class="section-content ">
+    <div class="containerSign" id="containerSign" >
+          
+    
+        <div class="form-container sign-in-container">
+            <form >
+                {% csrf_token %}
+               
+                <h1>User Information</h1>
+                
+                <img src="{{userProfile.profileImg.url }}" style="height: 350px;">
+<!--                 
+                <label for="name">Nom : </label>
+                <p>{{user.username}}</p>
+                <p>{</p>
+                <p></p>
+                <p>{{user.}}</p>   -->
+
+                <fieldset disabled>                   
+                    <div>                        
+                        <label for="FirstName" style="margin-top: 20px;"><strong>FirstName</strong></label>
+                        <input type="text" id="FirstName" value="{{user.first_name}}">
+                    </div>
+                    <div>
+                        <label for="LastName"><strong>LastName</strong></label>
+                        <input type="text" id="LastName" value="{{user.last_name}}">
+                    </div>                   
+                    <div>
+                        <label for="UserName"><strong>UserName</strong></label>                        
+                        <input type="text" id="UserName" value="{{user.username}}">
+                    </div>
+                    <div>                        
+                        <label for="Email"><strong>Email</strong></label>
+                        <input type="text" id="Email" value="{{user.email}}">
+                    </div>                                                  
+                </fieldset>
+                
+               
+
+            </form>
+            
+        </div>
+
+
+        <div class="overlay-container" >
+            <div class="overlay ChangePassword" >             
+                <div class="overlay-panel overlay-right" >
+                    <h1>ACTIONS</h1>
+                    <a style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;">
+                            EDIT PROFILE
+                        </button>
+                    </a>
+
+                    <a style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;">
+                            VIEW MY ORDERS
+                        </button>        
+                    </a>
+                    
+                    <a href="{% url 'UserAuthsAPP:ChangePassword' %}" style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary dropdown" id="ChangePasswordButton" style="margin-top: 10px;">
+                            CHANGE PASSWORD
+                        </button>
+                    </a>
+    
+    
+                    
+                      
+                  
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+    
+    </section>
+    
+    </div>
+{% endblock %}
+
+
+
+
+{% block extend_footer %}
+
+
+{% endblock %}
