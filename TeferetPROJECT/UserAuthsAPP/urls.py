@@ -17,6 +17,7 @@ urlpatterns = [
     ,path('ChangePassword'                      ,views.ChangePassword     ,name='ChangePassword')
     ,path('EditProfile'                         ,views.EditProfile        ,name='EditProfile')
     ,path('EditAddress'                         ,views.EditAddress        ,name='EditAddress')
+    ,path('ViewAddress'                         ,views.ViewAddress        ,name='ViewAddress')
 
 
 

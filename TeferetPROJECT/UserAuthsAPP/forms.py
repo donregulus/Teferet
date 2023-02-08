@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.forms import EmailInput, TextInput, PasswordInput, ModelForm
+from django.forms import EmailInput, TextInput, PasswordInput, ModelForm, FileInput
 
 from django.contrib.auth.models import User
 from .models import UserProfile
@@ -78,11 +78,12 @@ class ProfileInfoForm(ModelForm):
 
     address     = forms.CharField(max_length=300, required= True,widget= TextInput(attrs={"placeholder": "*Your Address..."}))
 
-    phoneNumber = forms.CharField(max_length=300, required= True,widget= TextInput(attrs={"placeholder": "*Your Phone Number...","type":"number"}))
+    phoneNumber = forms.CharField(max_length=300, required= True,widget= TextInput(attrs={"placeholder": "*Your Phone Number..."}))
 
     dateOfBirth = forms.DateField(required=True,widget= TextInput(attrs={"placeholder": "*Your Date of Birth...","type":"date"}))
-    
 
+    profileImg  = forms.ImageField(required=True,widget= FileInput(attrs={"placeholder": "*Your Prodile Image...","type":"file"})) 
+    
     class Meta:
         model  = UserProfile
-        fields = ('dateOfBirth','phoneNumber','address','town','country','post_code')
+        fields = ('dateOfBirth','phoneNumber','address','town','country','post_code','profileImg')

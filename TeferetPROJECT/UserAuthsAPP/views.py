@@ -251,20 +251,43 @@ def EditProfile(request):
         userLogged.username   = request.POST["username"]
         userLogged.email      = request.POST["email"]        
         userLogged.save()      
-        messages.success(request, 'Your Profile Informations has been updated.')
+        messages.success(request, 'Your Personal Informations has been updated.')
         return redirect('UserAuthsAPP:DashBoard')  
     else:        
-        Userform    = RegisterForm()            
+        Userform    = RegisterForm() 
+        LoggedUserProfile = UserProfile.objects.get(user=request.user)           
         context = {
                         'form' : Userform,
+                        'userProfile' : LoggedUserProfile,
             }
         return render(request,"UserAuthsAPP/EditProfile.html",context)
 
 
 @login_required(login_url="UserAuthsAPP:Login")
 def EditAddress(request):    
-    ProfileForm = ProfileInfoForm()
-    context = {                        
+    if request.method == 'POST':
+        UserLoggedProfile             = UserProfile.objects.get(user=request.user)        
+        UserLoggedProfile.dateOfBirth = request.POST["dateOfBirth"]
+        UserLoggedProfile.phoneNumber = request.POST["phoneNumber"]
+        UserLoggedProfile.address     = request.POST["address"]
+        UserLoggedProfile.town        = request.POST["town"]
+        UserLoggedProfile.country     = request.POST["country"]
+        UserLoggedProfile.post_code   = request.POST["post_code"]
+        UserLoggedProfile.profileImg  = request.FILES.get('profileImg')
+        UserLoggedProfile.save()
+        messages.success(request, 'Your Profile Informations has been updated.')
+        return redirect('UserAuthsAPP:DashBoard')  
+    else:
+        ProfileForm = ProfileInfoForm()
+        context = {                        
                         'ProfileForm' : ProfileForm,                        
             }
     return render(request,"UserAuthsAPP/EditAddress.html",context)
+
+@login_required(login_url="UserAuthsAPP:Login")
+def ViewAddress(request):    
+    LoggedUserProfile = UserProfile.objects.get(user=request.user)           
+    context = {                    
+                    'userProfile' : LoggedUserProfile,
+        }
+    return render(request,"UserAuthsAPP/ViewAddress.html",context)

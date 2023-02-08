@@ -1,0 +1,102 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block extend_head %}
+	<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">  
+    <title>Teferet | Edit Address</title>  
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Title page -->
+<div style="margin-top: 150px;">
+    <section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover" style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
+        <h2 class="ltext-105 cl0 txt-center">
+            EDIT ADDRESS / CONTACT
+        </h2>
+    </section>	
+<section class="section-content ">
+    <div class="containerSign" id="containerSign" >
+          
+    
+        <div class="form-container sign-in-container">
+            <form action="{% url 'UserAuthsAPP:EditAddress' %}" method="post">
+                {% csrf_token %}
+               
+                <h1 style="font-size: 35px;">Address/Contact</h1>
+                
+
+                <div class="input-control" style="margin-top: 20px;">    
+                    <label ><strong>Date of Birth</strong></label>               
+                    {{ProfileForm.dateOfBirth}}                                    
+                    <div class="error"></div>
+                </div>       
+                
+                <div class="input-control">                
+                    {{ProfileForm.phoneNumber}}                       
+                    <div class="error"></div>
+                </div> 
+                               
+                <div class="input-control">                
+                    {{ProfileForm.address}}                                    
+                    <div class="error"></div>
+                </div>          
+                
+                <div class="input-control">                
+                    {{ProfileForm.post_code}}                                    
+                    <div class="error"></div>
+                </div>          
+                
+                <div class="input-control">                
+                    {{ProfileForm.town}}                                    
+                    <div class="error"></div>
+                </div>          
+                
+                <div class="input-control">                
+                    {{ProfileForm.country}}                                    
+                    <div class="error"></div>
+                </div>         
+                
+                <div class="input-control">   
+                    <label ><strong>Profile Image</strong></label>                    
+                    {{ProfileForm.profileImg}}                       
+                    <div class="error"></div>
+                </div> 
+
+                <br>
+                <button type="submit"  class="btn btn-primary dropdown" id="SignupButton" style="margin-top: 10px;">
+                    Save
+                </button>
+            </form>
+            
+        </div>
+
+
+        <div class="overlay-container" >
+            <div class="overlay ForgotPassword" >             
+                <div class="overlay-panel overlay-right" >
+                    <h1>Security is a great Key!</h1>
+                    <p>Change your Password oftenly</p>            
+                  
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+    
+    </section>
+    
+</div> 
+{% endblock %}
+
+
+
+
+{% block extend_footer %}
+<script src="{% static 'js/UserAuthsAPP/ResetPasswordValidators.js' %}"></script>
+
+{% endblock %}
