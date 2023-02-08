@@ -276,11 +276,13 @@ def EditAddress(request):
         UserLoggedProfile.profileImg  = request.FILES.get('profileImg')
         UserLoggedProfile.save()
         messages.success(request, 'Your Profile Informations has been updated.')
-        return redirect('UserAuthsAPP:DashBoard')  
+        return redirect('UserAuthsAPP:ViewAddress')  
     else:
         ProfileForm = ProfileInfoForm()
+        LoggedUserProfile = UserProfile.objects.get(user=request.user)     
         context = {                        
-                        'ProfileForm' : ProfileForm,                        
+                        'ProfileForm' : ProfileForm,    
+                        'userProfile' : LoggedUserProfile,                    
             }
     return render(request,"UserAuthsAPP/EditAddress.html",context)
 
