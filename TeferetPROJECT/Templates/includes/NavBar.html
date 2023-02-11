@@ -32,18 +32,18 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">                          
 
-							<li  id="id_categories">
-								<a href="{% url 'CoreAPP:Index' %}">CATEGORIES</a>
+							<li  id="id_shop">
+								<a href="{% url 'ShopAPP:Products' %}">SHOP</a>
 								<ul class="sub-menu">
-									<li><a href="#">Clothes</a></li>
-									<li><a href="#">Cosmetics</a></li>
-									<li><a href="#">Accessories</a></li>
+									<li><a id="id_Accessories" href="{% url 'ShopAPP:AccessoriesProducts' %}">Accessories</a></li>
+									<li><a id="id_Clothes"     href="{% url 'ShopAPP:ClothesProducts' %}">Clothes</a></li>
+									<li><a id="id_Cosmetics"   href="{% url 'ShopAPP:CosmeticsProducts' %}">Cosmetics</a></li>
 								</ul>
 							</li>
 
-							<li id="id_shop">
+							<!-- <li id="id_shop">
 								<a href="{% url 'ShopAPP:Products' %}">SHOP</a>
-							</li>
+							</li> -->
 						
 							<li id="id_blog">
 								<a href="{% url 'BlogAPP:Blog' %}">BLOG</a>
@@ -251,29 +251,16 @@ $(".alert").delay(5000).slideUp(200, function() {
 });
 
 //Input validation forgot password
-const categories  = document.querySelector('#id_categories');
+
 const about       = document.querySelector('#id_about');
 const shop        = document.querySelector('#id_shop');
+const clothes     = document.querySelector('#id_Clothes');
+const accessories = document.querySelector('#id_Accessories');
+const cosmetics   = document.querySelector('#id_Cosmetics');
 const contact     = document.querySelector('#id_contact');
 const blog        = document.querySelector('#id_blog');
 
 
-const activeCategories = () => {
-    categoriesClicked= true
-    localStorage.setItem("categoriesClicked", categoriesClicked);    
-    
-    aboutClicked= false
-    localStorage.setItem("aboutClicked", aboutClicked);      
-    shopClicked= false
-    localStorage.setItem("shopClicked", shopClicked);   
-    contactClicked= false
-    localStorage.setItem("contactClicked", contactClicked); 
-    blogClicked= false
-    localStorage.setItem("blogClicked", blogClicked);   
-
-
-}
-categories.addEventListener('click', activeCategories);
 
 const activeAbout = () => {
     localStorage.clear()
@@ -290,7 +277,11 @@ const activeShop = () => {
     localStorage.setItem("shopClicked", shopClicked);       
     
 }
+
 shop.addEventListener('click', activeShop);
+clothes.addEventListener('click', activeShop);
+accessories.addEventListener('click', activeShop);
+cosmetics.addEventListener('click', activeShop);
 
 const activeContact = () => {
     localStorage.clear()
@@ -305,10 +296,7 @@ contact.addEventListener('click', activeContact);
 const activeBlog = () => {
     localStorage.clear()
     blogClicked= true
-    localStorage.setItem("blogClicked", blogClicked);      
-
-
-    
+    localStorage.setItem("blogClicked", blogClicked);        
 
 }
 blog.addEventListener('click', activeBlog);
@@ -322,14 +310,14 @@ function onload()  {
     var blogClicked  = localStorage.getItem("blogClicked");
     var contactClicked  = localStorage.getItem("contactClicked");
     var shopClicked  = localStorage.getItem("shopClicked");
-    var categoriesClicked  = localStorage.getItem("categoriesClicked");
+    
 
     var pageUrl = window.document.URL.split("/")
     var pageName = pageUrl[pageUrl.length-2]
 
-    if((! (pageName === "Contact"))&&(! (pageName === "About")) && (! (pageName === "Products")) && (! (pageName === "Blog")))
+    if((! (pageName === "Contact")) && (! (pageName === "About")) && (! (pageName === "Products")) && (! (pageName === "Blog")) && (! (pageName === "CosmeticsProducts")) && (! (pageName === "AccessoriesProducts")) && (! (pageName === "ClothesProducts")))
     {
-        categories.classList.remove('active-menu');
+    
         about.classList.remove('active-menu')
         shop.classList.remove('active-menu')
         contact.classList.remove('active-menu')
@@ -340,8 +328,7 @@ function onload()  {
     else if(aboutClicked === "true")
     {
         
-        about.classList.add('active-menu')
-        categories.classList.remove('active-menu');
+        about.classList.add('active-menu')    
         shop.classList.remove('active-menu')
         contact.classList.remove('active-menu')
         blog.classList.remove('active-menu')        
@@ -350,8 +337,7 @@ function onload()  {
     }
     else if(blogClicked === "true")
     {
-        blog.classList.add('active-menu')    
-        categories.classList.remove('active-menu');
+        blog.classList.add('active-menu')            
         about.classList.remove('active-menu')
         shop.classList.remove('active-menu')
         contact.classList.remove('active-menu')  
@@ -360,8 +346,7 @@ function onload()  {
     }
     else if(contactClicked === "true")
     {
-        contact.classList.add('active-menu')
-        categories.classList.remove('active-menu');
+        contact.classList.add('active-menu')        
         about.classList.remove('active-menu')
         shop.classList.remove('active-menu')
         blog.classList.remove('active-menu')   
@@ -371,25 +356,12 @@ function onload()  {
     }
     else if(shopClicked === "true")
     {
-        shop.classList.add('active-menu')
-        categories.classList.remove('active-menu');
+        shop.classList.add('active-menu')        
         about.classList.remove('active-menu')
         contact.classList.remove('active-menu')
-        blog.classList.remove('active-menu')         
-    
+        blog.classList.remove('active-menu')     
        
     }
-    else if(categoriesClicked === "true")
-    {
-        categories.classList.add('active-menu');
-        about.classList.remove('active-menu')
-        shop.classList.remove('active-menu')
-        contact.classList.remove('active-menu')
-        blog.classList.remove('active-menu')  
-        
-      
-
-    }    
    
     console.log(pageName)
     

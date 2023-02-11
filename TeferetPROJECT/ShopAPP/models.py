@@ -20,13 +20,21 @@ STATUS = (
     ("Published",'Published'),    
 )
 
-
 RATINGS = (
     (1,'★☆☆☆☆'),    
     (2,'★★☆☆☆'),    
     (3,'★★★☆☆'),    
     (4,'★★★★☆'),    
     (5,'★★★★★'),        
+)
+
+COLORS = (
+    (1,'⚫'),    
+    (2,'🔴'),    
+    (4,'🟢'),    
+    (5,'🟡'),        
+    (5,'🔵'),        
+    (6,'⚪'),    
 )
 
 
@@ -50,7 +58,7 @@ class Tags(models.Model):
 
 class Product(models.Model):
     Category    = models.ForeignKey(Category, on_delete=models.CASCADE,null=False)
-    tags        = models.ForeignKey(Tags, on_delete=models.SET_NULL,null=True)
+    # tags        = models.ForeignKey(Tags, on_delete=models.SET_NULL,null=True)
     
     pid         = models.AutoField(primary_key=True)
     name        = models.CharField(max_length=150)
@@ -62,6 +70,7 @@ class Product(models.Model):
     old_price   = models.DecimalField(max_digits=99999,decimal_places=2)    
     createdDate = models.DateTimeField(auto_now_add=True )
     updatedDate = models.DateTimeField(auto_now=True)    
+    color       = models.IntegerField(choices=COLORS,default=1,null=True)
 
     # product_status = models.CharField(choices=STATUS, max_length=10, default="inReview")
     # status = models.BooleanField(default=True)
