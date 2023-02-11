@@ -148,7 +148,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 JAZZMIN_SETTINGS = {    
     'site_logo'  : 'images/icons/logo.png',
     'site_brand' : 'TEFERET',
-    'copyright': "TEFERET"
+    'copyright': "TEFERET",
+    "welcome_sign": "Welcome to TEFERET Admin Interface",
+    "site_title": "TEFERET Admin",
+
 
 
 }
