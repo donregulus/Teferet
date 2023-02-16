@@ -9,16 +9,41 @@ from ShopAPP.models import Product, Category
 
 
 
-def ProductDetails(request):   
+def ModalProductDetails(request,pid):   
 
+    product = Product.objects.get(pid=pid)
+    context = {                    
+                    "product" : product,
+                }     
     if request.user.is_authenticated:        
         LoggedUserProfile = UserProfile.objects.get(user=request.user)
         context = {
                     "userProfile": LoggedUserProfile,
+                    "product" : product,
+                }       
+        return render(request, 'ShopAPP/ModalProductDetails.html',context)
+    else:   
+        return render(request, 'ShopAPP/ModalProductDetails.html',context)
+
+
+
+
+
+def ProductDetails(request,pid):   
+
+    product = Product.objects.get(pid=pid)
+    context = {                    
+                    "product" : product,
+                }     
+    if request.user.is_authenticated:        
+        LoggedUserProfile = UserProfile.objects.get(user=request.user)
+        context = {
+                    "userProfile": LoggedUserProfile,
+                    "product" : product,
                 }       
         return render(request, 'ShopAPP/ProductDetails.html',context)
     else:   
-        return render(request, 'ShopAPP/ProductDetails.html')
+        return render(request, 'ShopAPP/ProductDetails.html',context)
 
 
 

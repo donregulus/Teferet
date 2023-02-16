@@ -6,7 +6,8 @@ app_name = "ShopAPP"
 
 urlpatterns = [    
       
-      path('ProductDetails/'          ,views.ProductDetails       ,name='ProductDetails')
+      path('ProductDetails/<pid>'     ,views.ProductDetails       ,name='ProductDetails')
+     ,path('ModalProductDetails/<pid>',views.ModalProductDetails  ,name='ModalProductDetails')
      ,path('Products/'                ,views.Products             ,name='Products')
      ,path('CosmeticsProducts/'       ,views.CosmeticsProducts    ,name='CosmeticsProducts')
      ,path('ClothesProducts/'         ,views.ClothesProducts      ,name='ClothesProducts')
