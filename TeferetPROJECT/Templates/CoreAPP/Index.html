@@ -433,7 +433,7 @@
 
 	
 						<li class="card-action-item">
-						<a href="#" class="js-addcart-home">
+						<a href="#" class="js-addcart-home" data-id={{ product.pid }}>
 						  	<button class="card-action-btn" aria-labelledby="card-label-1">
 								<ion-icon name="cart-outline" style="display: block;"></ion-icon>
 							</button>
@@ -580,14 +580,29 @@
 
 	$('.js-addcart-home').each(function(){
 		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-b2').html();
+		
+		if ($("#cartNum").attr("data-notify").trim()==="" || $("#cartNum").attr("data-notify") === null)
+		{
+			$("#cartNum").attr("data-notify",0);		
+		}
+
 		$(this).on('click', function(){
 			swal(nameProduct, "is added to cart !", "success");
-			$(this).addClass('js-addedwish-b2');
-			$(this).off('click');
-		});
+			var productId = $(this).data('id');
+			let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
+
+			// AJAX request
+			$.ajax({
+				url: url,
+				type: 'get',		
+				success: function(response){   					
+						$("#cartNum").attr("data-notify",response);				
+				}
+			});
+
 	});
 
-
+	});
 
 
 	 /*==================================================================
@@ -651,8 +666,5 @@
 
 
 </script>
-
-
-
 
 {% endblock %}

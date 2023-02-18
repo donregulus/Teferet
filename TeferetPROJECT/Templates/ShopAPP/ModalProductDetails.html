@@ -128,7 +128,7 @@
 									</div>
 								</div>
 
-								<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+								<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-id={{ product.pid }}>
 									Add to cart
 								</button>
 							</div>
@@ -172,6 +172,23 @@
         $('.js-modal1').removeClass('show-modal1');
     });
 	
+
+	$('.js-addcart-detail').each(function(){
+		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+		$(this).on('click', function(){
+			swal(nameProduct, "is added to cart !", "success");
+			var productId = $(this).data('id');
+			let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
+			// AJAX request
+			$.ajax({
+				url: url,
+				type: 'get',		
+				success: function(response){   					
+						$("#cartNum").attr("data-notify",response);				
+				}
+			});
+		});
+	});
 	
 </script>
 

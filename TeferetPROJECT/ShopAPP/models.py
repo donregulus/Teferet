@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.html import mark_safe
+import uuid
 from django.contrib.auth.models import User
 # Create your models here.
 
@@ -38,8 +38,9 @@ COLORS = (
 )
 
 
+
 class Category(models.Model):
-    cid         = models.AutoField(primary_key=True)
+    cid         = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name        = models.CharField(max_length=150,unique=True)
     image       = models.ImageField(upload_to="Categories",default="Category.jpg")
     description = models.TextField(max_length=255, blank=True)
@@ -60,7 +61,7 @@ class Product(models.Model):
     Category    = models.ForeignKey(Category, on_delete=models.CASCADE,null=False)
     # tags        = models.ForeignKey(Tags, on_delete=models.SET_NULL,null=True)
     
-    pid         = models.AutoField(primary_key=True)
+    pid         = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name        = models.CharField(max_length=150)
     image       = models.ImageField(upload_to="Products",default="product.jpg")    
     description = models.TextField(null=False,blank=False)
@@ -104,3 +105,24 @@ class WhishList(models.Model):
 
     def __str__(self) -> str:
         return self.product.name    
+    
+
+class Cart(models.Model):
+    cart_id     =  models.UUIDField(primary_key=True, default=uuid.uuid4)
+    createdDate =  models.DateField(auto_now_add=True)
+    isActive    =  models.BooleanField(default=True)         
+
+    def __str__(self):
+        return str(self.cart_id)
+    
+
+
+class CartItem(models.Model): 
+    user     = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    product  = models.ForeignKey(Product, on_delete=models.CASCADE)    
+    cart     = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
+    quantity = models.IntegerField()
+
+    def sub_total(self):
+        return self.product.price * self.quantity
+ 

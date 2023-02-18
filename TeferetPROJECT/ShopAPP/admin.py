@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, WhishList,Product,ProductReview
+from .models import Category, WhishList,Product,ProductReview,CartItem,Cart
 # Register your models here.
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -16,8 +16,18 @@ class WishListAdmin(admin.ModelAdmin):
     list_display = ["user","product","createdDate"]
 
 
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ["user","product","cart","quantity"]
+
+class CartAdmin(admin.ModelAdmin):
+    list_display = ["cart_id","createdDate","isActive"]        
+  
+    
+
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Product,ProductAdmin)
 admin.site.register(ProductReview,ProductReviewAdmin)
 admin.site.register(WhishList,WishListAdmin)
+admin.site.register(CartItem,CartItemAdmin)
+admin.site.register(Cart,CartAdmin)
 
