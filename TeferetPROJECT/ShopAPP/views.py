@@ -85,7 +85,7 @@ def AccessoriesProducts(request):
 
 def ShowCartDetails(request):
 
-    cart_items = None
+    cart_items = []
     totalPrice = 0
 
     if request.user.is_authenticated:
@@ -102,6 +102,7 @@ def ShowCartDetails(request):
         if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
             cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
             cart_items = CartItem.objects.all().filter(cart=cart)
+        
 
     for item in cart_items:
         totalPrice += item.sub_total()

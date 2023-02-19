@@ -174,10 +174,12 @@
                     
                 </div>
 
-                <div class="header-cart-buttons flex-w w-full">
-                    <a href="{% url 'OrderAPP:PlaceOrder' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
-                        View Cart
-                    </a>
+                <div class="header-cart-buttons flex-w w-full">    
+                    <button  id="viewCartButton" >
+                        <a id="viewCartLink" href="{% url 'OrderAPP:PlaceOrder' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+                            View Cart
+                        </a>   
+                    </button>                                                                     
                 </div>
             </div>
         </div>
@@ -341,40 +343,56 @@ addEventListener('load', onload);
             dataType: 'json', 		
 			success: function(data){   					
                     
-                    $('#CartDetails').empty();
-                    		
-                    $('#totalPrice').html('Total: $'+data.total);
-                    var items = $.parseJSON(data.items);    
-                    $.each(items, function(index, item) {                  
+                    $('#CartDetails').empty();                 		
+                    var items = $.parseJSON(data.items);
+                    if($.isEmptyObject(items) || items=== null ){
+
                         
-                        let url = "{% url 'ShopAPP:ProductDetails' 'pid' %}".replace('pid', item.fields.product);
-                        $.ajax({
-                                url: url,
-                                type: 'get',
-                                dataType: 'json', 		
-                                success: function(data){  				                                                                               
+                        $("#viewCartLink").css('pointer-events', 'none'); 
+                        
+                        //Input Validations register                        
+                        $("#viewCartButton").css('cursor', 'not-allowed'); 
+                        $("#viewCartButton").disabled=true;                   
+                                                
+                        var details = $('<h4>Cart is empty</h4>')
+                        $('#CartDetails').append(details);    
+                        
+                                                     
+                    }
+                    else{
+                            $('#totalPrice').html('Total: $'+data.total);                        
+                            $("#viewCartButton").css('cursor', ''); 
+                            $("#viewCartLink").css('pointer-events', ''); 
+                            $("#viewCartButton").disabled=false;
+                            $.each(items, function(index, item) {                  
+                                
+                                let url = "{% url 'ShopAPP:ProductDetails' 'pid' %}".replace('pid', item.fields.product);
+                                $.ajax({
+                                        url: url,
+                                        type: 'get',
+                                        dataType: 'json', 		
+                                        success: function(data){  				                                                                               
 
-                                    var details = $( '<li class="header-cart-item flex-w flex-t m-b-12">'+
-                                                    '<div class="header-cart-item-img">'+
-                                                        '<img src='+'"'+data.image+'"'+ 'alt="IMG">'+
-                                                    '</div>'+
+                                            var details = $( '<li class="header-cart-item flex-w flex-t m-b-12">'+
+                                                            '<div class="header-cart-item-img">'+
+                                                                '<img src='+'"'+data.image+'"'+ 'alt="IMG">'+
+                                                            '</div>'+
 
-                                                    '<div class="header-cart-item-txt p-t-8">'+
-                                                        '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">'+
-                                                            data.name+
-                                                        '</a>'+
-                                                        '<span class="header-cart-item-info">'+
-                                                            item.fields.quantity+ 'x $'+data.price+
-                                                        '</span>'+
-                                                    '</div>'+
-                                                '</li>')                                                
-                                    $('#CartDetails').append(details); 
-                                    console.log(data)
-                                        
-                                }                              
+                                                            '<div class="header-cart-item-txt p-t-8">'+
+                                                                '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">'+
+                                                                    data.name+
+                                                                '</a>'+
+                                                                '<span class="header-cart-item-info">'+
+                                                                    item.fields.quantity+ 'x $'+data.price+
+                                                                '</span>'+
+                                                            '</div>'+
+                                                        '</li>')                                                
+                                            $('#CartDetails').append(details);                                    
+                                        }                              
 
+                                    });
                             });
-                    });
+                        }   
 			}
 		});
     });
