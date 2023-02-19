@@ -22,23 +22,12 @@ def __isAjax__(request):
     else:
         return False
 
-
-def ModalProductDetails(request,pid):   
-
+def ModalProductDetails(request,pid):
     product = Product.objects.get(pid=pid)
     context = {                    
                     "product" : product,
-                }     
-    if request.user.is_authenticated:        
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)
-        context = {
-                    "userProfile": LoggedUserProfile,
-                    "product" : product,
-                }       
-        return render(request, 'ShopAPP/ModalProductDetails.html',context)
-    else:   
-        return render(request, 'ShopAPP/ModalProductDetails.html',context)
-
+                }         
+    return render(request, 'ShopAPP/ModalProductDetails.html',context)
 
 def ProductDetails(request,pid):   
 
@@ -46,102 +35,48 @@ def ProductDetails(request,pid):
     context = {                    
                     "product" : product,
                 }     
-    if request.user.is_authenticated:        
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)
-        context = {
-                    "userProfile": LoggedUserProfile,
-                    "product" : product,
-                }    
-        if __isAjax__(request):    
+    
+    if __isAjax__(request):    
             productDetails = {
                 "image": product.image.url,
                 "price": str(product.price),
                 "name" : product.name
             }            
             return HttpResponse(json.dumps(productDetails))
-        else:            
+    else:            
             return render(request, 'ShopAPP/ProductDetails.html',context)
-    else:   
-        if __isAjax__(request):
-            productDetails = {
-                "image": product.image.url,
-                "price": str(product.price),
-                "name" : product.name
-            }            
-            return HttpResponse(json.dumps(productDetails))
-        else:            
-            return render(request, 'ShopAPP/ProductDetails.html',context)
-
-def Products(request):   
-
+    
+def Products(request):  
     products = Product.objects.all()
-    if request.user.is_authenticated:        
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)
-        context = {
-                    "userProfile": LoggedUserProfile,
+    context = {                   
                     "products": products,
                 }       
-        return render(request, 'ShopAPP/Products.html',context)
-    else:   
-        context = {                   
-                    "products": products,
-                }       
-        return render(request, 'ShopAPP/Products.html',context)    
-
+    return render(request, 'ShopAPP/Products.html',context)    
 
 def CosmeticsProducts(request):
     Cosmetics = Category.objects.get(name="Cosmetics")
     products = Product.objects.filter(Category=Cosmetics.cid)
-    if request.user.is_authenticated:        
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)
-        print(products)
-        context = {
-                    "userProfile": LoggedUserProfile,
+    context = {                    
                     "products": products,
                 }   
-        return render(request, "CoreAPP/CosmeticsProducts.html",context)
-    else:   
-        context = {                    
-                    "products": products,
-                }   
-        return render(request, 'ShopAPP/CosmeticsProducts.html',context)
-
+    return render(request, 'ShopAPP/CosmeticsProducts.html',context)
 
 def ClothesProducts(request):
     Cosmetics = Category.objects.get(name="Clothes")
-    products = Product.objects.filter(Category=Cosmetics.cid)
-    if request.user.is_authenticated:        
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)
-        print(products)
-        context = {
-                    "userProfile": LoggedUserProfile,
+    products = Product.objects.filter(Category=Cosmetics.cid)    
+    context = {                    
                     "products": products,
                 }   
-        return render(request, "CoreAPP/ClothesProducts.html",context)
-    else:   
-        context = {                    
-                    "products": products,
-                }   
-        return render(request, 'ShopAPP/ClothesProducts.html',context)
-    
+    return render(request, 'ShopAPP/ClothesProducts.html',context)
 
 def AccessoriesProducts(request):
     Cosmetics = Category.objects.get(name="Accessories")
     products = Product.objects.filter(Category=Cosmetics.cid)
-    if request.user.is_authenticated:        
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)
-        print(products)
-        context = {
-                    "userProfile": LoggedUserProfile,
+   
+    context = {                    
                     "products": products,
                 }   
-        return render(request, "CoreAPP/AccessoriesProducts.html",context)
-    else:   
-        context = {                    
-                    "products": products,
-                }   
-        return render(request, 'ShopAPP/AccessoriesProducts.html',context)
-
+    return render(request, 'ShopAPP/AccessoriesProducts.html',context)
 
 def ShowCartDetails(request):
 

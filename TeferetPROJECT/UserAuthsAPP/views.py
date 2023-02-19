@@ -178,9 +178,6 @@ def ResetPassword(request):
     else:
         return render(request, 'UserAuthsAPP/ResetPassword.html')
 
-   
-
-
 @login_required(login_url="UserAuthsAPP:Login")
 def ChangePassword(request):
         
@@ -199,48 +196,26 @@ def ChangePassword(request):
                     LoggedUser = auth.authenticate(username=user.username,password=password)
                     if LoggedUser is not None:
                         auth.login(request,LoggedUser)            
-                        messages.success(request, 'Password Changed Succefully !')
-                        LoggedUserProfile = UserProfile.objects.get(user=request.user)
-                        context = {
-                            "userProfile": LoggedUserProfile,
-                            }   
+                        messages.success(request, 'Password Changed Succefully !')                       
                         return redirect("UserAuthsAPP:DashBoard")
                     else:                        
                         messages.error(request, "Failed to login after changing the password")
                         return redirect("CoreAPP:Index")
                 else:
                     messages.error(request, 'New Password must be different from the current Password')
-                    LoggedUserProfile = UserProfile.objects.get(user=request.user)
-                    context = {
-                            "userProfile": LoggedUserProfile,
-                        }   
-                    return render(request, "UserAuthsAPP/ChangePassword.html",context)   
+                    LoggedUserProfile = UserProfile.objects.get(user=request.user)                      
+                    return render(request, "UserAuthsAPP/ChangePassword.html")   
 
             else:
                 messages.error(request, 'Password do not match!')
-                LoggedUserProfile = UserProfile.objects.get(user=request.user)
-                context = {
-                        "userProfile": LoggedUserProfile,
-                    }   
-                return render(request, "UserAuthsAPP/ChangePassword.html",context)   
-        else:    
-            print("request not post")
-            LoggedUserProfile = UserProfile.objects.get(user=request.user)
-            context = {
-                        "userProfile": LoggedUserProfile,
-                    }   
-            return render(request, "UserAuthsAPP/ChangePassword.html",context)
- 
-
+                LoggedUserProfile = UserProfile.objects.get(user=request.user)                   
+                return render(request, "UserAuthsAPP/ChangePassword.html")   
+        else:                           
+            return render(request, "UserAuthsAPP/ChangePassword.html")
 
 @login_required(login_url="UserAuthsAPP:Login")
 def DashBoard(request):    
-    LoggedUserProfile = UserProfile.objects.get(user=request.user)
-    context = {
-                    "userProfile": LoggedUserProfile,
-                }
-    return render(request,"UserAuthsAPP/DashBoard.html",context)
-
+    return render(request,"UserAuthsAPP/DashBoard.html")
 
 @login_required(login_url="UserAuthsAPP:Login")
 def EditProfile(request):
@@ -254,14 +229,11 @@ def EditProfile(request):
         messages.success(request, 'Your Personal Informations has been updated.')
         return redirect('UserAuthsAPP:DashBoard')  
     else:        
-        Userform    = RegisterForm() 
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)           
+        Userform    = RegisterForm()            
         context = {
-                        'form' : Userform,
-                        'userProfile' : LoggedUserProfile,
+                        'form' : Userform,                        
             }
         return render(request,"UserAuthsAPP/EditProfile.html",context)
-
 
 @login_required(login_url="UserAuthsAPP:Login")
 def EditAddress(request):    
@@ -278,18 +250,12 @@ def EditAddress(request):
         messages.success(request, 'Your Profile Informations has been updated.')
         return redirect('UserAuthsAPP:ViewAddress')  
     else:
-        ProfileForm = ProfileInfoForm()
-        LoggedUserProfile = UserProfile.objects.get(user=request.user)     
+        ProfileForm = ProfileInfoForm()        
         context = {                        
-                        'ProfileForm' : ProfileForm,    
-                        'userProfile' : LoggedUserProfile,                    
+                        'ProfileForm' : ProfileForm,                            
             }
     return render(request,"UserAuthsAPP/EditAddress.html",context)
 
 @login_required(login_url="UserAuthsAPP:Login")
 def ViewAddress(request):    
-    LoggedUserProfile = UserProfile.objects.get(user=request.user)           
-    context = {                    
-                    'userProfile' : LoggedUserProfile,
-        }
-    return render(request,"UserAuthsAPP/ViewAddress.html",context)
+    return render(request,"UserAuthsAPP/ViewAddress.html")

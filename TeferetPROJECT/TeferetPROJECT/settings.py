@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'ShopAPP.context_processors.counter',
+                'UserAuthsAPP.context_processors.loggedUser',
             ],
         },
     },
