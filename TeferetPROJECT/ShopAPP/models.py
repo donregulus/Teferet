@@ -107,18 +107,18 @@ class WhishList(models.Model):
         return self.product.name    
     
 
-class Cart(models.Model):
-    cart_id     =  models.UUIDField(primary_key=True, default=uuid.uuid4)
+class Cart(models.Model):    
+    cartid      =  models.CharField(primary_key=True,max_length=250)
+    user        =  models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     createdDate =  models.DateField(auto_now_add=True)
     isActive    =  models.BooleanField(default=True)         
 
     def __str__(self):
-        return str(self.cart_id)
+        return str(self.cartid)
     
 
 
-class CartItem(models.Model): 
-    user     = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+class CartItem(models.Model):     
     product  = models.ForeignKey(Product, on_delete=models.CASCADE)    
     cart     = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()

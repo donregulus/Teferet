@@ -17,10 +17,10 @@ class WishListAdmin(admin.ModelAdmin):
 
 
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ["user","product","cart","quantity"]
+    list_display = ["product","cart","quantity"]
 
 class CartAdmin(admin.ModelAdmin):
-    list_display = ["cart_id","createdDate","isActive"]        
+    list_display = ["cartid","user","createdDate","isActive"]        
   
     
 

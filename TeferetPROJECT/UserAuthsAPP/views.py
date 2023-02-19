@@ -89,14 +89,9 @@ def Login(request):
             #Authentificate user and redirect to profile page            
             LoggedUser = auth.authenticate(username=userCreatedName,password=userCreatedPassword) 
             if LoggedUser is not None:
-                auth.login(request,LoggedUser)   
-                LoggedUser = User.objects.get(username=userCreatedName)
-                LoggedUserProfile = UserProfile.objects.get(user=LoggedUser)
-                context = {
-                    "userProfile": LoggedUserProfile,
-                }
+                auth.login(request,LoggedUser)                   
                 messages.success(request,"Logged in succefully !")  
-                return render(request,"CoreAPP/Index.html",context)
+                return redirect("CoreAPP:Index")
             else:
                 messages.error(request,"Credential Failed: Enter a correct username and password")    
                 return render(request,'UserAuthsAPP/Sign-up.html',context)
