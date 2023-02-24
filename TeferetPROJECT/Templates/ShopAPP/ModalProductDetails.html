@@ -115,22 +115,31 @@
 						</div>
 
 						<div class="flex-w flex-r-m p-b-10">
-							<div class="size-204 flex-w flex-m respon6-next">
-								<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-									<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-										<i class="fs-16 zmdi zmdi-minus"></i>
+							<div class="size-204 flex-w flex-m respon6-next" id="shoppingDetails">
+								{% if quantity == 0 %}
+								
+									<button style="margin-top: 10px;"class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-id={{ product.pid }}>
+										Add to cart
+									</button>
+								
+								
+								{% else %}
+									<div class="wrap-num-product flex-w m-r-20 m-tb-10">
+										<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" data-id={{ product.pid }}>
+											<i class="fs-16 zmdi zmdi-minus"></i>
+										</div>
+										
+										<input class="mtext-104 cl3 txt-center num-product"  name="num-product" value={{quantity}} data-id={{ product.pid }}>
+										
+										<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"data-id={{ product.pid }}>
+											<i class="fs-16 zmdi zmdi-plus"></i>
+										</div>
 									</div>
-
-									<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
-
-									<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-										<i class="fs-16 zmdi zmdi-plus"></i>
-									</div>
-								</div>
-
-								<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-id={{ product.pid }}>
-									Add to cart
-								</button>
+									
+									<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 DeleteProduct" data-id={{ product.pid }}>
+										Remove
+									</button>
+								{% endif %}
 							</div>
 						</div>	
 					</div>
@@ -176,6 +185,14 @@
 	$('.js-addcart-detail').each(function(){
 		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
 		$(this).on('click', function(){
+			swal(nameProduct, "is added to cart !", "success");	
+			
+		});
+	});
+
+	
+	$('#shoppingDetails').on('click','.js-addcart-detail', function(e){
+		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
 			swal(nameProduct, "is added to cart !", "success");
 			var productId = $(this).data('id');
 			let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
@@ -184,11 +201,127 @@
 				url: url,
 				type: 'get',		
 				success: function(response){   					
-						$("#cartNum").attr("data-notify",response);				
+						$("#cartNum").attr("data-notify",response);
+						$("#shoppingDetails").empty()
+						var addProductNumber = $(
+														'<div class="wrap-num-product flex-w m-r-20 m-tb-10">'+
+															'<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" data-id='+productId+'>'+
+																'<i class="fs-16 zmdi zmdi-minus"></i>'+
+															'</div>'+
+															'<input class="mtext-104 cl3 txt-center num-product" type="text" name="num-product1" value=1 data-id='+productId+'>'+
+															'<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"  data-id='+productId+'>'+
+																'<i class="fs-16 zmdi zmdi-plus"></i>'+
+															'</div>'+
+														'</div>'+
+
+															'<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 DeleteProduct" data-id='+productId+'>'+
+																'Remove'+
+															'</button>'
+														)												
+						$("#shoppingDetails").append(addProductNumber)
 				}
 			});
 		});
-	});
+	
+
+	
+	
+
+$('#shoppingDetails').on('click','.DeleteProduct', function(e){
+
+e.stopPropagation();		
+e.stopImmediatePropagation();      	
+var productId = $(this).data('id');
+let url = "{% url 'ShopAPP:DeleteProduct' 'pid' %}".replace('pid', productId);
+// AJAX request
+$.ajax({
+			url: url,
+			type: 'get',		
+			success: function(response){   					
+							$("#cartNum").attr("data-notify",response);	
+							$("#shoppingDetails").empty()
+
+							var addProductNumber = $('<button style="margin-top: 10px;" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-id='+productId+'>'+
+									'Add to cart'+
+									'</button>'									
+							)												
+							$("#shoppingDetails").append(addProductNumber)
+					}
+		});
+});
+
+$('#shoppingDetails').on('click','.btn-num-product-up', function(e){		
+		e.stopPropagation();		
+		e.stopImmediatePropagation();
+		var numProduct = Number($(this).prev().val());
+		$(this).prev().val(numProduct + 1);
+
+		var productId = $(this).data('id');
+
+		let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
+
+		// // AJAX request
+		$.ajax({
+			url: url,
+			type: 'get',		
+			success: function(response){   					
+					$("#cartNum").attr("data-notify",response);						
+			}
+		});
+});
+
+$('#shoppingDetails').on('click','.btn-num-product-down', function(e){		
+	e.stopPropagation();		
+	e.stopImmediatePropagation();
+	var numProduct = Number($(this).next().val());
+	if(numProduct > 1) $(this).next().val(numProduct - 1);	
+
+	if ( numProduct > 1 )
+	{
+			var productId = $(this).data('id');
+
+			let url = "{% url 'ShopAPP:RemoveProduct' 'pid' %}".replace('pid', productId);
+
+			// // AJAX request
+			$.ajax({
+				url: url,
+				type: 'get',		
+				success: function(response){   					
+						$("#cartNum").attr("data-notify",response);				
+
+				}
+			});
+	}
+});
+
+$('#shoppingDetails').on('input','.num-product', function(e){
+this.value = this.value.replace(/[^\d]+|^0+(?!$)/g, '').replace(/(\..*)\./g, '$1');
+});
+
+$('#shoppingDetails').on('change','.num-product', function(e){		
+		e.stopPropagation();		
+		e.stopImmediatePropagation();
+		var numProduct = Number($(this).val());  	
+
+		if(numProduct === 0)
+		{
+			$(this).val(1);  	
+			var numProduct = 1
+		}
+					
+		var productId = $(this).data('id');
+		console.log(productId)
+		let url = "{% url 'ShopAPP:AddProducts' 'pid' 'numProduct' %}".replace('pid', productId).replace('numProduct', numProduct);
+
+		// // AJAX request
+		$.ajax({
+			url: url,
+			type: 'get',		
+			success: function(response){   					
+					$("#cartNum").attr("data-notify",response);														
+			}
+		});
+});
 	
 </script>
 

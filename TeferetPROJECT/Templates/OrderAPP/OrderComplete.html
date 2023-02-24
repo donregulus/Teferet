@@ -1,0 +1,116 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block extend_head %}
+	<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- Title page -->
+<div style="margin-top: 150px;">
+<section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover" style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
+    <h2 class="ltext-105 cl0 txt-center">
+        ORDER PAYMENT
+    </h2>
+</section>	
+
+
+
+<section class="section-content ">
+    <div class="containerSign" id="containerSign" >
+          
+    
+        <div class="form-container sign-in-container">
+            <form action="{% url 'UserAuthsAPP:ForgotPassword' %}" method="post">
+                {% csrf_token %}
+                <div>
+                    <style>
+                        h5{
+                            color: red;
+                        }
+                    </style>                    
+                        {% for message in messages%}
+                        <h5>{{message}}</h5>
+                        {% endfor %}                    
+                </div>  
+    
+                <h1>Credit Card </h1>
+
+                <img src="{% static './images/icons/creditcart.png' %}">
+                
+                
+                <div class="input-control">                                
+                    <input type="text"  placeholder="* Name on card..." name="NameOnCard" id= "id_NameOnCard" required>                      
+                    <div class="error"></div>   
+                </div>    
+
+                <div class="input-control">                                
+                    <input type="text"  placeholder="* Credit card number..." name="CardNumber" id= "id_CardNumber" required   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />            
+                    <div class="error"></div>   
+                </div>             
+
+                <div class="input-control">                                
+                    <input type="text"  placeholder="* CVV" name="CVV" id= "id_CVV" required maxlength="3"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />                  
+                    <div class="error"></div>   
+                </div>  
+
+                <div class="input-control">                                
+                    <input type="date"  placeholder="* Expiration" name="CardDate" id= "id_CardDate" required>                      
+                    <div class="error"></div>   
+                </div>  
+                
+                
+                
+                <button type="submit" class="btn btn-primary dropdown" id="ResetPasswordButton" style="margin-top: 10px;">
+                    Pay
+                </button>
+            </form>
+            
+        </div>
+
+
+        <div class="overlay-container" >
+            <div class="overlay ForgotPassword" >             
+                <div class="overlay-panel overlay-right" >
+                    <h1>Thanks you for your order!</h1>                        
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+    
+</section>
+
+
+
+</div>
+
+{% endblock %}
+
+
+{% block extend_footer %}
+
+
+<script>
+        var signUpView     = "{{signUpView|safe}}";
+        if(signUpView)
+        {
+            const container = document.getElementById('containerSign');
+	        container.classList.add("right-panel-active");
+
+        }
+</script>
+
+
+<script src="{% static 'js/UserAuthsAPP/LoginRegisterValidators.js' %}"></script>
+
+
+
+
+{% endblock %}
