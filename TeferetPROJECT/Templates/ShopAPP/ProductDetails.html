@@ -638,9 +638,6 @@
 
 {% block extend_footer %}
 <script>
-	
-
-
 
 $('.js-addcart-detail').each(function(){
 		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
@@ -659,7 +656,7 @@ $('.js-addcart-detail').each(function(){
 		});
 	});
 
-	$('#shoppingDetails').on('click','.js-addcart-detail', function(e){
+$('#shoppingDetails').on('click','.js-addcart-detail', function(e){
 		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
 			swal(nameProduct, "is added to cart !", "success");
 			var productId = $(this).data('id');
@@ -690,7 +687,6 @@ $('.js-addcart-detail').each(function(){
 				}
 			});
 		});
-	
 
 $('#shoppingDetails').on('click','.DeleteProduct', function(e){
 
@@ -714,7 +710,6 @@ $.ajax({
 					}
 		});
 });
-
 
 $('#shoppingDetails').on('click','.btn-num-product-up', function(e){		
 		e.stopPropagation();		
@@ -788,9 +783,6 @@ $('#shoppingDetails').on('change','.num-product', function(e){
 			}
 		});
 });
-
-
-
 
 </script>
 {% endblock %}

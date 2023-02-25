@@ -221,10 +221,13 @@ def ShoppingDetails(request):
     cart_items = []
     products = []
     totalPrice = 0
+    UserLoggedProfile = None
+        
 
     if request.user.is_authenticated:
         #Get The current user
-        LoggedUser = User.objects.get(username=request.user)    
+        LoggedUser = User.objects.get(username=request.user)  
+        UserLoggedProfile = UserProfile.objects.get(user=LoggedUser)        
         #Get the current cart
         cart = None
         if Cart.objects.filter(isActive=True,user=LoggedUser).exists() :
@@ -254,7 +257,7 @@ def ShoppingDetails(request):
 
         context = {
         "total": str(totalPrice),
-        "products": products,
+        "products": products,        
         } 
         return HttpResponse(json.dumps(context))
     else:
@@ -270,6 +273,7 @@ def ShoppingDetails(request):
         context = {
         "total": str(totalPrice),
         "products": products,
+        "UserLoggedProfile": UserLoggedProfile,
         }
         return render(request, 'ShopAPP/ShoppingDetails.html',context)
     

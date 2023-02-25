@@ -123,45 +123,68 @@
 								</div>
 							</div>
 
-							<div class="flex-w flex-t bor12 p-t-15 p-b-30">
-								<div class="size-208 w-full-ssm">
-									<span class="stext-110 cl2">
-										Shipping :
-									</span>
-								</div>
 
-								<div class="size-209 p-r-18 p-r-0-sm w-full-ssm">								
-									<div class="p-t-15">
-										<span class="stext-112 cl8">
-											Address
+							{% if UserLoggedProfile is None or UserLoggedProfile.address|length == 0 %}
+								<div class="flex-w flex-t bor12 p-t-15 p-b-30">
+									<div class="size-208 w-full-ssm">
+										<span class="stext-110 cl2">
+											Shipping :
 										</span>
+									</div>
 
-										<div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
-											<select class="js-select2" name="time">
-												<option>Select a country...</option>
-												<option>USA</option>
-												<option>UK</option>
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-
-										<div class="bor8 bg0 m-b-12">
-											<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state" placeholder="State /  country">
-										</div>
-
-										<div class="bor8 bg0 m-b-22">
-											<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="postcode" placeholder="Postcode / Zip">
-										</div>
-										
-										<div class="flex-w">
-											<div class="flex-c-m stext-101 cl0 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
-												Update Totals
-											</div>
-										</div>
+									<div class="size-209 p-r-18 p-r-0-sm w-full-ssm">								
+										<div class="p-t-15">
+											<span class="stext-112 cl8">
+												No Address
+											</span>										
 											
+											<a href="{% url 'UserAuthsAPP:EditAddress' %}"  style="margin-top: 20px;" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >
+												Add Address
+											</a>
+												
+										</div>
 									</div>
 								</div>
-							</div>
+							{% else %}
+								<div class="flex-w flex-t bor12 p-t-15 p-b-30">
+									<div class="size-208 w-full-ssm">
+										<span class="stext-110 cl2">
+											Shipping :
+										</span>
+									</div>
+
+									<div class="size-209 p-r-18 p-r-0-sm w-full-ssm">								
+										<div class="p-t-15">
+											<span class="stext-112 cl8">
+												Address
+											</span>			
+
+											<div style="margin-top: 20px; margin-left: 30px;" class="size-209" >
+												<span class="mtext-101 cl2">
+													{{UserLoggedProfile.address}}  
+												</span>
+												
+
+											
+												<span class="mtext-101 cl2" id="shoppingDetailstotalPrice">
+													{{UserLoggedProfile.post_code}}   {{UserLoggedProfile.town}}    
+												</span>
+											
+
+											
+												<span class="mtext-101 cl2" id="shoppingDetailstotalPrice">
+													{{UserLoggedProfile.country}}  
+												</span>
+											</div>
+
+											<a href="{% url 'UserAuthsAPP:EditAddress' %}"  style="margin-top: 20px;" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >
+												Change Address
+											</a>
+												
+										</div>
+									</div>
+								</div>
+							{% endif %}
 
 							<div class="flex-w flex-t bor12 p-b-13">
 								<div class="size-208">
@@ -178,13 +201,10 @@
 									</div>
 										
 								<div>
-
-
-
-									<p>
+									<p id='paymentChoice'>
 										<br>
-										Credit Cart<img src="{% static './images/icons/creditcart.png' %}"><input type="radio" name="PayPal" value="CreditCart"/><br />
-										PayPal <img src="{% static './images/icons/paypal.png' %}"><input type="radio" name="PayPal" value="PayPal"/>									
+										Credit Cart<img src="{% static './images/icons/creditcart.png' %}"><input type="radio" name="payment" value="CreditCart"/><br />
+										PayPal <img src="{% static './images/icons/paypal.png' %}"><input type="radio" name="payment" value="PayPal"/>									
 									</p>
 										
 								</div>
@@ -202,13 +222,22 @@
 
 								<div class="size-209 p-t-1">
 									<span class="mtext-110 cl2">
-										$79.65
+										${{total}}
 									</span>
 								</div>
 							</div>
-							<a href="{% url 'OrderAPP:CreditCardPayment' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >
-								Proceed to Checkout
-							</a>					
+
+							<div id="Checkout">
+								<!-- <a href="{% url 'OrderAPP:CreditCardPayment' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >
+									Proceed to Checkout
+								</a> -->
+							</div>	
+							
+							<!-- <button  id="viewCartButton" >
+								<a id="viewCartLink" href="{% url 'OrderAPP:CreditCardPayment' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+									Proceed to Checkout
+								</a>   
+							</button>   -->
 
 						</div>
 					</div>
@@ -223,8 +252,6 @@
 {% block extend_footer %}
 
 <script>
-
-
 
 	$('#shoppingDetails').on('click','.DeleteProduct', function(e){
 
@@ -541,6 +568,32 @@
 	});
 
 
+// Reference #roles
+var paymentChoice = document.getElementById('paymentChoice');
+paymentChoice.addEventListener('change', function(e) {
+
+	 // Assign variable to e.target
+	 var target = e.target;
+	 switch (target.value) {
+			case 'PayPal':				
+					var details = ""
+					details += '<a href="/Order/PaypalPayment/"'					
+					details += ' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >'
+					details += 'Proceed to Checkout'
+					details += '</a>'										
+					$('#Checkout').append(details); 				
+				break;
+				
+				case 'CreditCart':					
+					var details = ""
+					details += '<a href="/Order/CreditCardPayment/"'					
+					details += ' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >'
+					details += 'Proceed to Checkout'
+					details += '</a>'										
+					$('#Checkout').append(details); 
+				break;
+ 			 }			 
+})
 
 </script>
 
