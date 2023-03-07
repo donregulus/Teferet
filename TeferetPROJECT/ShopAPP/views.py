@@ -10,6 +10,7 @@ from ShopAPP.models import Product, Category, Cart, CartItem
 
 from django.core import serializers
 import json
+import uuid
 
 
 from django.http import HttpResponse
@@ -18,8 +19,9 @@ from django.http import HttpResponse
 def __cart_id__(request):
     cart = request.session.session_key
     if not cart:
-        cart = request.session.create()
-    return cart
+        cart = request.session.create()        
+    # return uuid.UUID(str(cart)).hex
+    return uuid.uuid1()
 
 def __isAjax__(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':

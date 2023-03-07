@@ -8,6 +8,9 @@ urlpatterns = [
      
      path('PaypalPayment/'          ,views.PaypalPayment      ,name='PaypalPayment')
     ,path('CreditCardPayment/'      ,views.CreditCardPayment  ,name='CreditCardPayment')
+    ,path('SuccessPayment/'         ,views.SuccessPayment     ,name='SuccessPayment')
+    ,path('CancelPayment/'          ,views.CancelPayment      ,name='CancelPayment')
+    
      
      
 

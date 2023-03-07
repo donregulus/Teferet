@@ -108,7 +108,7 @@ class WhishList(models.Model):
     
 
 class Cart(models.Model):    
-    cartid      =  models.CharField(primary_key=True,max_length=250)
+    cartid      =  models.UUIDField(primary_key=True, default=uuid.uuid4)
     user        =  models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     createdDate =  models.DateField(auto_now_add=True)
     isActive    =  models.BooleanField(default=True)         

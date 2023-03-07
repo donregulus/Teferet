@@ -567,13 +567,15 @@
 			});
 	});
 
+// Payments Method
+$('input:radio[name=payment]').each(function () { $(this).prop('checked', false); });
 
-// Reference #roles
 var paymentChoice = document.getElementById('paymentChoice');
 paymentChoice.addEventListener('change', function(e) {
 
 	 // Assign variable to e.target
 	 var target = e.target;
+	 $("#Checkout").empty()
 	 switch (target.value) {
 			case 'PayPal':				
 					var details = ""
