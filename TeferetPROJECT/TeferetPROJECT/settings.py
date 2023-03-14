@@ -166,3 +166,6 @@ EMAIL_HOST_PASSWORD = 'oakwdnebxthtxnfu'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 # DEFAULT_FROM_EMAIL = 'Teferet Customer Team <noreply@Teferet.com>'
+
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY='same-origin-allow-popups'
