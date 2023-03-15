@@ -61,7 +61,7 @@
 							<i class="zmdi zmdi-search"></i>
 						</button>
 
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15 SearchClothesProducts" type="text" name="search-product" placeholder="Search">
 					</div>	
 				</div>
 
@@ -256,7 +256,13 @@
 			</div>
 			
 
-			<ul class="product-list">
+
+			<div id="NotFoundProduct">
+
+			</div>
+
+
+			<ul class="product-list" id="productsList">
 
 				{% for product in products %}
 				<li class="product-item">
@@ -338,7 +344,7 @@
 
 			
 			<!-- Load more -->
-			<div class="flex-c-m flex-w w-full p-t-45">
+			<div class="flex-c-m flex-w w-full p-t-45" id="loadMoreId">
 				<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
 					Load More
 				</a>
@@ -404,8 +410,6 @@
 
 	});
 
-
-
 	/*==================================================================
    [ Show modal1 ]*/
    $('.js-show-modal1').on('click',function(e){
@@ -460,6 +464,128 @@
    });		
 	   
    });
+
+
+   $('.SearchClothesProducts').on('keypress', function(e){
+
+if(e.key === "Enter")
+{
+	e.stopPropagation();		
+	e.stopImmediatePropagation();      	
+	e.preventDefault();
+
+	var searchWord = $("[name='search-product']").val();
+	let url = "{% url 'ShopAPP:SearchProduct' 'Clothes' 'searchWord'  %}".replace('searchWord',searchWord);
+
+	// AJAX request
+	$.ajax({
+		url: url,
+		type: 'get',		
+		dataType: 'json', 		
+		success: function(response){
+
+			if(response.length === 0)
+			{
+				$("#productsList").empty()
+				$("#loadMoreId").empty()
+				$("#NotFoundProduct").empty()
+				
+
+				var details = '<form class=" bg0 p-t-23 p-b-140">'
+				details += '<div class="container">'
+				details += '<div class="row">'
+				details += '<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">'
+				details += '<div class="m-l-25 m-r--38 m-lr-0-xl">'
+				details += '<h1 style="text-align: center; margin-bottom: 30px;">PRODUCTS NOT FOUND</h1>'
+				details += '</div>'
+				details += '</div>'
+				details += '</div>'
+				details += '</div>'
+				details += '</form>'    
+				$('#NotFoundProduct').append(details); 
+				
+			}
+			else
+			{
+				$("#productsList").empty()							
+				$("#NotFoundProduct").empty()
+				$("#loadMoreId").empty()
+
+				var details = '<div class="flex-c-m flex-w w-full p-t-45" id="loadMoreId">'
+				details += '<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">'
+				details += 'Load More</a>'
+				details += '</div>'
+				$('#loadMoreId').append(details); 				
+				
+				$.each(response, function(index, item) {  
+
+
+					var details = '<li class="product-item">'
+					details += '<div class="product-card" tabindex="0">'
+					details += '<figure class="card-banner">'
+					details += '<img src="'+item.productImage+'" width="312" height="350" loading="lazy"class="image-contain">'
+					details += '<div class="card-badge" style="background-color:  rgb(2, 61, 2);font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">New</div>'
+					details += '<ul class="card-action-list">'
+					details += '<li class="card-action-item">'
+					details += '<a href="#" class="js-addcart-home"data-id='+item.productId+'>'
+					details += '<button class="card-action-btn" aria-labelledby="card-label-1">'
+					details += '<ion-icon name="cart-outline" style="display: block;"></ion-icon>'						
+					details += '</button>'
+					details += '<div class="card-action-tooltip" id="card-label-1" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Cart</div>'					  	
+					details += '</a>' 	
+					details += '</li>'
+					details += '<li class="card-action-item">'
+					details += '<a href="#" class="js-addwish-b2">'
+					details += '<button class="card-action-btn" aria-labelledby="card-label-2">'						
+					details += '<ion-icon name="heart-outline"  style="display: block;"></ion-icon>'						
+					details += '</button>'						
+					details += '<div class="card-action-tooltip" id="card-label-2" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Whishlist</div>'						
+					details += '</a>'						
+					details += '</li>'						
+					details += '<li class="card-action-item">'											
+					details += '<a href="#" class="js-show-modal1" data-id='+item.productId+'>'
+					details += '<button class="card-action-btn" aria-labelledby="card-label-3">'
+					details += '<ion-icon name="eye-outline"  style="display: block;"></ion-icon>'									
+					details += '</button>'									
+					details += '<div class="card-action-tooltip" id="card-label-3" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Quick View</div>'														  
+					details += '</a>'  
+					details += '</li>'  
+					details += '<li class="card-action-item">'  						
+					details += '<button class="card-action-btn" aria-labelledby="card-label-4">' 					
+					details += '<ion-icon name="repeat-outline"  style="display: block;"></ion-icon>'
+					details += '</button>'	
+					details += '<div class="card-action-tooltip" id="card-label-4" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Compare</div>'	
+					details += '</li>'	
+					details += '</ul>'	
+					details += '</figure>'	
+					details += '<div class="card-content">' 
+					details += '<h6 class="h6 card-title ">' 
+					details += '<a href="#" >'+item.category+'</a>'				
+					details += '</h6>'				
+					details += '<h3 class="h3 card-title ">'	
+					let url = "{% url 'ShopAPP:ProductDetails' 'id'  %}".replace('id',item.productId);				
+					details += '<a href='+url +' class="js-name-b2">'+item.productName+'</a>'					
+					details += '</h3>'					
+					details += '<data class="card-price" value="'+item.productPrice+'">$'+item.productPrice+'</data>'				
+					details += '</div>'				
+					details += '</div>'				
+					details += '</li>'				
+
+					$('#productsList').append(details); 
+
+				})
+			}
+		}
+	})
+}
+
+});
+
+
+
+
+
+
 </script>
 
 {% endblock %}

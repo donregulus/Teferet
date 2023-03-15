@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 
@@ -13,7 +14,7 @@ import json
 import uuid
 
 
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 
 
 def __cart_id__(request):
@@ -440,3 +441,29 @@ def DeleteProduct(request,pid):
     for cart_item in cart_items:
         Itemscount += cart_item.quantity
     return HttpResponse(Itemscount)
+
+
+def SearchProduct(request, category, searchWord):
+    if request.method=="GET":
+        product_list=[]
+        if category == 'ALL':
+            product_list = Product.objects.filter(name__icontains=searchWord)
+        else:
+            categoryObj = Category.objects.get(name=category)            
+            product_list = Product.objects.filter(name__icontains=searchWord, Category=categoryObj.cid)
+        products = []
+        for item in product_list:            
+            finalItem = {
+            "productName" : item.name,
+            "productPrice" : str(item.price),
+            "productId" : str(item.pid),
+            "productImage" : item.image.url,
+            "category" : item.Category.name   
+             }
+            products.append(finalItem)
+        return HttpResponse( json.dumps(products))
+        
+        
+    
+        
+    
