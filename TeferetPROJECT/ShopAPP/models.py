@@ -53,8 +53,6 @@ class Category(models.Model):
         return self.name
 
 
-class Tags(models.Model):
-    pass
 
 
 class Product(models.Model):

@@ -6,11 +6,9 @@ app_name = "BlogAPP"
 
 urlpatterns = [
         
-     path(''             ,views.Blog        ,name='Blog')
-    ,path('BlogDetails/' ,views.BlogDetails ,name='BlogDetails')
-    ,path('SendComment/' ,views.SendComment ,name='SendComment')
+     path(''                  ,views.Blogs        ,name='Blog')
+    ,path('BlogDetails/<bid>' ,views.BlogDetails ,name='BlogDetails')
+    ,path('SendComment/'      ,views.SendComment ,name='SendComment')
      
-
-    # ,path('follow'          ,views.follow  ,name='follow')
    
 ]
