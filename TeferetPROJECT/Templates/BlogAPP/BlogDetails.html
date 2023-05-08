@@ -86,6 +86,38 @@
 							</div>
 						</div>
 
+
+
+						<div class="bg6 flex-c-m flex-w size-302 m-t-73 p-tb-15" style="margin-bottom: 30px; background-image: linear-gradient(to right, rgb(73, 2, 2) , #023a0a);;">
+							<span class="stext-107 cl6 p-lr-25" style="color:#faf5f5;font-size:xx-large;">
+								COMMENTS
+							</span>
+						</div>
+
+
+						{% for comment in comments %}
+						<img src="{{comment.User.profileImg.url}}" style="width: 70px;">  
+						<span class="ltext-102 cl2 p-b-28">
+							{{comment.User.user.username}}						
+						</span>					
+
+						<div class="stext-107">
+							{{comment.CommentDate}}
+						</div>      
+						
+						
+						<span  style="margin-left:90px; font-size:20px;
+						padding: 0.1em 0.3em;
+						border-radius: 0.2em;
+						position: relative;												
+						background: rgb(175, 211, 175);
+						transform: skewX(-10deg);
+						display: inline-block;">
+							{{comment.CommentText}}						
+						</span>						
+						
+						{% endfor %}
+
 					
 
 
@@ -94,7 +126,7 @@
 								  
 							
 								<div class="form-container sign-in-container">
-									<form action="{% url 'UserAuthsAPP:ForgotPassword' %}" method="post">
+									<form action="{% url 'BlogAPP:SendComment' %}" method="post">
 										{% csrf_token %}
 										<div>
 											<style>
@@ -107,22 +139,14 @@
 												{% endfor %}                    
 										</div>  
 							
-										<h1>Comment</h1>										
+										<h1>Comment</h1>									
 										
-										<div class="input-control">                                
-											<input type="email"  placeholder="* Your Email Address..." name="email" id= "id_Email" required>                      
-											<div class="error"></div>   
-										</div>    
 
-										
-										<div class="input-control">   
-											<input type="text" name="name" placeholder="* Your Name..." id= "id_name" required>                             											
-											<div class="error"></div>   
-										</div>   
+										<input type="hidden" name="BlogId" value={{ blog.bid }} />
 
-										<div class="input-control">     
+										<div class="input-control" style="margin-top: 20px;">     
 											<div class="bor19 m-b-20">
-												<textarea style= "background-color: #eee;" class="stext-111 cl2 plh3 size-120 p-lr-18 p-tb-15" name="Comment" placeholder="* Your Comment..."></textarea>
+												<textarea style= "background-color: #eee; height: 400px;" class="stext-111 cl2 plh3 size-120 p-lr-18 p-tb-15" name="Comment" placeholder="* Write your Comment..."></textarea>
 											</div>
 										</div>
 										

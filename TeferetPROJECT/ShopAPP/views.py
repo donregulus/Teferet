@@ -174,7 +174,7 @@ def AddProduct(request,pid):
     
     if request.user.is_authenticated:
         #Get The current user
-        LoggedUser = User.objects.get(username=request.user)    
+        LoggedUser = User.objects.get(username=request.user)
         #Get the current cart
         cart = None
         if Cart.objects.filter(isActive=True,user=LoggedUser).exists() :
