@@ -69,9 +69,9 @@
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</div>
 
-						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+						<div class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-favorite"  id="favNum" data-notify="{{WishCount}}">
 							<i class="zmdi zmdi-favorite-outline"></i>							
-						</a>  
+                        </div>  
 
                         <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 account-menu">
                             <li>                                                 
@@ -183,6 +183,40 @@
     </div>
 </div>
 
+<!-- favorite -->
+<div class="wrap-header-cart js-panel-favorite">
+    <div class="s-full js-hide-favorite"></div>
+
+    <div class="header-cart flex-col-l p-l-65 p-r-25">
+        <div class="header-cart-title flex-w flex-sb-m p-b-8">
+            <span class="mtext-103 cl2">
+                Wishlist
+            </span>
+
+            <div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-favorite">
+                <i class="zmdi zmdi-close"></i>
+            </div>
+        </div>
+        
+        <div class="header-cart-content flex-w js-pscroll">
+            <ul class="header-cart-wrapitem w-full" id="FavoritesDetails">                
+                
+            </ul>
+            
+            <div class="w-full">
+                <div class="header-cart-total w-full p-tb-40" id="totalPrice">
+                    
+                </div>
+
+                <div class="header-wish-buttons flex-w w-full">    
+                                                                        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Back to top -->
 <div class="btn-back-to-top" id="myBtn">
@@ -216,8 +250,6 @@ const accessories = document.querySelector('#id_Accessories');
 const cosmetics   = document.querySelector('#id_Cosmetics');
 const contact     = document.querySelector('#id_contact');
 const blog        = document.querySelector('#id_blog');
-
-
 
 const activeAbout = () => {
     localStorage.clear()
@@ -257,9 +289,6 @@ const activeBlog = () => {
 
 }
 blog.addEventListener('click', activeBlog);
-
-
-
 
 function onload()  {
 
@@ -332,7 +361,7 @@ addEventListener('load', onload);
         $('.js-panel-cart').addClass('show-header-cart');
 		
 		
-		let url = "{% url 'ShopAPP:ShowCartDetails' %}"
+		let url = "{% url 'ShopAPP:ShowCartDetails' %}";
 		// AJAX request
 		$.ajax({
 			url: url,
@@ -387,6 +416,60 @@ addEventListener('load', onload);
                                         }                              
 
                                     });
+                            });
+                        }   
+			}
+		});
+    });
+
+
+
+ /*==================================================================
+    [ favorite ]*/
+    $('.js-show-favorite').on('click',function(){
+        $('.js-panel-favorite').addClass('show-header-cart');
+		
+		
+		let url = "{% url 'ShopAPP:WishList' %}";
+		// AJAX request
+		$.ajax({
+			url: url,
+			type: 'get',
+            dataType: 'json', 		
+			success: function(data){				
+
+                $('#FavoritesDetails').empty();
+                // var items = $.parseJSON(data);
+                if(data.length ===0 || data=== null )
+                {
+                    var details = $('<h4>YOUR WISHLIST IS EMPTY</h4>')
+                    $('#FavoritesDetails').append(details);                        
+                }
+                else{     
+                    
+                    $('.header-wish-buttons').empty()
+                            
+                    var details = ""
+                        details += '<a href="/Shop/WishList/"'					
+                        details += ' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >'
+                        details += 'View WishList'
+                        details += '</a>'	
+
+                    $(".header-wish-buttons").append(details);  
+                    
+                            $.each(data, function(index, item) {       
+                                var details = $( '<li class="header-cart-item flex-w flex-t m-b-12">'+
+                                                '<div class="header-cart-item-img">'+
+                                                    '<img src='+'"'+item.productImage+'"'+ 'alt="IMG">'+
+                                                '</div>'+
+
+                                                '<div class="header-cart-item-txt p-t-8">'+
+                                                    '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">'+
+                                                        item.productName+
+                                                    '</a>'+                                                   
+                                                '</div>'+
+                                            '</li>')                                                
+                                $('#FavoritesDetails').append(details);                                   
                             });
                         }   
 			}

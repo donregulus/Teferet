@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required 
 from django.contrib.auth.models import User
 from django.core.serializers.json import DjangoJSONEncoder
 
 
 
 from UserAuthsAPP.models import UserProfile
-from ShopAPP.models import Product, Category, Cart, CartItem
+from ShopAPP.models import Product, Category, Cart, CartItem, WhishList
 # Create your views here.
 
 
@@ -442,7 +443,6 @@ def DeleteProduct(request,pid):
         Itemscount += cart_item.quantity
     return HttpResponse(Itemscount)
 
-
 def SearchProduct(request, category, searchWord):
     if request.method=="GET":
         product_list=[]
@@ -463,7 +463,47 @@ def SearchProduct(request, category, searchWord):
             products.append(finalItem)
         return HttpResponse( json.dumps(products))
         
-        
+# @login_required(login_url="UserAuthsAPP:Login")
+def WishList(request):
+    LoggedUser = User.objects.get(username=request.user)    
+    UserWishList   =  WhishList.objects.all().filter(user=LoggedUser)
+    wishListResponse = list()
     
-        
+    for whish in UserWishList:             
+            finalItem = {
+            "productName" : whish.product.name,
+            "productId" : str(whish.product.pid),
+            "productImage" : whish.product.image.url            
+            }
+            wishListResponse.append(finalItem)   
+    if __isAjax__(request):
+        return HttpResponse(json.dumps(wishListResponse))
+    else:
+        context = {        
+        "WhishList": wishListResponse,        
+        }
+        return render(request, 'ShopAPP/WhishListDetails.html',context)
+   
+
+def AddWishProduct(request,pid):
+    wishCount = 0
+    wishItems  =  list()
+
+    #get the product
+    product = Product.objects.get(pid=pid)
+
+    #get the current logged user
+    LoggedUser = User.objects.get(username=request.user)    
+    
+    #Check If item to add is already in WishList
+    wishItemExist   =  WhishList.objects.all().filter(user=LoggedUser,product=product).exists()
+    if not wishItemExist : 
+            wish = WhishList.objects.create(user=LoggedUser,product=product)
+            wish.save()               
+    wishItems = WhishList.objects.all().filter(user=LoggedUser)
+    return HttpResponse(len(wishItems))
+
+
+
+
     

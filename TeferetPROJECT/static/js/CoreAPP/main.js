@@ -200,6 +200,14 @@
     });
 
     /*==================================================================
+    [ Favorites ]*/
+   
+
+    $('.js-hide-favorite').on('click',function(){
+        $('.js-panel-favorite').removeClass('show-header-cart');
+    });
+
+    /*==================================================================
     [ Cart ]*/
     $('.js-show-sidebar').on('click',function(){
         $('.js-sidebar').addClass('show-sidebar');
