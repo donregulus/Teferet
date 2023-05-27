@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 
+
 app_name = "ShopAPP"
 
 urlpatterns = [    
@@ -10,6 +11,7 @@ urlpatterns = [
      ,path('ModalProductDetails/<pid>'                  ,views.ModalProductDetails    ,name='ModalProductDetails')
      ,path('AddProduct/<pid>'                           ,views.AddProduct             ,name='AddProduct')
      ,path('AddWishProduct/<pid>'                       ,views.AddWishProduct         ,name='AddWishProduct')
+     ,path('RemoveWishProduct/<pid>'                    ,views.RemoveWishProduct      ,name='RemoveWishProduct')
      ,path('RemoveProduct/<pid>'                        ,views.RemoveProduct          ,name='RemoveProduct')
      ,path('DeleteProduct/<pid>'                        ,views.DeleteProduct          ,name='DeleteProduct')
      ,path('AddProducts/<pid>/<pnum>'                   ,views.AddProducts            ,name='AddProducts')

@@ -463,7 +463,7 @@ def SearchProduct(request, category, searchWord):
             products.append(finalItem)
         return HttpResponse( json.dumps(products))
         
-# @login_required(login_url="UserAuthsAPP:Login")
+@login_required(login_url="UserAuthsAPP:Login")
 def WishList(request):
     LoggedUser = User.objects.get(username=request.user)    
     UserWishList   =  WhishList.objects.all().filter(user=LoggedUser)
@@ -483,8 +483,8 @@ def WishList(request):
         "WhishList": wishListResponse,        
         }
         return render(request, 'ShopAPP/WhishListDetails.html',context)
-   
 
+@login_required(login_url="UserAuthsAPP:Login")
 def AddWishProduct(request,pid):
     wishCount = 0
     wishItems  =  list()
@@ -503,7 +503,22 @@ def AddWishProduct(request,pid):
     wishItems = WhishList.objects.all().filter(user=LoggedUser)
     return HttpResponse(len(wishItems))
 
+@login_required(login_url="UserAuthsAPP:Login")
+def RemoveWishProduct(request,pid):
+    #get the product
+    product = Product.objects.get(pid=pid)
 
+    #get the current logged user
+    LoggedUser = User.objects.get(username=request.user)    
 
+    #Check If item to add is already in cart
+    wishItemExist = WhishList.objects.filter(user=LoggedUser,product=product).exists()
+    
+    #Delete wish
+    if wishItemExist : 
+            wish = WhishList.objects.get(user=LoggedUser,product=product)            
+            wish.delete()
+    wishItems = WhishList.objects.all().filter(user=LoggedUser)
+    return HttpResponse(len(wishItems))
 
     
