@@ -20,9 +20,9 @@ urlpatterns = [
      ,path('ClothesProducts/'                           ,views.ClothesProducts        ,name='ClothesProducts')
      ,path('AccessoriesProducts/'                       ,views.AccessoriesProducts    ,name='AccessoriesProducts')
      ,path('ShowCartDetails/'                           ,views.ShowCartDetails        ,name='ShowCartDetails')
-     ,path('ShoppingDetails/'                           ,views.ShoppingDetails        ,name='ShoppingDetails')
-     ,path('WhishList/'                                 ,views.WhishList              ,name='WhishList')
+     ,path('ShoppingDetails/'                           ,views.ShoppingDetails        ,name='ShoppingDetails')     
      ,path('RemoveAll/'                                 ,views.RemoveAll              ,name='RemoveAll')
+     ,path('RemoveAllWishes/'                           ,views.RemoveAllWishes        ,name='RemoveAllWishes')
      ,path('SearchProduct/<category>/<searchWord>'      ,views.SearchProduct          ,name='SearchProduct')
      ,path('WishList/'                                  ,views.WishList               ,name='WishList')
      

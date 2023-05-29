@@ -264,79 +264,165 @@
 
 			<ul class="product-list" id="productsList">
 
-				{% for product in products %}
-				<li class="product-item">
-				  <div class="product-card" tabindex="0">
-	
-					<figure class="card-banner">
-					  <img src="{{ product.image.url }}" width="312" height="350" loading="lazy"
-						class="image-contain">
-	
-					  <div class="card-badge" style="background-color:  rgb(2, 61, 2);font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">New</div>
-	
-					  <ul class="card-action-list">
-
-	
-						<li class="card-action-item">
-						<a href="#" class="js-addcart-home"data-id={{ product.pid }}>
-						  	<button class="card-action-btn" aria-labelledby="card-label-1">
-								<ion-icon name="cart-outline" style="display: block;"></ion-icon>
-							</button>
-							<div class="card-action-tooltip" id="card-label-1" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Cart</div>
-						</a>
-	
+				{% if user.is_authenticated %}				
+					{% for product in products %}
+						<li class="product-item">
+							<div class="product-card" tabindex="0">
+				
+								<figure class="card-banner">
+								<img src="{{ product.details.image.url }}" width="312" height="350" loading="lazy"
+									class="image-contain">
+				
+								<div class="card-badge" style="background-color:  rgb(2, 61, 2);font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">New</div>
+				
+								<ul class="card-action-list">
+		
+				
+									<li class="card-action-item">
+										<a href="#" class="js-addcart-home"data-id={{ product.details.pid }}>
+											<button class="card-action-btn" aria-labelledby="card-label-1">
+												<ion-icon name="cart-outline" style="display: block;"></ion-icon>
+											</button>
+											<div class="card-action-tooltip" id="card-label-1" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Cart</div>
+										</a>				
+									</li>
+									
+									{% if product.wish %}
+									<li class="card-action-item">
+											<a href="#" class="js-addwish-b2"  data-id={{ product.details.pid }} data-wish={{ product.wish }}>
+												<button class="card-action-btn" style="background-color: #0d6305; color:aliceblue;" aria-labelledby="card-label-2">
+													<ion-icon name="heart-outline"  style="display: block;"></ion-icon>
+												</button>
+												<div class="card-action-tooltip" id="card-label-2" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Remove to Wishlist</div>
+											</a>						  
+									  </li>
+								  {% else %}		
+									<li class="card-action-item">
+											<a href="#" class="js-addwish-b2"  data-id={{ product.details.pid }} data-wish={{ product.wish }} >
+												<button class="card-action-btn" aria-labelledby="card-label-2">
+													<ion-icon name="heart-outline"  style="display: block;"></ion-icon>
+												</button>
+												<div class="card-action-tooltip" id="card-label-2" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Wishlist</div>
+											</a>						  
+									</li>
+								  {% endif %}
+								
+								<li class="card-action-item">						
+									<a href="#" class="js-show-modal1" data-id={{ product.details.pid }}>
+									<button class="card-action-btn" aria-labelledby="card-label-3">
+										<ion-icon name="eye-outline"  style="display: block;"></ion-icon>
+									</button>
+									<div class="card-action-tooltip" id="card-label-3" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Quick View</div>
+									</a>
+				
+									</li>
+				
+									<li class="card-action-item">
+									<button class="card-action-btn" aria-labelledby="card-label-4">
+										<ion-icon name="repeat-outline"  style="display: block;"></ion-icon>
+									</button>
+				
+									<div class="card-action-tooltip" id="card-label-4" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Compare</div>
+									</li>
+				
+								</ul>
+								</figure>
+				
+								<div class="card-content">		
+								
+								<h6 class="h6 card-title ">
+									<a href="#" >{{product.details.Category}}</a>
+								</h6>
+								
+				
+								<h3 class="h3 card-title ">						
+									<a href="{% url 'ShopAPP:ProductDetails' pid=product.details.pid %}" class="js-name-b2">{{product.details.name}}</a>
+								</h3>
+				
+								<data class="card-price" value="{{product.details.price}}">${{product.details.price}}</data>
+				
+								</div>
+				
+							</div>
 						</li>
-	
-						<li class="card-action-item">
-						<a href="#" class="js-addwish-b2">
-							<button class="card-action-btn" aria-labelledby="card-label-2">
-								<ion-icon name="heart-outline"  style="display: block;"></ion-icon>
-							</button>
-							<div class="card-action-tooltip" id="card-label-2" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Whishlist</div>
-						</a>
+
+					{% endfor %}
+				{% else %}
+					{% for product in products %}
+					<li class="product-item">
+					<div class="product-card" tabindex="0">
+		
+						<figure class="card-banner">
+						<img src="{{ product.image.url }}" width="312" height="350" loading="lazy"
+							class="image-contain">
+		
+						<div class="card-badge" style="background-color:  rgb(2, 61, 2);font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">New</div>
+		
+						<ul class="card-action-list">
+
+		
+							<li class="card-action-item">
+							<a href="#" class="js-addcart-home"data-id={{ product.pid }}>
+								<button class="card-action-btn" aria-labelledby="card-label-1">
+									<ion-icon name="cart-outline" style="display: block;"></ion-icon>
+								</button>
+								<div class="card-action-tooltip" id="card-label-1" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Cart</div>
+							</a>
+		
+							</li>
+		
+							<li class="card-action-item">
+							<a href="#" class="js-addwish-b2">
+								<button class="card-action-btn" aria-labelledby="card-label-2">
+									<ion-icon name="heart-outline"  style="display: block;"></ion-icon>
+								</button>
+								<div class="card-action-tooltip" id="card-label-2" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Whishlist</div>
+							</a>
+							
+						</li>
 						
-					</li>
-					
-					<li class="card-action-item">						
-						<a href="#" class="js-show-modal1"data-id={{ product.pid }}>
-						  <button class="card-action-btn" aria-labelledby="card-label-3">
-							<ion-icon name="eye-outline"  style="display: block;"></ion-icon>
-						  </button>
-						  <div class="card-action-tooltip" id="card-label-3" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Quick View</div>
-						</a>
-	
-						</li>
-	
-						<li class="card-action-item">
-						  <button class="card-action-btn" aria-labelledby="card-label-4">
-							<ion-icon name="repeat-outline"  style="display: block;"></ion-icon>
-						  </button>
-	
-						  <div class="card-action-tooltip" id="card-label-4" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Compare</div>
-						</li>
-	
-					  </ul>
-					</figure>
-	
-					<div class="card-content">		
-					
-					<h6 class="h6 card-title ">
-						<a href="#">{{product.Category}}</a>
-					</h6>
-	
-					<h3 class="h3 card-title ">
-						<a href="{% url 'ShopAPP:ProductDetails' pid=product.pid %}" class="js-name-b2">{{product.name}}</a>
-					 </h3>
-	
-					<data class="card-price" value="{{product.price}}">${{product.price}}</data>
-	
+						<li class="card-action-item">						
+							<a href="#" class="js-show-modal1" data-id={{ product.pid }}>
+							<button class="card-action-btn" aria-labelledby="card-label-3">
+								<ion-icon name="eye-outline"  style="display: block;"></ion-icon>
+							</button>
+							<div class="card-action-tooltip" id="card-label-3" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Quick View</div>
+							</a>
+		
+							</li>
+		
+							<li class="card-action-item">
+							<button class="card-action-btn" aria-labelledby="card-label-4">
+								<ion-icon name="repeat-outline"  style="display: block;"></ion-icon>
+							</button>
+		
+							<div class="card-action-tooltip" id="card-label-4" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Compare</div>
+							</li>
+		
+						</ul>
+						</figure>
+		
+						<div class="card-content">		
+						
+							<h6 class="h6 card-title ">
+								<a href="#" >{{product.Category}}</a>
+							</h6>
+		
+							<h3 class="h3 card-title ">						
+								<a href="{% url 'ShopAPP:ProductDetails' pid=product.pid %}" class="js-name-b2">{{product.name}}</a>
+							</h3>
+		
+							<data class="card-price" value="{{product.price}}">${{product.price}}</data>
+		
+						</div>
+		
 					</div>
-	
-				  </div>
-				</li>
-				{% endfor %}
+					</li>
+					{% endfor %}
+				{% endif %}
+			
 
-				</ul>
+			</ul>
 
 
 
@@ -381,6 +467,62 @@
 
 <script>
 	
+	
+$('.js-addwish-b2').on('click', function(e){
+	e.preventDefault();
+});
+
+$('.js-addwish-b2').each(function(){
+		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-b2').html();		
+		if ($("#favNum").attr("data-notify").trim()==="" || $("#favNum").attr("data-notify") === null)
+		{
+			$("#favNum").attr("data-notify",0);		
+		}		
+
+			var button = $(this).find('.card-action-btn')
+			var tooltip = $(this).find('.card-action-tooltip')
+			var productId = $(this).data('id');
+			var test = $(this)
+			$(this).on('click', function(){
+
+			console.log($(this).data('wish'))
+			
+			
+			if($(this).data('wish') === "True")
+			{
+				let url = "{% url 'ShopAPP:RemoveWishProduct' 'pid' %}".replace('pid', productId);
+				$.ajax({
+					url: url,
+					type: 'get',		
+					success: function(response){   					
+							$("#favNum").attr("data-notify",response);	
+							test.data("wish","False")
+							button.css("background-color","#fff")
+							button.css("color","#696969")
+							tooltip.text("Add to Wishlist")
+					}
+				});
+			}
+			else
+			{
+				swal(nameProduct, "is added to your wishlist !", "success");
+				let url = "{% url 'ShopAPP:AddWishProduct' 'pid' %}".replace('pid', productId);
+				// AJAX request
+				$.ajax({
+					url: url,
+					type: 'get',		
+					success: function(response){   					
+							$("#favNum").attr("data-notify",response);
+							test.data("wish","True")			
+							button.css("background-color","#0d6305")
+							button.css("color","aliceblue")
+							tooltip.text("Remove to Wishlist")
+					}
+				});
+			}
+
+		});
+	});
 
 	$('.js-addcart-home').on('click', function(e){
 		e.preventDefault();

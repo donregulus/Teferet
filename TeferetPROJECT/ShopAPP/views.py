@@ -104,36 +104,158 @@ def ProductDetails(request,pid):
             return render(request, 'ShopAPP/ProductDetails.html',context)
     
 def Products(request):  
-    products = Product.objects.all()
-    context = {                   
-                    "products": products,
-                }       
-    return render(request, 'ShopAPP/Products.html',context)    
+
+    if request.user.is_authenticated:
+
+        productsWithWish = list()
+        #get the current logged user
+        LoggedUser = User.objects.get(username=request.user)    
+
+        #get  all products
+        products = Product.objects.all()
+
+        for product in products:
+            #Check If item is  in WishList
+            wishItemExist   =  WhishList.objects.all().filter(user=LoggedUser,product=product).exists()
+            if wishItemExist :
+                item ={
+                    "wish": True,
+                    "details": product,
+                }
+                productsWithWish.append(item)
+            else:
+                item ={
+                    "wish": False,
+                    "details": product,
+                }
+                productsWithWish.append(item)
+
+        context = {                    
+                        "products": productsWithWish,
+                    }   
+        return render(request, 'ShopAPP/Products.html',context)
+        
+    else:
+        products = Product.objects.all()  
+        context = {                  
+                        "products": products,
+                    }   
+        return render(request, 'ShopAPP/Products.html',context)    
+
+
 
 def CosmeticsProducts(request):
     Cosmetics = Category.objects.get(name="Cosmetics")
-    products = Product.objects.filter(Category=Cosmetics.cid)
-    context = {                    
-                    "products": products,
-                }   
-    return render(request, 'ShopAPP/CosmeticsProducts.html',context)
+    if request.user.is_authenticated:
+        products = Product.objects.filter(Category=Cosmetics.cid)
+        productsWithWish = list()
+        LoggedUser = User.objects.get(username=request.user)    
 
-def ClothesProducts(request):
-    Cosmetics = Category.objects.get(name="Clothes")
-    products = Product.objects.filter(Category=Cosmetics.cid)    
-    context = {                    
-                    "products": products,
-                }   
-    return render(request, 'ShopAPP/ClothesProducts.html',context)
+        for product in products:
+                #Check If item is  in WishList
+                wishItemExist   =  WhishList.objects.all().filter(user=LoggedUser,product=product).exists()
+                if wishItemExist :
+                    item ={
+                        "wish": True,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+                else:
+                    item ={
+                        "wish": False,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+
+        context = {                    
+                            "products": productsWithWish,
+                        }   
+        return render(request, 'ShopAPP/CosmeticsProducts.html',context)
+        
+    else:        
+        products = Product.objects.filter(Category=Cosmetics.cid)
+        context = {                  
+                        "products": products,
+                    }   
+        return render(request, 'ShopAPP/CosmeticsProducts.html',context)
+
+
+def ClothesProducts(request):    
+    Clothes = Category.objects.get(name="Clothes")
+    if request.user.is_authenticated:
+
+        productsWithWish = list()
+        products = Product.objects.filter(Category=Clothes.cid)
+        #get the current logged user
+        LoggedUser = User.objects.get(username=request.user)    
+
+        for product in products:
+                #Check If item is  in WishList
+                wishItemExist   =  WhishList.objects.all().filter(user=LoggedUser,product=product).exists()
+                if wishItemExist :
+                    item ={
+                        "wish": True,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+                else:
+                    item ={
+                        "wish": False,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+
+        context = {                    
+                            "products": productsWithWish,
+                        }   
+        return render(request, 'ShopAPP/ClothesProducts.html',context)
+        
+    else:        
+        products = Product.objects.filter(Category=Cosmetics.cid)
+        context = {                  
+                        "products": products,
+                    }   
+        return render(request, 'ShopAPP/ClothesProducts.html',context)
+
+    
 
 def AccessoriesProducts(request):
-    Cosmetics = Category.objects.get(name="Accessories")
-    products = Product.objects.filter(Category=Cosmetics.cid)
-   
-    context = {                    
-                    "products": products,
-                }   
-    return render(request, 'ShopAPP/AccessoriesProducts.html',context)
+    Accessories = Category.objects.get(name="Accessories")
+    if request.user.is_authenticated:
+
+        productsWithWish = list()
+        products = Product.objects.filter(Category=Accessories.cid)
+        #get the current logged user
+        LoggedUser = User.objects.get(username=request.user)    
+
+        for product in products:
+                #Check If item is  in WishList
+                wishItemExist   =  WhishList.objects.all().filter(user=LoggedUser,product=product).exists()
+                if wishItemExist :
+                    item ={
+                        "wish": True,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+                else:
+                    item ={
+                        "wish": False,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+
+        context = {                    
+                            "products": productsWithWish,
+                        }   
+        return render(request, 'ShopAPP/AccessoriesProducts.html',context)
+        
+    else:        
+        products = Product.objects.filter(Category=Cosmetics.cid)
+        context = {                  
+                        "products": products,
+                    }   
+        return render(request, 'ShopAPP/AccessoriesProducts.html',context)
+    
 
 def ShowCartDetails(request):
 
@@ -521,4 +643,16 @@ def RemoveWishProduct(request,pid):
     wishItems = WhishList.objects.all().filter(user=LoggedUser)
     return HttpResponse(len(wishItems))
 
-    
+@login_required(login_url="UserAuthsAPP:Login")
+def RemoveAllWishes(request):
+    if request.user.is_authenticated:
+        #Get The current user
+        LoggedUser = User.objects.get(username=request.user)
+
+        #Get all wishes for the current user
+        wishItems = WhishList.objects.all().filter(user=LoggedUser)
+
+        for wish in wishItems:
+            wish.delete()
+
+        return redirect("ShopAPP:WishList")

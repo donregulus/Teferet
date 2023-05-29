@@ -445,7 +445,7 @@
 	  
 						  {% if product.wish %}
 							<li class="card-action-item">
-									<a href="#" class="js-addwish-b2"  data-id={{ product.details.pid }}>
+									<a href="#" class="js-addwish-b2"  data-id={{ product.details.pid }} data-wish={{ product.wish }}>
 										<button class="card-action-btn" style="background-color: #0d6305; color:aliceblue;" aria-labelledby="card-label-2">
 											<ion-icon name="heart-outline"  style="display: block;"></ion-icon>
 										</button>
@@ -454,7 +454,7 @@
 					 	 	</li>
 						  {% else %}		
 							<li class="card-action-item">
-									<a href="#" class="js-addwish-b2"  data-id={{ product.details.pid }}>
+									<a href="#" class="js-addwish-b2"  data-id={{ product.details.pid }} data-wish={{ product.wish }} >
 										<button class="card-action-btn" aria-labelledby="card-label-2">
 											<ion-icon name="heart-outline"  style="display: block;"></ion-icon>
 										</button>
@@ -649,22 +649,46 @@
 
 			var button = $(this).find('.card-action-btn')
 			var tooltip = $(this).find('.card-action-tooltip')
-		$(this).on('click', function(){
-			swal(nameProduct, "is added to your wishlist !", "success");
 			var productId = $(this).data('id');
-			let url = "{% url 'ShopAPP:AddWishProduct' 'pid' %}".replace('pid', productId);
+			var test = $(this)
+			$(this).on('click', function(){
 
-			// AJAX request
-			$.ajax({
-				url: url,
-				type: 'get',		
-				success: function(response){   					
-						$("#favNum").attr("data-notify",response);					
-						button.css("background-color","#0d6305")
-						button.css("color","aliceblue")
-						tooltip.text("Remove to Wishlist")
-				}
-			});
+			console.log($(this).data('wish'))
+			
+			
+			if($(this).data('wish') === "True")
+			{
+				let url = "{% url 'ShopAPP:RemoveWishProduct' 'pid' %}".replace('pid', productId);
+				$.ajax({
+					url: url,
+					type: 'get',		
+					success: function(response){   					
+							$("#favNum").attr("data-notify",response);	
+							test.data("wish","False")
+							button.css("background-color","#fff")
+							button.css("color","#696969")
+							tooltip.text("Add to Wishlist")
+					}
+				});
+			}
+			else
+			{
+				swal(nameProduct, "is added to your wishlist !", "success");
+				let url = "{% url 'ShopAPP:AddWishProduct' 'pid' %}".replace('pid', productId);
+				// AJAX request
+				$.ajax({
+					url: url,
+					type: 'get',		
+					success: function(response){   					
+							$("#favNum").attr("data-notify",response);
+							test.data("wish","True")			
+							button.css("background-color","#0d6305")
+							button.css("color","aliceblue")
+							tooltip.text("Remove to Wishlist")
+					}
+				});
+			}
+
 		});
 	});
 
