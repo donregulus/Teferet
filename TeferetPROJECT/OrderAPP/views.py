@@ -83,7 +83,7 @@ def CreditCardPayment(request):
     
 
 @login_required(login_url="UserAuthsAPP:Login")
-def RegisterOrderPayment(request,paymentMode):  
+def RegisterOrderPayment(request,paymentMode,totalAmout):  
     if request.user.is_authenticated:
         #Get The current user
         LoggedUser = User.objects.get(username=request.user)    
@@ -104,10 +104,10 @@ def RegisterOrderPayment(request,paymentMode):
                 id = body['id']
                 status = body['status']
 
-                order = Order.objects.create(user=LoggedUser,cart=cart,PaymentMode="PayPal",userIpAddress=ip,PaymentStatus=status,providerOrderId=id)
+                order = Order.objects.create(user=LoggedUser,cart=cart,PaymentMode="PayPal",userIpAddress=ip,PaymentStatus=status,providerOrderId=id,totalAmout=totalAmout)
                 order.save()            
             elif(paymentMode == "CreditCard"):            
-                order = Order.objects.create(user=LoggedUser,cart=cart,PaymentMode="CreditCard")
+                order = Order.objects.create(user=LoggedUser,cart=cart,PaymentMode="CreditCard",totalAmout=totalAmout)
                 order.save()
             
     return render(request, 'OrderAPP/Success.html')
@@ -121,3 +121,18 @@ def CancelPayment(request):
 @login_required(login_url="UserAuthsAPP:Login")
 def SuccessPayment(request):  
     return render(request, 'OrderAPP/Success.html')
+
+@login_required(login_url="UserAuthsAPP:Login")
+def ViewOrders(request):
+
+    #Get The current user
+    LoggedUser = User.objects.get(username=request.user)   
+
+    #Get current user orders
+    orders = Order.objects.filter(user=LoggedUser)
+
+    context = {                    
+                        "OrderList": orders,
+                    }   
+
+    return render(request, 'OrderAPP/ViewOrders.html',context)

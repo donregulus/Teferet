@@ -6,10 +6,11 @@ app_name = "OrderAPP"
 
 urlpatterns = [         
      
-     path('CreditCardPayment/'                 ,views.CreditCardPayment    ,name='CreditCardPayment')
-    ,path('RegisterOrderPayment/<paymentMode>' ,views.RegisterOrderPayment ,name='RegisterOrderPayment')
-    ,path('CancelPayment/'                     ,views.CancelPayment        ,name='CancelPayment')
-    ,path('SuccessPayment/'                    ,views.SuccessPayment       ,name='SuccessPayment')
+     path('CreditCardPayment/'                              ,views.CreditCardPayment    ,name='CreditCardPayment')
+    ,path('RegisterOrderPayment/<paymentMode>/<totalAmout>' ,views.RegisterOrderPayment ,name='RegisterOrderPayment')
+    ,path('CancelPayment/'                                  ,views.CancelPayment        ,name='CancelPayment')
+    ,path('SuccessPayment/'                                 ,views.SuccessPayment       ,name='SuccessPayment')
+    ,path('ViewOrders/'                                     ,views.ViewOrders           ,name='ViewOrders')
     
      
      

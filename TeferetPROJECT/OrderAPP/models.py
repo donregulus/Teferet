@@ -20,5 +20,7 @@ class Order(models.Model):
     PaymentStatus   = models.CharField(max_length=150)    
     DeliveredStatus = models.IntegerField(choices=ORDERSTATUS,default=1,null=False)     
     userIpAddress   = models.CharField(max_length=150)
-    providerOrderId = models.CharField(max_length=150)      
+    providerOrderId = models.CharField(max_length=150)   
+    totalAmout      = models.DecimalField(max_digits=99999,decimal_places=2, default=0.0)
+
     

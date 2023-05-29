@@ -1,0 +1,181 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block extend_head %}
+	
+<title>Teferet | Order List</title>
+
+{% endblock %}
+
+
+{% block content %}
+<div style="margin-top: 150px;">
+	<!-- Title page -->
+	<section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover" style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
+		<h2 class="ltext-105 cl0 txt-center">
+			ORDER LIST
+		</h2>
+	</section>	
+
+	{% if OrderList|length == 0 %}
+		<form class="bg0 p-t-75 p-b-85">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+						<div class="m-l-25 m-r--38 m-lr-0-xl">
+							
+							<h1 style="text-align: center;">ORDER LIST IS  EMPTY</h1>						
+							<a style="text-align: center; width: 20%; margin-left: 40%; margin-top: 10px;" href="{% url 'ShopAPP:Products' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+								SHOP							
+							</a>								
+						</div>
+					</div>
+
+				
+				</div>
+			</div>
+		</form>
+	{% else %}
+		<!-- Shoping Cart -->
+		<form class="bg0 p-t-75 p-b-85">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+						<div class="m-l-25 m-r--38 m-lr-0-xl">
+							<div class="wrap-table-shopping-cart">
+								<table class="table-shopping-cart" id="wishListDetails">
+									<tr class="table_head">
+										<th class="column-1" style="width: 15%;">Date</th>										
+										<th class="column-2" style="width: 15%;padding-left: 10px;">Payment Mode</th>			
+										<th class="column-3" style="width: 15%;">Payment Status</th>			
+										<th class="column-4" style="width: 15%;padding-left: 30px;">Delivered Status</th>			
+										<th class="column-5" style="width: 20%; padding-left: 30px;">Total Amount</th>		
+									</tr>														
+										{% for order in OrderList %}
+											<tr class="table_row">
+												<td class="column-1">{{ order.createdDate | date:"d" }}/{{ order.createdDate | date:"M" }} {{ order.createdDate | date:"Y"  }}</td>
+												
+												{% if order.PaymentMode == "PayPal" %}
+													<td class="column-2"><img src="{% static './images/icons/paypal.png' %}" style="height: 65px;"></td>											
+												{% elif order.PaymentMode == "CreditCart" %}
+													<td class="column-2"><img src="{% static './images/icons/creditcart.png' %}" style="height: 65px;"></td>																								
+												{% endif %}
+
+												<td class="column-3">{{order.PaymentStatus}}</td>
+												<td class="column-4">{{order.DeliveredStatus}}</td>
+												<td class="column-5" style="width: 20%; padding-left: 30px;" >{{order.totalAmout}} $</td>
+												<td class="column-6">													
+														<a id="viewCartLink" href="{% url 'ShopAPP:ProductDetails' pid=order.id %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+															View Order								
+														</a>													
+												</td>																				
+											</tr>
+										{% endfor %}								
+
+								</table>
+							</div>
+
+						</div>
+					</div>
+
+				
+				</div>
+			</div>
+		</form>		
+	{% endif %}
+</div>	
+{% endblock %}
+
+
+{% block extend_footer %}
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+
+<script>
+
+
+$( document ).ready(function() {
+	let url = "{% url 'ShopAPP:ShoppingDetails' %}"
+    $.ajax({
+								url: url,
+								type: 'get',
+								dataType: 'json', 		
+								success: function(data)
+								{  	
+											DATA = data	
+								}
+			})
+	});
+
+	$('#wishListDetails').on('click','.DeleteWishProduct', function(e){
+
+
+			e.stopPropagation();		
+            e.stopImmediatePropagation();      	
+			
+			var productId = $(this).data('id');
+			let url = "{% url 'ShopAPP:RemoveWishProduct' 'pid' %}".replace('pid', productId);
+
+			// // AJAX request
+			$.ajax({
+				url: url,
+				type: 'get',		
+				success: function(response){   					
+						$("#favNum").attr("data-notify",response);							
+
+						let url = "{% url 'ShopAPP:WishList' %}";
+						$.ajax({
+								url: url,
+								type: 'get',
+								dataType: 'json', 		
+								success: function(data){  	
+											DATA = data
+											$("#wishListDetails").empty()
+
+											var tablesTitles = $(
+															'<tr class="table_head">'+
+																'<th class="column-1">Product</th>'+
+															'</tr>'
+											)
+											$("#wishListDetails").append(tablesTitles)																		
+											
+											if(data.length === 0)
+											{
+												window.location.href="/Shop/WishList/";
+											}
+											else
+											{											
+												$.each(data, function(index, item) {  
+												var url = "{% url 'ShopAPP:ProductDetails' 'pip' %}".replace('pid', pid=item.productId);
+                                            	var details = $( 
+												'<tr class="table_row">'+
+													'<td class="column-1">'+
+														'<div class="how-itemcart1">'+
+															'<img src="'+item.productImage+'" alt="IMG">'+
+														'</div>'+
+													'</td>'+
+													'<td class="column-2">'+item.productName+'</td>'+
+													'<td class="column-3">'+
+														'<a id="viewCartLink"  class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10" href='+url+'>'+
+														'View Product</a>'+													
+													'</td>'+		
+													'<td class="column-4">'+
+													'<input class="DeleteWishProduct flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10" type="button" value="Remove" data-id='+ item.productId+ '>'+
+													'</td>'+													
+												'</tr>');                                                												
+                                            	$('#wishListDetails').append(details); 
+											});											
+											}
+										}                       
+                                    });
+				}
+			});
+	});
+	
+
+</script>
+
+
+{% endblock %}
