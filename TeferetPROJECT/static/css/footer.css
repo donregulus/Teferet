@@ -8,7 +8,7 @@
  */
 
 
---portland-orange: hsl(133, 79%, 19%);
+--portland-orange:rgb(1, 46, 1);
 --battleship-gray: hsl(0, 0%, 53%);
 --spanish-gray: hsl(0, 0%, 60%);
 --black: hsl(0, 0%, 0%);
@@ -128,7 +128,7 @@ color: var(--white);
 font-size: 17px;
 font-weight: var(--fw-700);
 padding-block: 5px;
-border-bottom: 8px solid rgb(2, 61, 2);
+border-bottom: 8px solid rgb(1, 46, 1);
 }
 
 .footer-link {

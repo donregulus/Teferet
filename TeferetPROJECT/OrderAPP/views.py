@@ -98,7 +98,7 @@ def RegisterOrderPayment(request,paymentMode,totalAmout):
             cart.isActive=False   
             cart.save()         
             #Save Order
-            if(paymentMode == "PayPal"):            
+            if(paymentMode == "PayPal"):
                 body_unicode = request.body.decode('utf-8')
                 body = json.loads(body_unicode)                
                 id = body['id']
@@ -124,15 +124,28 @@ def SuccessPayment(request):
 
 @login_required(login_url="UserAuthsAPP:Login")
 def ViewOrders(request):
-
     #Get The current user
     LoggedUser = User.objects.get(username=request.user)   
 
     #Get current user orders
     orders = Order.objects.filter(user=LoggedUser)
-
     context = {                    
                         "OrderList": orders,
-                    }   
-
+                    }
     return render(request, 'OrderAPP/ViewOrders.html',context)
+
+@login_required(login_url="UserAuthsAPP:Login")
+def ViewOrderDetails(request,pid):    
+    #Get order
+    order = Order.objects.get(id=pid)
+
+    #Get the cartItems related to the order
+    cartItems = CartItem.objects.filter(cart=order.cart)
+
+    context = {                    
+                        "Products": cartItems,
+                        "Total": order.totalAmout,
+                    }
+
+
+    return render(request, 'OrderAPP/ViewOrderDetails.html',context)

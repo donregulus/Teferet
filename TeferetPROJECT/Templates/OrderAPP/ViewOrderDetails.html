@@ -17,7 +17,7 @@
 		</h2>
 	</section>	
 
-	{% if OrderList|length == 0 %}
+	{% if Products|length == 0 %}
 		<form class="bg0 p-t-75 p-b-85">
 			<div class="container">
 				<div class="row">
@@ -45,34 +45,36 @@
 							<div class="wrap-table-shopping-cart">
 								<table class="table-shopping-cart" id="wishListDetails">
 									<tr class="table_head">
-										<th class="column-1" style="width: 15%;">Date</th>										
-										<th class="column-2" style="width: 15%;padding-left: 10px;">Payment Mode</th>			
-										<th class="column-3" style="width: 15%;">Payment Status</th>			
-										<th class="column-4" style="width: 15%;padding-left: 30px;">Delivered Status</th>			
-										<th class="column-5" style="width: 20%; padding-left: 30px;">Total Amount</th>		
+										<th class="column-1" style="width: 15%;">Product</th>										
+										<th class="column-2" style="width: 15%;"></th>		
+										<th class="column-3" style="width: 15%;padding-left: 10px;">Price</th>			
+										<th class="column-4" style="width: 15%;">Quantity</th>			
+										<th class="column-5" style="width: 15%;padding-left: 30px;">Sub Total</th>			
+										
 									</tr>														
-										{% for order in OrderList %}
+										{% for item in Products %}
 											<tr class="table_row">
-												<td class="column-1">{{ order.createdDate | date:"d" }}/{{ order.createdDate | date:"M" }} {{ order.createdDate | date:"Y"  }}</td>
+												<td class="column-1">
+													<a href="{% url 'ShopAPP:ProductDetails' pid=item.product.pid %}">
+														<div class="how-itemcart1">
+															<img src="{{item.product.image.url}}" alt="IMG">
+														</div>
+													</a>
+												</td>
 												
-												{% if order.PaymentMode == "PayPal" %}
-													<td class="column-2"><img src="{% static './images/icons/paypal.png' %}" style="height: 65px;"></td>											
-												{% elif order.PaymentMode == "CreditCart" %}
-													<td class="column-2"><img src="{% static './images/icons/creditcart.png' %}" style="height: 65px;"></td>																								
-												{% endif %}
-
-												<td class="column-3">{{order.PaymentStatus}}</td>
-												<td class="column-4">{{order.DeliveredStatus}}</td>
-												<td class="column-5" style="width: 20%; padding-left: 30px;" >{{order.totalAmout}} $</td>
-												<td class="column-6">													
-														<a id="viewCartLink" href="{% url 'OrderAPP:ViewOrderDetails' pid=order.id %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
-															View Order								
-														</a>													
-												</td>																				
+												<td class="column-2"><a href="{% url 'ShopAPP:ProductDetails' pid=item.product.pid %}">{{item.product.name}}</a></td>																							
+												<td class="column-3">{{item.product.price}}</td>												
+												<td class="column-4">{{item.quantity}}</td>
+												<td class="column-5">{{item.sub_total}} $</td>
+												
+												
 											</tr>
 										{% endfor %}								
 
 								</table>
+							</div>
+							<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm" style="margin-left: 77%; background-color: rgb(1, 46, 1);color: rgb(245, 237, 237);">								
+									 {{Total}} $
 							</div>
 
 						</div>
