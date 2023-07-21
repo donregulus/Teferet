@@ -18,12 +18,26 @@ import uuid
 from django.http import HttpResponse,JsonResponse
 
 
-def __cart_id__(request):
-    cart = request.session.session_key
-    if not cart:
-        cart = request.session.create()        
-    # return uuid.UUID(str(cart)).hex
-    return uuid.uuid1()
+def __cart_id__(request):    
+
+    if not request.user.is_authenticated:
+        cartSession = request.session.session_key
+        if not cartSession:
+                cartSession = request.session.create()              
+        return cartSession
+    else:
+        cartSession = request.session.session_key
+         #Get The current user
+        LoggedUser = User.objects.get(username=request.user)
+        if Cart.objects.filter(isActive=True,sessionid=cartSession,user=LoggedUser).exists():
+            cartSession = request.session.create()    
+        if request.session.get("logout") == True :
+            cartSession = request.session.create()    
+            request.session["logout"]= False     
+        else:  
+            if not cartSession:
+                cartSession = request.session.create()            
+        return cartSession
 
 def __isAjax__(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -49,8 +63,8 @@ def ModalProductDetails(request,pid):
     else:
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))            
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request)).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request))            
             #Check If item to add is already in cart
             cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
             if cartItemExist:
@@ -80,8 +94,8 @@ def ProductDetails(request,pid):
     else:
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))            
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)            
             #Check If item to add is already in cart
             cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
             if cartItemExist:
@@ -211,7 +225,7 @@ def ClothesProducts(request):
         return render(request, 'ShopAPP/ClothesProducts.html',context)
         
     else:        
-        products = Product.objects.filter(Category=Cosmetics.cid)
+        products = Product.objects.filter(Category=Clothes.cid)
         context = {                  
                         "products": products,
                     }   
@@ -250,7 +264,7 @@ def AccessoriesProducts(request):
         return render(request, 'ShopAPP/AccessoriesProducts.html',context)
         
     else:        
-        products = Product.objects.filter(Category=Cosmetics.cid)
+        products = Product.objects.filter(Category=Accessories.cid)
         context = {                  
                         "products": products,
                     }   
@@ -273,8 +287,8 @@ def ShowCartDetails(request):
     else:
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
             cart_items = CartItem.objects.all().filter(cart=cart)
         
 
@@ -303,7 +317,7 @@ def AddProduct(request,pid):
         if Cart.objects.filter(isActive=True,user=LoggedUser).exists() :
             cart = Cart.objects.get(isActive=True,user=LoggedUser)
         else:         
-            cart = Cart.objects.create(user=LoggedUser)
+            cart = Cart.objects.create(user=LoggedUser,sessionid=__cart_id__(request))
             cart.save()
          
         #Check If item to add is already in cart
@@ -321,10 +335,10 @@ def AddProduct(request,pid):
     else:        
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
         else:         
-            cart = Cart.objects.create(cartid=__cart_id__(request))
+            cart = Cart.objects.create(sessionid=__cart_id__(request))
             cart.save()            
         #Check If item to add is already in cart
         cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
@@ -362,8 +376,8 @@ def ShoppingDetails(request):
     else:
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
             cart_items = CartItem.objects.all().filter(cart=cart)
         
 
@@ -417,8 +431,8 @@ def RemoveAll(request):
     else:
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
             cart.delete()
             return redirect("ShopAPP:ShoppingDetails")
 
@@ -455,10 +469,10 @@ def AddProducts(request,pid,pnum):
     else:        
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request)).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request))
         else:         
-            cart = Cart.objects.create(cartid=__cart_id__(request))
+            cart = Cart.objects.create(sessionid=__cart_id__(request))
             cart.save()            
         #Check If item to add is already in cart
         cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
@@ -505,10 +519,10 @@ def RemoveProduct(request,pid):
     else:        
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
         else:         
-            cart = Cart.objects.create(cartid=__cart_id__(request))
+            cart = Cart.objects.create(sessionid=__cart_id__(request))
             cart.save()            
         #Check If item to add is already in cart
         cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
@@ -546,20 +560,25 @@ def DeleteProduct(request,pid):
             item = CartItem.objects.get(cart=cart,product=product)
             item.delete()            
             cart_items = CartItem.objects.all().filter(cart=cart)   
+            if len(cart_items) == 0:
+                cart.delete()
+
     else:        
         #Get the current cart
         cart = None
-        if Cart.objects.filter(isActive=True,cartid=__cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid=__cart_id__(request))
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
         else:         
-            cart = Cart.objects.create(cartid=__cart_id__(request))
+            cart = Cart.objects.create(sessionid=__cart_id__(request))
             cart.save()            
         #Check If item to add is already in cart
         cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
         if cartItemExist : 
             item = CartItem.objects.get(cart=cart,product=product)            
             item.delete()
-            cart_items = CartItem.objects.all().filter(cart=cart)       
+            cart_items = CartItem.objects.all().filter(cart=cart)  
+            if len(cart_items) == 0:
+                cart.delete()     
     
     for cart_item in cart_items:
         Itemscount += cart_item.quantity

@@ -676,16 +676,21 @@ const paypalButtonsComponent = paypal.Buttons({
 		
         // handle unrecoverable errors
         onError: (err) => {            
-			var redirect_url = "{% url 'OrderAPP:CancelPayment' %}"
-			console.log(err)
-			window.location.href = redirect_url 
+			if(DATA.length != 0)
+			{					
+				var redirect_url = "{% url 'OrderAPP:CancelPayment' %}"
+				console.log(err)
+				window.location.href = redirect_url 
+			} 
         },
 
 		// handle cancel actions
-        onCancel: (err) => {            
-			var redirect_url = "{% url 'OrderAPP:CancelPayment' %}"
-			console.log(err)
-			window.location.href = redirect_url 
+        onCancel: (err) => {       
+							
+				var redirect_url = "{% url 'OrderAPP:CancelPayment' %}"
+				console.log(err)
+				window.location.href = redirect_url 
+			
         }
     });
 

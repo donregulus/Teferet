@@ -367,7 +367,7 @@
 							<div class="product-card" tabindex="0">
 				
 								<figure class="card-banner">
-								<img src="{{ product.details.image.url }}" width="312" height="350" loading="lazy"
+								<img src="{{ product.image.url }}" width="312" height="350" loading="lazy"
 									class="image-contain">
 				
 								<div class="card-badge" style="background-color:  rgb(2, 61, 2);font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">New</div>
@@ -376,7 +376,7 @@
 
 				
 									<li class="card-action-item">
-									<a href="#" class="js-addcart-home" data-id={{ product.details.pid }}>
+									<a href="#" class="js-addcart-home" data-id={{ product.pid }}>
 										<button class="card-action-btn" aria-labelledby="card-label-1">
 											<ion-icon name="cart-outline" style="display: block;"></ion-icon>
 										</button>
@@ -385,7 +385,7 @@
 				
 									</li>
 				
-									<li class="card-action-item">
+									<!-- <li class="card-action-item">
 									<a href="#" class="js-addwish-b2">
 										<button class="card-action-btn" aria-labelledby="card-label-2">
 											<ion-icon name="heart-outline"  style="display: block;"></ion-icon>
@@ -393,10 +393,10 @@
 										<div class="card-action-tooltip" id="card-label-2" style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">Add to Whishlist</div>
 									</a>
 									
-								</li>
+								</li> -->
 								
 								<li class="card-action-item">						
-									<a href="#" class="js-show-modal1" data-id={{ product.details.pid }}>
+									<a href="#" class="js-show-modal1" data-id={{ product.pid }}>
 									<button class="card-action-btn" aria-labelledby="card-label-3">
 										<ion-icon name="eye-outline"  style="display: block;"></ion-icon>
 									</button>
@@ -418,27 +418,27 @@
 				
 								<div class="card-content">		
 								
-								{% if product.details.Category.name == "Cosmetics" %}
+								{% if product.Category.name == "Cosmetics" %}
 									<h6 class="h6 card-title ">
-										<a href="{% url 'ShopAPP:CosmeticsProducts' %}">{{product.details.Category}}</a>
+										<a href="{% url 'ShopAPP:CosmeticsProducts' %}">{{product.Category}}</a>
 									</h6>
 
-								{% elif product.details.Category.name == "Clothes" %}		
+								{% elif product.Category.name == "Clothes" %}		
 									<h6 class="h6 card-title ">
-										<a href="{% url 'ShopAPP:ClothesProducts' %}">{{product.details.Category}}</a>
+										<a href="{% url 'ShopAPP:ClothesProducts' %}">{{product.Category}}</a>
 									</h6>
-								{% elif product.details.Category.name == "Accessories" %}
+								{% elif product.Category.name == "Accessories" %}
 									<h6 class="h6 card-title ">
-										<a href="{% url 'ShopAPP:AccessoriesProducts' %}">{{product.details.Category}}</a>
+										<a href="{% url 'ShopAPP:AccessoriesProducts' %}">{{product.Category}}</a>
 									</h6>
 								{% endif %}
 								
 				
 								<h3 class="h3 card-title ">
-									<a href="{% url 'ShopAPP:ProductDetails' pid=product.details.pid %}" class="js-name-b2">{{product.details.name}}</a>
+									<a href="{% url 'ShopAPP:ProductDetails' pid=product.pid %}" class="js-name-b2">{{product.name}}</a>
 								</h3>
 				
-								<data class="card-price" value="{{product.details.price}}">${{product.details.price}}</data>
+								<data class="card-price" value="{{product.details.price}}">${{product.price}}</data>
 				
 								</div>
 				

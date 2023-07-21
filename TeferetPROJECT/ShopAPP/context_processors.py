@@ -21,9 +21,12 @@ def counter(request):
         WishCount = len(wishItems)
     else:
         #Get the current cart
+        # request.session["logout"]= False   
+        # request.session["login"]= False  
         cart = None
-        if Cart.objects.filter(isActive=True,cartid= __cart_id__(request)).exists() :
-            cart = Cart.objects.get(isActive=True,cartid= __cart_id__(request))
+        sessionId= __cart_id__(request)
+        if Cart.objects.filter(isActive=True,sessionid=sessionId,user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=sessionId,user=None)
             
         cart_items = CartItem.objects.all().filter(cart=cart)
 

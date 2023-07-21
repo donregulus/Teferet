@@ -109,7 +109,8 @@ class Cart(models.Model):
     cartid      =  models.UUIDField(primary_key=True, default=uuid.uuid4)
     user        =  models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     createdDate =  models.DateField(auto_now_add=True)
-    isActive    =  models.BooleanField(default=True)         
+    isActive    =  models.BooleanField(default=True) 
+    sessionid   =  models.CharField(max_length=250,null=True)      
 
     def __str__(self):
         return str(self.cartid)

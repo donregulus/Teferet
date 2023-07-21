@@ -15,6 +15,8 @@ from django.core.mail import EmailMessage
 
 from UserAuthsAPP.forms import RegisterForm,LoginForm,ProfileInfoForm
 from UserAuthsAPP.models import UserProfile
+from ShopAPP.models import  Cart, CartItem
+from ShopAPP.views  import __cart_id__
 
 # Create your views here.
 def Register(request):
@@ -86,11 +88,50 @@ def Login(request):
             userCreatedName     = loginForm.cleaned_data.get("username")            
             userCreatedPassword = loginForm.cleaned_data.get("password")            
             
+            #Get previous session id
+            AnonymousSessionId=__cart_id__(request)
+
             #Authentificate user and redirect to profile page            
             LoggedUser = auth.authenticate(username=userCreatedName,password=userCreatedPassword) 
             if LoggedUser is not None:
+               
+                cart = None
+                if Cart.objects.filter(isActive=True,sessionid=AnonymousSessionId,user=None).exists():
+
+                    #Get the current seession cart
+                    cart = Cart.objects.get(isActive=True,sessionid=AnonymousSessionId,user=None)
+                    cart_items = CartItem.objects.all().filter(cart=cart)
+
+                    #Get The current user
+                    LoggedUser = User.objects.get(username=userCreatedName)
+
+                    #Get the current user cart
+                    if Cart.objects.filter(isActive=True,user=LoggedUser).exists():
+                        userCart = Cart.objects.get(isActive=True,user=LoggedUser)
+                        userCart_items = CartItem.objects.all().filter(cart=userCart)
+                        for item in cart_items:
+                            for userItemLoop in userCart_items:
+                                if item.product.pid == userItemLoop.product.pid:
+                                    AnonymousProductId = item.product.pid
+                                    AnonymousProductQuantity = item.quantity
+                                    item.delete()
+                                    userItem =  CartItem.objects.get(cart=userCart,product=AnonymousProductId)
+                                    userItem.quantity +=AnonymousProductQuantity
+                                    userItem.save()
+                                    break
+                                else:
+                                    item.cart=userCart
+                                    item.save()
+                    else:         
+                        Newcart = Cart.objects.create(user=LoggedUser,sessionid=__cart_id__(request))
+                        Newcart.save()
+                        for item in cart_items:                            
+                            item.cart=Newcart
+                            item.save()
+                    cart.delete()                    
+
                 auth.login(request,LoggedUser)                   
-                messages.success(request,"Logged in succefully !")  
+                messages.success(request,"Logged in succefully !")                
                 return redirect("CoreAPP:Index")
             else:
                 messages.error(request,"Credential Failed: Enter a correct username and password")    
@@ -110,9 +151,12 @@ def Login(request):
 
 @login_required(login_url="UserAuthsAPP:Login")
 def Logout(request):        
-    auth.logout(request)
+    auth.logout(request)       
+    # request.session["logout"]= True   
+    #     
+    # request.session["login"]= False     
     messages.success(request,"Logged out succefully !")  
-    return redirect("UserAuthsAPP:Login")
+    return redirect("CoreAPP:Index")
 
 def ForgotPassword(request):
     if request.method == 'POST':        

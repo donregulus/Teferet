@@ -126,6 +126,19 @@ USE_I18N = True
 USE_TZ = True
 
 
+
+
+
+
+
+SESSION_EXPIRE_SECONDS = 900  # 1 hour
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_ENGINE  = "django.contrib.sessions.backends.signed_cookies"
+# SESSION_TIMEOUT_REDIRECT = 'accounts/login'
+
+
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
