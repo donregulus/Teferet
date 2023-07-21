@@ -32,31 +32,23 @@
 									<div class="wrap-pic-w pos-relative">
 										<img src="{{product.image.url}}"  alt="IMG-PRODUCT">
 
-										<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{% static './images/banners/pexels-rodnae-productions-6191874.jpg' %}">
+										<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" target="_blank" href="{{product.image.url}}">
 											<i class="fa fa-expand"></i>
 										</a>
 									</div>
-								</div>
-
-								<div class="item-slick3" data-thumb="{% static './images/banners/pexels-rodnae-productions-6191874.jpg' %}">
-									<div class="wrap-pic-w pos-relative">
-										<img src="{% static './images/banners/pexels-rodnae-productions-6191874.jpg' %}"  alt="IMG-PRODUCT">
-
-										<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{% static './images/banners/pexels-rodnae-productions-6191874.jpg' %}">
-											<i class="fa fa-expand"></i>
-										</a>
+								</div>								
+								{% for proImg in ProductImages %}
+									<div class="item-slick3" data-thumb="{{proImg.image.url}}">
+										<div class="wrap-pic-w pos-relative">
+											<img src="{{proImg.image.url}}"  alt="IMG-PRODUCT">
+											
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" target="_blank" href="{{proImg.image.url}}">
+												<i class="fa fa-expand"></i>
+											</a>
+										</div>
 									</div>
-								</div>
-
-								<div class="item-slick3" data-thumb="{% static './images/banners/pexels-rodnae-productions-6191874.jpg' %}">
-									<div class="wrap-pic-w pos-relative">
-										<img src="{% static './images/banners/pexels-rodnae-productions-6191874.jpg' %}"  alt="IMG-PRODUCT">
-
-										<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{% static './images/banners/pexels-rodnae-productions-6191874.jpg' %}">
-											<i class="fa fa-expand"></i>
-										</a>
-									</div>
-								</div>
+								{% endfor %}
+								
 							</div>
 						</div>
 					</div>

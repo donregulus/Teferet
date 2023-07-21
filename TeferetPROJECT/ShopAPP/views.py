@@ -23,7 +23,8 @@ def __cart_id__(request):
     if not request.user.is_authenticated:
         cartSession = request.session.session_key
         if not cartSession:
-                cartSession = request.session.create()              
+                request.session.save()              
+                cartSession = request.session.session_key
         return cartSession
     else:
         cartSession = request.session.session_key
@@ -49,6 +50,7 @@ def ModalProductDetails(request,pid):
         
     quantity = 0
     product = Product.objects.get(pid=pid)
+    ProductImages = product.productAllImages.all()
     if request.user.is_authenticated:
         #Get The current user
         LoggedUser = User.objects.get(username=request.user)    
@@ -73,6 +75,7 @@ def ModalProductDetails(request,pid):
     context = {                    
                     "product" : product,
                     "quantity": quantity,
+                     "ProductImages":ProductImages
                 }         
     return render(request, 'ShopAPP/ModalProductDetails.html',context)
 
@@ -80,6 +83,7 @@ def ProductDetails(request,pid):
 
     quantity = 0
     product = Product.objects.get(pid=pid)
+    ProductImages = product.productAllImages.all()
     if request.user.is_authenticated:
         #Get The current user
         LoggedUser = User.objects.get(username=request.user)    
@@ -104,6 +108,7 @@ def ProductDetails(request,pid):
     context = {                    
                     "product" : product,
                     "quantity": quantity,
+                    "ProductImages":ProductImages
                 }           
     
     if __isAjax__(request):    

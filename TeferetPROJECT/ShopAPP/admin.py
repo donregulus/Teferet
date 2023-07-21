@@ -1,12 +1,16 @@
 from django.contrib import admin
-from .models import Category, WhishList,Product,ProductReview,CartItem,Cart
+from .models import Category, WhishList,Product,ProductReview,CartItem,Cart,ProductImages
 # Register your models here.
 
+class ProductImageAdmin(admin.TabularInline):
+    model = ProductImages    
+
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name","image","description"]
+    list_display = ["name","category_image","description"]
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name","image","price","description","createdDate","isAvailable"]
+    inlines = [ProductImageAdmin]
+    list_display = ["name","product_image","price","description","createdDate","isAvailable"]
 
 
 class ProductReviewAdmin(admin.ModelAdmin):

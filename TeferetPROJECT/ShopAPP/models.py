@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
+from django.utils.html import mark_safe
 # Create your models here.
 
 
@@ -52,7 +53,8 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.name
 
-
+    def category_image(self):
+        return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
 
 
 class Product(models.Model):
@@ -82,6 +84,21 @@ class Product(models.Model):
     def getPercentage(self):
         return ((self.price/self.old_price)*100)
 
+    def product_image(self):
+        return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
+
+
+class ProductImages(models.Model):
+    image   = models.ImageField(upload_to="ProductImages",default="product.jpg")    
+    product = models.ForeignKey(Product,related_name="productAllImages", on_delete=models.CASCADE,null=True)
+    class Meta:
+        verbose_name_plural="Product Images"
+
+    def product_image(self):
+        return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
+
+
+
 class ProductReview(models.Model):
     user        = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
     product     = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -97,8 +114,8 @@ class ProductReview(models.Model):
         return self.rating
 
 class WhishList(models.Model):
-    user      = models.ForeignKey(User, on_delete=models.CASCADE)
-    product   = models.ForeignKey(Product, on_delete=models.CASCADE)  
+    user        = models.ForeignKey(User, on_delete=models.CASCADE)
+    product     = models.ForeignKey(Product, on_delete=models.CASCADE)  
     createdDate = models.DateTimeField(auto_now_add=True )
 
     def __str__(self) -> str:
@@ -117,10 +134,11 @@ class Cart(models.Model):
     
 
 
-class CartItem(models.Model):     
-    product  = models.ForeignKey(Product, on_delete=models.CASCADE)    
-    cart     = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
-    quantity = models.IntegerField()
+class CartItem(models.Model):    
+    cartItemid =  models.UUIDField(primary_key=True, default=uuid.uuid4) 
+    product    = models.ForeignKey(Product, on_delete=models.CASCADE)    
+    cart       = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
+    quantity   = models.IntegerField()
 
     def sub_total(self):
         return self.product.price * self.quantity
