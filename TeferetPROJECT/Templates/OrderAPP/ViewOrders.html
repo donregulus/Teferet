@@ -56,9 +56,9 @@
 												<td class="column-1">{{ order.createdDate | date:"d" }}/{{ order.createdDate | date:"M" }} {{ order.createdDate | date:"Y"  }}</td>
 												
 												{% if order.PaymentMode == "PayPal" %}
-													<td class="column-2"><img src="{% static './images/icons/paypal.png' %}" style="height: 65px;"></td>											
-												{% elif order.PaymentMode == "CreditCart" %}
-													<td class="column-2"><img src="{% static './images/icons/creditcart.png' %}" style="height: 65px;"></td>																								
+													<td class="column-2"><img src="{% static './images/icons/paypal.png' %}" style="height: 55px;"></td>											
+												{% elif order.PaymentMode == "CreditCard" %}
+													<td class="column-2"><img src="{% static './images/icons/creditcart.png' %}" style="height: 25px;"></td>																								
 												{% endif %}
 
 												<td class="column-3">{{order.PaymentStatus}}</td>

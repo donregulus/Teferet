@@ -12,6 +12,7 @@ urlpatterns = [
     ,path('SuccessPayment/'                                 ,views.SuccessPayment       ,name='SuccessPayment')
     ,path('ViewOrders/'                                     ,views.ViewOrders           ,name='ViewOrders')
     ,path('ViewOrderDetails/<pid>'                          ,views.ViewOrderDetails     ,name='ViewOrderDetails')
+    ,path('CreditCardSuccess/'                              ,views.CreditCardSuccess    ,name='CreditCardSuccess')
     
      
      

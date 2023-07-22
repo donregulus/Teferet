@@ -58,15 +58,16 @@ def CreditCardPayment(request):
         if Cart.objects.filter(isActive=True,user=LoggedUser).exists() :
             cart = Cart.objects.get(isActive=True,user=LoggedUser)    
             cart_items = CartItem.objects.all().filter(cart=cart)
-   
-    for item in cart_items:            
+    total = 0
+    for item in cart_items:     
+        total += item.product.price       
         finalItem = {
                         "price_data" : {
                                             'currency': 'usd',
                                             'product_data': {
                                                             'name': item.product.name,
                                                             },
-                                            'unit_amount': int(item.product.price+1000),
+                                            'unit_amount': int(item.product.price*100),
                                         },
                         "quantity" : item.quantity            
                     }
@@ -75,12 +76,20 @@ def CreditCardPayment(request):
     session = stripe.checkout.Session.create(
     line_items=items,
     mode='payment',
-    success_url= urlBase + '/Order/RegisterOrderPayment/CreditCard',
+    success_url= urlBase + '/Order/CreditCardSuccess?session_id={CHECKOUT_SESSION_ID}',
     cancel_url = urlBase + '/Order/CancelPayment',
+    
   )
 
     return redirect(session.url, code=303)
     
+
+
+def CreditCardSuccess(request):
+  session = stripe.checkout.Session.retrieve(request.GET['session_id'])
+  total = session.amount_total/100
+  return redirect("OrderAPP:RegisterOrderPayment",paymentMode="CreditCard",totalAmout=total)
+
 
 @login_required(login_url="UserAuthsAPP:Login")
 def RegisterOrderPayment(request,paymentMode,totalAmout):  
@@ -107,7 +116,7 @@ def RegisterOrderPayment(request,paymentMode,totalAmout):
                 order = Order.objects.create(user=LoggedUser,cart=cart,PaymentMode="PayPal",userIpAddress=ip,PaymentStatus=status,providerOrderId=id,totalAmout=totalAmout)
                 order.save()            
             elif(paymentMode == "CreditCard"):            
-                order = Order.objects.create(user=LoggedUser,cart=cart,PaymentMode="CreditCard",totalAmout=totalAmout)
+                order = Order.objects.create(user=LoggedUser,cart=cart,PaymentMode="CreditCard",totalAmout=totalAmout,PaymentStatus="COMPLETED")
                 order.save()
             
     return render(request, 'OrderAPP/Success.html')
