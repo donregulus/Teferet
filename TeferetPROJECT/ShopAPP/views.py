@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth.models import User
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
 
@@ -124,14 +125,14 @@ def ProductDetails(request,pid):
     
 def Products(request):  
 
+    #get  all products
+    products = Product.objects.all().order_by('-createdDate')
+
     if request.user.is_authenticated:
 
         productsWithWish = list()
         #get the current logged user
         LoggedUser = User.objects.get(username=request.user)    
-
-        #get  all products
-        products = Product.objects.all()
 
         for product in products:
             #Check If item is  in WishList
@@ -149,24 +150,44 @@ def Products(request):
                 }
                 productsWithWish.append(item)
 
-        context = {                    
-                        "products": productsWithWish,
-                    }   
+        page = request.GET.get("page")
+        paginator = Paginator(productsWithWish, 8)     
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)        
+        context = {                  
+                        "products": posts,
+                        "url":"/Shop/Products",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
         return render(request, 'ShopAPP/Products.html',context)
         
-    else:
-        products = Product.objects.all()  
+    else:        
+        page = request.GET.get("page")
+        paginator = Paginator(products, 8)        
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+
         context = {                  
-                        "products": products,
-                    }   
+                        "products": posts,
+                        "url":"/Shop/Products",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)      
         return render(request, 'ShopAPP/Products.html',context)    
-
-
 
 def CosmeticsProducts(request):
     Cosmetics = Category.objects.get(name="Cosmetics")
+    products = Product.objects.filter(Category=Cosmetics.cid).order_by('-createdDate')
     if request.user.is_authenticated:
-        products = Product.objects.filter(Category=Cosmetics.cid)
         productsWithWish = list()
         LoggedUser = User.objects.get(username=request.user)    
 
@@ -186,25 +207,46 @@ def CosmeticsProducts(request):
                     }
                     productsWithWish.append(item)
 
-        context = {                    
-                            "products": productsWithWish,
-                        }   
+        page = request.GET.get("page")
+        paginator = Paginator(productsWithWish, 4)     
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)        
+        context = {                  
+                        "products": posts,
+                        "url":"/Shop/CosmeticsProducts",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
         return render(request, 'ShopAPP/CosmeticsProducts.html',context)
         
-    else:        
-        products = Product.objects.filter(Category=Cosmetics.cid)
-        context = {                  
-                        "products": products,
-                    }   
-        return render(request, 'ShopAPP/CosmeticsProducts.html',context)
+    else:                
+        page = request.GET.get("page")
+        paginator = Paginator(products, 4)        
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
 
+        context = {                  
+                        "products": posts,
+                        "url":"/Shop/CosmeticsProducts",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)      
+        return render(request, 'ShopAPP/CosmeticsProducts.html',context)
 
 def ClothesProducts(request):    
     Clothes = Category.objects.get(name="Clothes")
+    products = Product.objects.filter(Category=Clothes.cid).order_by('-createdDate')
     if request.user.is_authenticated:
 
         productsWithWish = list()
-        products = Product.objects.filter(Category=Clothes.cid)
         #get the current logged user
         LoggedUser = User.objects.get(username=request.user)    
 
@@ -224,26 +266,45 @@ def ClothesProducts(request):
                     }
                     productsWithWish.append(item)
 
-        context = {                    
-                            "products": productsWithWish,
-                        }   
+        page = request.GET.get("page")
+        paginator = Paginator(productsWithWish, 4)     
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)        
+        context = {                  
+                        "products": posts,
+                        "url":"/Shop/ClothesProducts",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
         return render(request, 'ShopAPP/ClothesProducts.html',context)
         
-    else:        
-        products = Product.objects.filter(Category=Clothes.cid)
-        context = {                  
-                        "products": products,
-                    }   
-        return render(request, 'ShopAPP/ClothesProducts.html',context)
+    else:      
+        page = request.GET.get("page")
+        paginator = Paginator(products, 4)        
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
 
-    
+        context = {                  
+                        "products": posts,
+                        "url":"/Shop/ClothesProducts",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)                  
+        return render(request, 'ShopAPP/ClothesProducts.html',context)
 
 def AccessoriesProducts(request):
     Accessories = Category.objects.get(name="Accessories")
+    products = Product.objects.filter(Category=Accessories.cid).order_by('-createdDate')
     if request.user.is_authenticated:
-
         productsWithWish = list()
-        products = Product.objects.filter(Category=Accessories.cid)
         #get the current logged user
         LoggedUser = User.objects.get(username=request.user)    
 
@@ -263,19 +324,40 @@ def AccessoriesProducts(request):
                     }
                     productsWithWish.append(item)
 
-        context = {                    
-                            "products": productsWithWish,
-                        }   
-        return render(request, 'ShopAPP/AccessoriesProducts.html',context)
-        
-    else:        
-        products = Product.objects.filter(Category=Accessories.cid)
+        page = request.GET.get("page")
+        paginator = Paginator(productsWithWish, 4)        
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+                
         context = {                  
-                        "products": products,
-                    }   
-        return render(request, 'ShopAPP/AccessoriesProducts.html',context)
-    
+                        "products": posts,
+                        "url":"/Shop/AccessoriesProducts",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)
+        return render(request, 'ShopAPP/AccessoriesProducts.html',context)     
+    else:                
+        page = request.GET.get("page")
+        paginator = Paginator(products, 4)        
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
 
+        context = {                  
+                        "products": posts,
+                        "url":"/Shop/AccessoriesProducts",
+                    }
+        if request.htmx:
+            return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)
+        return render(request, 'ShopAPP/AccessoriesProducts.html',context)
+       
 def ShowCartDetails(request):
 
     cart_items = []

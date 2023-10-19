@@ -7,6 +7,7 @@ from ShopAPP.models import Product, WhishList
 
 # Create your views here.
 def Index(request):
+    products = Product.objects.all().order_by('-createdDate')
     if request.user.is_authenticated:
 
         productsWithWish = list()
@@ -14,7 +15,6 @@ def Index(request):
         LoggedUser = User.objects.get(username=request.user)    
 
         #get  all products
-        products = Product.objects.all()
 
         for product in products:
             #Check If item is  in WishList
@@ -37,8 +37,7 @@ def Index(request):
                     }   
         return render(request, "CoreAPP/Index.html",context)
         
-    else:
-        products = Product.objects.all()  
+    else:        
         context = {                  
                         "products": products,
                     }   
