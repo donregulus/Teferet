@@ -7,7 +7,7 @@ from ShopAPP.models import Product, WhishList
 
 # Create your views here.
 def Index(request):
-    products = Product.objects.all().order_by('-createdDate')
+    products = Product.objects.all().order_by('-createdDate')[:8]
     if request.user.is_authenticated:
 
         productsWithWish = list()

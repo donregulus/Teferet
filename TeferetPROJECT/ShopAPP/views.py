@@ -83,7 +83,8 @@ def ModalProductDetails(request,pid):
 def ProductDetails(request,pid):   
 
     quantity = 0
-    product = Product.objects.get(pid=pid)
+    product = Product.objects.get(pid=pid)    
+    RelatedProducts = Product.objects.filter(Category=product.Category).exclude(pid=pid).order_by('-createdDate')[:8]
     ProductImages = product.productAllImages.all()
     if request.user.is_authenticated:
         #Get The current user
@@ -109,7 +110,8 @@ def ProductDetails(request,pid):
     context = {                    
                     "product" : product,
                     "quantity": quantity,
-                    "ProductImages":ProductImages
+                    "ProductImages":ProductImages,
+                    "RelatedProducts":RelatedProducts
                 }           
     
     if __isAjax__(request):    
