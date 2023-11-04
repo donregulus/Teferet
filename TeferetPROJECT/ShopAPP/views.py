@@ -126,6 +126,22 @@ def Products(request):
     #get  all products
     products = Product.objects.all().order_by('-createdDate')
     min_max_price = Product.objects.aggregate(Min("price"), Max("price"))
+    colorsAvaillable = []
+    colors =  Product.objects.values('color').distinct()
+    for item in colors:
+        match item["color"] :
+            case 1:
+                colorsAvaillable.append({"color":"#0f0f0f","name":"Black","id":1})                
+            case 2:
+                colorsAvaillable.append({"color":"#BA2828","name":"Red","id":2})
+            case 3:
+                colorsAvaillable.append({"color":"#317034","name":"Green","id":3})
+            case 4:
+                colorsAvaillable.append({"color":"#F5E23D","name":"Yellow","id":4})
+            case 5:
+                colorsAvaillable.append({"color":"#1D6CBA","name":"Blue","id":5})
+            case 6:
+                colorsAvaillable.append({"color":"#EFEFEF","name":"White","id":6})    
 
     if request.user.is_authenticated:
 
@@ -161,7 +177,8 @@ def Products(request):
                         "products": posts,
                         "url":"/Shop/Products",
                         "min_max_price":min_max_price,
-                        "cid":"",
+                        "cid":"all",
+                        "colorsAvaillable":colorsAvaillable,
                         
                     }
         if request.htmx:
@@ -183,6 +200,7 @@ def Products(request):
                         "url":"/Shop/Products",
                         "min_max_price":min_max_price,
                         "cid":"all",
+                        "colorsAvaillable":colorsAvaillable,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)      
@@ -192,6 +210,24 @@ def CosmeticsProducts(request):
     Cosmetics = Category.objects.get(name="Cosmetics")
     products = Product.objects.filter(Category=Cosmetics.cid).order_by('-createdDate')
     min_max_price = Product.objects.filter(Category=Cosmetics.cid).aggregate(Min("price"), Max("price"))
+    
+    colorsAvaillable = []
+    colors =  Product.objects.filter(Category=Cosmetics.cid).values('color').distinct()
+    for item in colors:
+        match item["color"] :
+            case 1:
+                colorsAvaillable.append({"color":"#0f0f0f","name":"Black","id":1})                
+            case 2:
+                colorsAvaillable.append({"color":"#BA2828","name":"Red","id":2})
+            case 3:
+                colorsAvaillable.append({"color":"#317034","name":"Green","id":3})
+            case 4:
+                colorsAvaillable.append({"color":"#F5E23D","name":"Yellow","id":4})
+            case 5:
+                colorsAvaillable.append({"color":"#1D6CBA","name":"Blue","id":5})
+            case 6:
+                colorsAvaillable.append({"color":"#EFEFEF","name":"White","id":6})  
+
     if request.user.is_authenticated:
         productsWithWish = list()
         LoggedUser = User.objects.get(username=request.user)    
@@ -225,6 +261,7 @@ def CosmeticsProducts(request):
                         "url":"/Shop/CosmeticsProducts",
                         "min_max_price":min_max_price,
                         "cid":Cosmetics.cid,
+                        "colorsAvaillable":colorsAvaillable,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
@@ -245,6 +282,7 @@ def CosmeticsProducts(request):
                         "url":"/Shop/CosmeticsProducts",
                         "min_max_price":min_max_price,
                         "cid":Cosmetics.cid,
+                        "colorsAvaillable":colorsAvaillable,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)      
@@ -254,6 +292,23 @@ def ClothesProducts(request):
     Clothes = Category.objects.get(name="Clothes")
     products = Product.objects.filter(Category=Clothes.cid).order_by('-createdDate')
     min_max_price = Product.objects.filter(Category=Clothes.cid).aggregate(Min("price"), Max("price"))
+
+    colorsAvaillable = []
+    colors =  Product.objects.filter(Category=Clothes.cid).values('color').distinct()
+    for item in colors:
+        match item["color"] :
+            case 1:
+                colorsAvaillable.append({"color":"#0f0f0f","name":"Black","id":1})                
+            case 2:
+                colorsAvaillable.append({"color":"#BA2828","name":"Red","id":2})
+            case 3:
+                colorsAvaillable.append({"color":"#317034","name":"Green","id":3})
+            case 4:
+                colorsAvaillable.append({"color":"#F5E23D","name":"Yellow","id":4})
+            case 5:
+                colorsAvaillable.append({"color":"#1D6CBA","name":"Blue","id":5})
+            case 6:
+                colorsAvaillable.append({"color":"#EFEFEF","name":"White","id":6})  
     if request.user.is_authenticated:
 
         productsWithWish = list()
@@ -289,6 +344,7 @@ def ClothesProducts(request):
                         "url":"/Shop/ClothesProducts",
                         "min_max_price":min_max_price,
                         "cid":Clothes.cid,
+                        "colorsAvaillable":colorsAvaillable,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
@@ -309,6 +365,7 @@ def ClothesProducts(request):
                         "url":"/Shop/ClothesProducts",
                         "min_max_price":min_max_price,
                         "cid":Clothes.cid,
+                        "colorsAvaillable":colorsAvaillable,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)                  
@@ -318,6 +375,24 @@ def AccessoriesProducts(request):
     Accessories = Category.objects.get(name="Accessories")
     products = Product.objects.filter(Category=Accessories.cid).order_by('-createdDate')
     min_max_price = Product.objects.filter(Category=Accessories.cid).aggregate(Min("price"), Max("price"))
+
+    colorsAvaillable = []
+    colors =  Product.objects.filter(Category=Accessories.cid).values('color').distinct()
+    for item in colors:
+        match item["color"] :
+            case 1:
+                colorsAvaillable.append({"color":"#0f0f0f","name":"Black","id":1})                
+            case 2:
+                colorsAvaillable.append({"color":"#BA2828","name":"Red","id":2})
+            case 3:
+                colorsAvaillable.append({"color":"#317034","name":"Green","id":3})
+            case 4:
+                colorsAvaillable.append({"color":"#F5E23D","name":"Yellow","id":4})
+            case 5:
+                colorsAvaillable.append({"color":"#1D6CBA","name":"Blue","id":5})
+            case 6:
+                colorsAvaillable.append({"color":"#EFEFEF","name":"White","id":6})  
+
     if request.user.is_authenticated:
         productsWithWish = list()
         #get the current logged user
@@ -353,6 +428,7 @@ def AccessoriesProducts(request):
                         "url":"/Shop/AccessoriesProducts",
                         "min_max_price":min_max_price,
                         "cid":Accessories.cid,
+                        "colorsAvaillable":colorsAvaillable
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)
@@ -372,6 +448,7 @@ def AccessoriesProducts(request):
                         "url":"/Shop/AccessoriesProducts",
                         "min_max_price":min_max_price,
                         "cid":Accessories.cid,
+                        "colorsAvaillable":colorsAvaillable,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)
@@ -714,6 +791,10 @@ def FiltersProduct(request,cid):
 
     minPrice = request.GET["minPrice"]
     maxPrice = request.GET["maxPrice"]
+
+    colorsTofilter = request.GET.getlist('color[]')
+
+
     products = None
     paginatorNumber = None
 
@@ -725,6 +806,10 @@ def FiltersProduct(request,cid):
         #get  products per category
         paginatorNumber = 4
         products = Product.objects.filter(Category=cid).order_by('-createdDate')
+
+    #filter by color
+    if len(colorsTofilter) > 0:
+        products= products.filter(color__in=colorsTofilter).distinct()
     
     #filter by price
     products = products.filter(price__gte=minPrice)
@@ -776,7 +861,7 @@ def FiltersProduct(request,cid):
             posts = paginator.page(paginator.num_pages)
 
         data = render_to_string("ShopAPP/Partials/PartialProductsList.html",{"products":posts})
-        return JsonResponse({"data":data})  
+        return JsonResponse({"data":data,"size":len(posts)})  
 
 
 @login_required(login_url="UserAuthsAPP:Login")
