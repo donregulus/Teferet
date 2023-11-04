@@ -3,20 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-
-
-
-from UserAuthsAPP.models import UserProfile
-from ShopAPP.models import Product, Category, Cart, CartItem, WhishList
-# Create your views here.
-
-
+from django.db.models import Min, Max
+from django.template.loader import render_to_string
+from django.http import HttpResponse,JsonResponse
 from django.core import serializers
 import json
 import uuid
 
-
-from django.http import HttpResponse,JsonResponse
+from UserAuthsAPP.models import UserProfile
+from ShopAPP.models import Product, Category, Cart, CartItem, WhishList
+# Create your views here.
 
 
 def __cart_id__(request):    
@@ -129,6 +125,7 @@ def Products(request):
 
     #get  all products
     products = Product.objects.all().order_by('-createdDate')
+    min_max_price = Product.objects.aggregate(Min("price"), Max("price"))
 
     if request.user.is_authenticated:
 
@@ -163,6 +160,9 @@ def Products(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/Products",
+                        "min_max_price":min_max_price,
+                        "cid":"",
+                        
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
@@ -181,6 +181,8 @@ def Products(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/Products",
+                        "min_max_price":min_max_price,
+                        "cid":"all",
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)      
@@ -189,6 +191,7 @@ def Products(request):
 def CosmeticsProducts(request):
     Cosmetics = Category.objects.get(name="Cosmetics")
     products = Product.objects.filter(Category=Cosmetics.cid).order_by('-createdDate')
+    min_max_price = Product.objects.filter(Category=Cosmetics.cid).aggregate(Min("price"), Max("price"))
     if request.user.is_authenticated:
         productsWithWish = list()
         LoggedUser = User.objects.get(username=request.user)    
@@ -220,6 +223,8 @@ def CosmeticsProducts(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/CosmeticsProducts",
+                        "min_max_price":min_max_price,
+                        "cid":Cosmetics.cid,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
@@ -238,6 +243,8 @@ def CosmeticsProducts(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/CosmeticsProducts",
+                        "min_max_price":min_max_price,
+                        "cid":Cosmetics.cid,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)      
@@ -246,6 +253,7 @@ def CosmeticsProducts(request):
 def ClothesProducts(request):    
     Clothes = Category.objects.get(name="Clothes")
     products = Product.objects.filter(Category=Clothes.cid).order_by('-createdDate')
+    min_max_price = Product.objects.filter(Category=Clothes.cid).aggregate(Min("price"), Max("price"))
     if request.user.is_authenticated:
 
         productsWithWish = list()
@@ -279,6 +287,8 @@ def ClothesProducts(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/ClothesProducts",
+                        "min_max_price":min_max_price,
+                        "cid":Clothes.cid,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)  
@@ -297,6 +307,8 @@ def ClothesProducts(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/ClothesProducts",
+                        "min_max_price":min_max_price,
+                        "cid":Clothes.cid,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)                  
@@ -305,6 +317,7 @@ def ClothesProducts(request):
 def AccessoriesProducts(request):
     Accessories = Category.objects.get(name="Accessories")
     products = Product.objects.filter(Category=Accessories.cid).order_by('-createdDate')
+    min_max_price = Product.objects.filter(Category=Accessories.cid).aggregate(Min("price"), Max("price"))
     if request.user.is_authenticated:
         productsWithWish = list()
         #get the current logged user
@@ -338,6 +351,8 @@ def AccessoriesProducts(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/AccessoriesProducts",
+                        "min_max_price":min_max_price,
+                        "cid":Accessories.cid,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)
@@ -355,6 +370,8 @@ def AccessoriesProducts(request):
         context = {                  
                         "products": posts,
                         "url":"/Shop/AccessoriesProducts",
+                        "min_max_price":min_max_price,
+                        "cid":Accessories.cid,
                     }
         if request.htmx:
             return render(request, 'ShopAPP/Partials/PartialProductsList.html',context)
@@ -692,7 +709,76 @@ def SearchProduct(request, category, searchWord):
              }
             products.append(finalItem)
         return HttpResponse( json.dumps(products))
+
+def FiltersProduct(request,cid):
+
+    minPrice = request.GET["minPrice"]
+    maxPrice = request.GET["maxPrice"]
+    products = None
+    paginatorNumber = None
+
+    if str(cid).strip()=="all":
+        #get  all products
+        paginatorNumber = 8
+        products = Product.objects.all().order_by('-createdDate')
+    else : 
+        #get  products per category
+        paginatorNumber = 4
+        products = Product.objects.filter(Category=cid).order_by('-createdDate')
+    
+    #filter by price
+    products = products.filter(price__gte=minPrice)
+    products = products.filter(price__lte=maxPrice)
+    
+    if request.user.is_authenticated:
+
+        productsWithWish = list()
+        #get the current logged user
+        LoggedUser = User.objects.get(username=request.user)    
+
+        for product in products:
+            #Check If item is  in WishList
+            wishItemExist   =  WhishList.objects.all().filter(user=LoggedUser,product=product).exists()
+            if wishItemExist :
+                item ={
+                    "wish": True,
+                    "details": product,
+                }
+                productsWithWish.append(item)
+            else:
+                item ={
+                    "wish": False,
+                    "details": product,
+                }
+                productsWithWish.append(item)
+
+        page = request.GET.get("page")
+        paginator = Paginator(productsWithWish, paginatorNumber)     
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)        
+              
+        data = render_to_string("ShopAPP/Partials/PartialProductsList.html",{"products":posts})
+        return JsonResponse({"data":data})
+
         
+    else:        
+        page = request.GET.get("page")
+        paginator = Paginator(products, paginatorNumber)        
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+
+        data = render_to_string("ShopAPP/Partials/PartialProductsList.html",{"products":posts})
+        return JsonResponse({"data":data})  
+
+
 @login_required(login_url="UserAuthsAPP:Login")
 def WishList(request):
     LoggedUser = User.objects.get(username=request.user)    

@@ -560,8 +560,12 @@
 		}
 	});
 
-	$('#shoppingDetails').on('input', '.num-product', function (e) {
-		this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+
+
+	$("#shoppingDetails").on("input", ".num-product", function (e) {
+		this.value = this.value
+			.replace(/[^\d]+|^0+(?!$)/g, "")
+			.replace(/(\..*)\./g, "$1");
 	});
 
 	$('#shoppingDetails').on('change', '.num-product', function (e) {

@@ -25,10 +25,6 @@ urlpatterns = [
      ,path('RemoveAllWishes/'                           ,views.RemoveAllWishes        ,name='RemoveAllWishes')
      ,path('SearchProduct/<category>/<searchWord>'      ,views.SearchProduct          ,name='SearchProduct')
      ,path('WishList/'                                  ,views.WishList               ,name='WishList')
-     
-
-    # ,path('follow'          ,views.follow  ,name='follow')CosmeticsProducts
-
+     ,path('FiltersProduct/<cid>'                       ,views.FiltersProduct         ,name='FiltersProduct')
     
-   
 ]
