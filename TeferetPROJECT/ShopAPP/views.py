@@ -11,7 +11,7 @@ import json
 import uuid
 
 from UserAuthsAPP.models import UserProfile
-from ShopAPP.models import Product, Category, Cart, CartItem, WhishList
+from ShopAPP.models import Product, Category, Cart, CartItem, WhishList, Variation
 # Create your views here.
 
 
@@ -46,6 +46,7 @@ def __isAjax__(request):
 def ModalProductDetails(request,pid):
         
     quantity = 0
+    variation_value = None
     product = Product.objects.get(pid=pid)
     ProductImages = product.productAllImages.all()
     if request.user.is_authenticated:
@@ -56,8 +57,10 @@ def ModalProductDetails(request,pid):
         if Cart.objects.filter(isActive=True,user=LoggedUser).exists() :
             cart = Cart.objects.get(isActive=True,user=LoggedUser)    
             cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-            if cartItemExist:
-                quantity = CartItem.objects.get(cart=cart,product=product).quantity
+            if cartItemExist:                
+                item = CartItem.objects.filter(cart=cart,product=product).order_by("quantity").last()      
+                quantity =  item.quantity
+                variation_value = item.variation
 
     else:
         #Get the current cart
@@ -67,18 +70,22 @@ def ModalProductDetails(request,pid):
             #Check If item to add is already in cart
             cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
             if cartItemExist:
-                quantity = CartItem.objects.get(cart=cart,product=product).quantity        
+                item = CartItem.objects.filter(cart=cart,product=product).order_by("quantity").last()      
+                quantity =  item.quantity
+                variation_value = item.variation     
     
     context = {                    
                     "product" : product,
                     "quantity": quantity,
-                     "ProductImages":ProductImages
+                     "ProductImages":ProductImages,
+                     "variation":variation_value,
                 }         
     return render(request, 'ShopAPP/ModalProductDetails.html',context)
 
 def ProductDetails(request,pid):   
 
     quantity = 0
+    variation_value = None
     product = Product.objects.get(pid=pid)    
     RelatedProducts = Product.objects.filter(Category=product.Category).exclude(pid=pid).order_by('-createdDate')[:8]
     ProductImages = product.productAllImages.all()
@@ -91,7 +98,9 @@ def ProductDetails(request,pid):
             cart = Cart.objects.get(isActive=True,user=LoggedUser)    
             cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
             if cartItemExist:
-                quantity = CartItem.objects.get(cart=cart,product=product).quantity
+                item = CartItem.objects.filter(cart=cart,product=product).order_by("quantity").last()      
+                quantity =  item.quantity
+                variation_value = item.variation
 
     else:
         #Get the current cart
@@ -101,13 +110,16 @@ def ProductDetails(request,pid):
             #Check If item to add is already in cart
             cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
             if cartItemExist:
-                quantity = CartItem.objects.get(cart=cart,product=product).quantity        
+                item = CartItem.objects.filter(cart=cart,product=product).order_by("quantity").last()      
+                quantity =  item.quantity
+                variation_value = item.variation                
     
     context = {                    
                     "product" : product,
                     "quantity": quantity,
                     "ProductImages":ProductImages,
-                    "RelatedProducts":RelatedProducts
+                    "RelatedProducts":RelatedProducts,
+                    "variation":variation_value,
                 }           
     
     if __isAjax__(request):    
@@ -116,6 +128,7 @@ def ProductDetails(request,pid):
                 "price": str(product.price),
                 "name" : product.name,
                 "quantity": str(quantity),
+                "variation":variation_value,
             }            
             return HttpResponse(json.dumps(productDetails))
     else:            
@@ -124,7 +137,7 @@ def ProductDetails(request,pid):
 def Products(request):  
 
     #get  all products
-    products = Product.objects.all().order_by('-createdDate')
+    products = Product.objects.filter(stock__gt=0).order_by('-createdDate')
     min_max_price = Product.objects.aggregate(Min("price"), Max("price"))
     colorsAvaillable = []
     colors =  Product.objects.values('color').distinct()
@@ -208,7 +221,7 @@ def Products(request):
 
 def CosmeticsProducts(request):
     Cosmetics = Category.objects.get(name="Cosmetics")
-    products = Product.objects.filter(Category=Cosmetics.cid).order_by('-createdDate')
+    products = Product.objects.filter(Category=Cosmetics.cid,stock__gt=0).order_by('-createdDate')
     min_max_price = Product.objects.filter(Category=Cosmetics.cid).aggregate(Min("price"), Max("price"))
     
     colorsAvaillable = []
@@ -290,7 +303,7 @@ def CosmeticsProducts(request):
 
 def ClothesProducts(request):    
     Clothes = Category.objects.get(name="Clothes")
-    products = Product.objects.filter(Category=Clothes.cid).order_by('-createdDate')
+    products = Product.objects.filter(Category=Clothes.cid,stock__gt=0).order_by('-createdDate')
     min_max_price = Product.objects.filter(Category=Clothes.cid).aggregate(Min("price"), Max("price"))
 
     colorsAvaillable = []
@@ -373,7 +386,7 @@ def ClothesProducts(request):
 
 def AccessoriesProducts(request):
     Accessories = Category.objects.get(name="Accessories")
-    products = Product.objects.filter(Category=Accessories.cid).order_by('-createdDate')
+    products = Product.objects.filter(Category=Accessories.cid,stock__gt=0).order_by('-createdDate')
     min_max_price = Product.objects.filter(Category=Accessories.cid).aggregate(Min("price"), Max("price"))
 
     colorsAvaillable = []
@@ -491,6 +504,15 @@ def AddProduct(request,pid):
 
     #get the product
     product = Product.objects.get(pid=pid)
+
+    #Get size if exist
+    cartItemWithVariation = None
+    variationSize  = None
+    if request.GET.get("size") is not None:
+        variationSize =  request.GET["size"]
+        cartItemWithVariation = Variation.objects.filter(product=product,variation_value=variationSize).exists()
+    else:
+        cartItemWithVariation= False
     
     if request.user.is_authenticated:
         #Get The current user
@@ -504,16 +526,29 @@ def AddProduct(request,pid):
             cart.save()
          
         #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)
-            item.quantity += 1
-            item.save()
-            cart_items = CartItem.objects.all().filter(cart=cart)
+        cartItemExist = None
+        if cartItemWithVariation:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.quantity += 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=1,variation=variationSize)
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)
         else:
-            item = CartItem.objects.create(cart=cart,product=product,quantity=1)
-            item.save()        
-            cart_items = CartItem.objects.all().filter(cart=cart)
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)
+                item.quantity += 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=1)
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)       
 
     else:        
         #Get the current cart
@@ -522,18 +557,32 @@ def AddProduct(request,pid):
             cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
         else:         
             cart = Cart.objects.create(sessionid=__cart_id__(request))
-            cart.save()            
-        #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)
-            item.quantity +=1
-            item.save()
-            cart_items = CartItem.objects.all().filter(cart=cart)
+            cart.save()       
+
+        #Check If item to add is already in cart        
+        cartItemExist = None
+        if cartItemWithVariation:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.quantity += 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=1,variation=variationSize)
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)
         else:
-            item = CartItem.objects.create(cart=cart,product=product,quantity=1)
-            item.save()        
-            cart_items = CartItem.objects.all().filter(cart=cart)
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)
+                item.quantity += 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=1)
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)
     
     for cart_item in cart_items:
         Itemscount += cart_item.quantity
@@ -574,7 +623,8 @@ def ShoppingDetails(request):
             "productId" : str(item.product.pid),
             "productImage" : item.product.image.url,
             "quantity" : item.quantity,
-            "total": str(item.sub_total())
+            "total": str(item.sub_total()),
+            "product_variation": item.variation
              }
             products.append(finalItem)
 
@@ -588,6 +638,7 @@ def ShoppingDetails(request):
             totalPrice += item.sub_total()        
             finalItem = {
             "product" : item.product,
+            "product_variation": item.variation,
             "quantity" : item.quantity,
             "total": item.sub_total()
              }
@@ -625,6 +676,15 @@ def AddProducts(request,pid,pnum):
 
     #get the product
     product = Product.objects.get(pid=pid)
+
+    #Get size if exist
+    cartItemWithVariation = None
+    variationSize  = None
+    if request.GET.get("size") is not None:
+        variationSize =  request.GET["size"]
+        cartItemWithVariation = Variation.objects.filter(product=product,variation_value=variationSize).exists()
+    else:
+        cartItemWithVariation= False
     
     if request.user.is_authenticated:
         #Get The current user
@@ -637,17 +697,31 @@ def AddProducts(request,pid,pnum):
             cart = Cart.objects.create(user=LoggedUser)
             cart.save()
          
-        #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)
-            item.quantity = int(pnum)
-            item.save()
-            cart_items = CartItem.objects.all().filter(cart=cart)
+        cartItemExist = None
+        if cartItemWithVariation:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()
+            #Check If item to add is already in cart
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.quantity =  int(pnum)
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=int(pnum),variation=variationSize)
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)
         else:
-            item = CartItem.objects.create(cart=cart,product=product,quantity=1)
-            item.save()        
-            cart_items = CartItem.objects.all().filter(cart=cart)
+            #Check If item to add is already in cart
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)
+                item.quantity = int(pnum)
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=int(pnum))
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)
 
     else:        
         #Get the current cart
@@ -657,17 +731,32 @@ def AddProducts(request,pid,pnum):
         else:         
             cart = Cart.objects.create(sessionid=__cart_id__(request))
             cart.save()            
-        #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)
-            item.quantity =int(pnum)
-            item.save()
-            cart_items = CartItem.objects.all().filter(cart=cart)
+
+        if cartItemWithVariation:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()
+            #Check If item to add is already in cart
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.quantity =  int(pnum)
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=int(pnum),variation=variationSize)
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)
         else:
-            item = CartItem.objects.create(cart=cart,product=product,quantity=1)
-            item.save()        
-            cart_items = CartItem.objects.all().filter(cart=cart)
+
+            #Check If item to add is already in cart
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)
+                item.quantity =int(pnum)
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)
+            else:
+                item = CartItem.objects.create(cart=cart,product=product,quantity=1)
+                item.save()        
+                cart_items = CartItem.objects.all().filter(cart=cart)
     
     for cart_item in cart_items:
         Itemscount += cart_item.quantity
@@ -679,6 +768,15 @@ def RemoveProduct(request,pid):
 
     #get the product
     product = Product.objects.get(pid=pid)
+
+    #Get size if exist
+    cartItemWithVariation = None
+    variationSize  = None
+    if request.GET.get("size") is not None:
+        variationSize =  request.GET["size"]
+        cartItemWithVariation = Variation.objects.filter(product=product,variation_value=variationSize).exists()
+    else:
+        cartItemWithVariation= False
     
     if request.user.is_authenticated:
         #Get The current user
@@ -691,13 +789,22 @@ def RemoveProduct(request,pid):
             cart = Cart.objects.create(user=LoggedUser)
             cart.save()
          
-        #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)
-            item.quantity -= 1
-            item.save()
-            cart_items = CartItem.objects.all().filter(cart=cart)       
+        cartItemExist = None
+        if cartItemWithVariation:
+            #Check If item to add is already in cart
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()        
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.quantity -= 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)  
+        else:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()        
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)
+                item.quantity -= 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)  
 
     else:        
         #Get the current cart
@@ -707,13 +814,23 @@ def RemoveProduct(request,pid):
         else:         
             cart = Cart.objects.create(sessionid=__cart_id__(request))
             cart.save()            
-        #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)
-            item.quantity -=1
-            item.save()
-            cart_items = CartItem.objects.all().filter(cart=cart)        
+        
+        cartItemExist = None
+        if cartItemWithVariation:
+            #Check If item to add is already in cart
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()        
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.quantity -= 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)  
+        else:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()        
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)
+                item.quantity -= 1
+                item.save()
+                cart_items = CartItem.objects.all().filter(cart=cart)       
     
     for cart_item in cart_items:
         Itemscount += cart_item.quantity
@@ -725,6 +842,15 @@ def DeleteProduct(request,pid):
 
     #get the product
     product = Product.objects.get(pid=pid)
+
+    #Get size if exist
+    cartItemWithVariation = None
+    variationSize  = None
+    if request.GET.get("size") is not None:
+        variationSize =  request.GET["size"]
+        cartItemWithVariation = Variation.objects.filter(product=product,variation_value=variationSize).exists()
+    else:
+        cartItemWithVariation= False
     
     if request.user.is_authenticated:
         #Get The current user
@@ -737,14 +863,26 @@ def DeleteProduct(request,pid):
             cart = Cart.objects.create(user=LoggedUser)
             cart.save()
          
-        #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)
-            item.delete()            
-            cart_items = CartItem.objects.all().filter(cart=cart)   
-            if len(cart_items) == 0:
-                cart.delete()
+
+        cartItemExist = None
+        if cartItemWithVariation:
+            #Check If item to add is already in cart
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()        
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.delete()            
+                cart_items = CartItem.objects.all().filter(cart=cart)   
+                if len(cart_items) == 0:
+                    cart.delete()
+        else:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)            
+                item.delete()
+                cart_items = CartItem.objects.all().filter(cart=cart)  
+                if len(cart_items) == 0:
+                    cart.delete()     
+
 
     else:        
         #Get the current cart
@@ -753,16 +891,27 @@ def DeleteProduct(request,pid):
             cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
         else:         
             cart = Cart.objects.create(sessionid=__cart_id__(request))
-            cart.save()            
-        #Check If item to add is already in cart
-        cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
-        if cartItemExist : 
-            item = CartItem.objects.get(cart=cart,product=product)            
-            item.delete()
-            cart_items = CartItem.objects.all().filter(cart=cart)  
-            if len(cart_items) == 0:
-                cart.delete()     
-    
+            cart.save()        
+
+        cartItemExist = None
+        if cartItemWithVariation:
+            #Check If item to add is already in cart
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()        
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                item.delete()            
+                cart_items = CartItem.objects.all().filter(cart=cart)   
+                if len(cart_items) == 0:
+                    cart.delete()
+        else:
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product)            
+                item.delete()
+                cart_items = CartItem.objects.all().filter(cart=cart)  
+                if len(cart_items) == 0:
+                    cart.delete()     
+
     for cart_item in cart_items:
         Itemscount += cart_item.quantity
     return HttpResponse(Itemscount)
@@ -863,6 +1012,35 @@ def FiltersProduct(request,cid):
         data = render_to_string("ShopAPP/Partials/PartialProductsList.html",{"products":posts})
         return JsonResponse({"data":data,"size":len(posts)})  
 
+def UpdateVariation(request,pid):
+    variationSize =  request.GET["size"]
+    variation_Quantity = 0
+    #get the product
+    product = Product.objects.get(pid=pid)
+
+
+    if request.user.is_authenticated:
+        #Get The current user
+        LoggedUser = User.objects.get(username=request.user)
+        #Get the current cart
+        cart = None
+        if Cart.objects.filter(isActive=True,user=LoggedUser).exists() :
+            cart = Cart.objects.get(isActive=True,user=LoggedUser)
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                variation_Quantity = item.quantity
+        
+    else:
+        #Get the current cart
+        cart = None
+        if Cart.objects.filter(isActive=True,sessionid=__cart_id__(request),user=None).exists() :
+            cart = Cart.objects.get(isActive=True,sessionid=__cart_id__(request),user=None)
+            cartItemExist = CartItem.objects.filter(cart=cart,product=product,variation=variationSize).exists()
+            if cartItemExist : 
+                item = CartItem.objects.get(cart=cart,product=product,variation=variationSize)
+                variation_Quantity = item.quantity
+    return HttpResponse(variation_Quantity)
 
 @login_required(login_url="UserAuthsAPP:Login")
 def WishList(request):

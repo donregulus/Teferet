@@ -7,7 +7,7 @@ from ShopAPP.models import Product, WhishList
 
 # Create your views here.
 def Index(request):
-    products = Product.objects.all().order_by('-createdDate')[:8]
+    products = Product.objects.filter(stock__gt=0).order_by('-createdDate')[:8]
     if request.user.is_authenticated:
 
         productsWithWish = list()
@@ -48,9 +48,33 @@ def Search(request):
     searchword = str()    
     if request.method=="POST":
         searchword = request.POST["search"]
-        product_list = Product.objects.filter(name__icontains=searchword)        
-    context = {'product_list':product_list,"searchword":searchword}
-    return render(request, "CoreAPP/Search.html",context)    
+        product_list = Product.objects.filter(name__icontains=searchword) 
+
+        if request.user.is_authenticated:
+            productsWithWish = list()
+            #get the current logged user
+            LoggedUser = User.objects.get(username=request.user)    
+
+            for product in product_list:
+                #Check If item is  in WishList
+                wishItemExist   =  WhishList.objects.all().filter(user=LoggedUser,product=product).exists()
+                if wishItemExist :
+                    item ={
+                        "wish": True,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+                else:
+                    item ={
+                        "wish": False,
+                        "details": product,
+                    }
+                    productsWithWish.append(item)
+            context = {'products':productsWithWish,"searchword":searchword}
+            return render(request, "CoreAPP/Search.html",context)    
+        else:     
+            context = {'products':product_list,"searchword":searchword}
+            return render(request, "CoreAPP/Search.html",context)    
 
 
 def Contact(request):   

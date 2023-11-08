@@ -4,6 +4,18 @@
 {% block extend_head %}
 <title>Teferet | ProductDetails</title>
 
+
+<style>
+	.box {
+		width: 95px;
+		border: 1px solid #8b0a0a6e;
+		font-size: 16px;
+		color: #1c87c9;
+		background-color: #02350d;
+		border-radius: 15px;
+	}
+</style>
+
 {% endblock %}
 
 
@@ -72,27 +84,35 @@
 						</p>
 
 						<!--  -->
+						{% if product.stock > 0 %}
 						<div class="p-t-33">
+							{% if product.variation_set.sizes|length > 0 %}
 							<div class="flex-w flex-r-m p-b-10">
 								<div class="size-203 flex-c-m respon6">
 									Size
 								</div>
 
-								<div class="size-204 respon6-next">
-									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="time">
-											<option>Choose an option</option>
-											<option>Size S</option>
-											<option>Size M</option>
-											<option>Size L</option>
-											<option>Size XL</option>
+								<div class="size-204 ">
+									<div class="rs1-select2 bor8 bg0 box">
+										<select class="js-select2" id="sizeSelected">
+											<option value="">-----</option>
+											{% for i in product.variation_set.sizes %}
+											{% if i.variation_value == variation %}
+											<option value="{{i.variation_value}}" selected="selected">
+												{{i.variation_value}}
+											</option>
+											{% else %}
+											<option value="{{i.variation_value}}">{{i.variation_value}}
+											</option>
+											{% endif %}
+											{% endfor %}
 										</select>
 										<div class="dropDownSelect2"></div>
 									</div>
 								</div>
 							</div>
-
-							<div class="flex-w flex-r-m p-b-10">
+							{% endif %}
+							<!-- <div class="flex-w flex-r-m p-b-10">
 								<div class="size-203 flex-c-m respon6">
 									Color
 								</div>
@@ -109,45 +129,48 @@
 										<div class="dropDownSelect2"></div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 
 							<div class="flex-w flex-r-m p-b-10">
-								<div class="size-204 flex-w flex-m respon6-next" id="shoppingDetails">
+								<div class="size-204 flex-w flex-m respon6-next" id="shoppingDetails"
+									data-id={{product.pid}}>
 									{% if quantity == 0 %}
 
 									<button style="margin-top: 10px;"
 										class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail"
-										data-id={{ product.pid }}>
+										data-id={{product.pid}}>
 										Add to cart
 									</button>
 
 
 									{% else %}
 									<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-										<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" data-id={{
-											product.pid }}>
+										<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+											data-id={{product.pid}}>
 											<i class="fs-16 zmdi zmdi-minus"></i>
 										</div>
 
 										<input class="mtext-104 cl3 txt-center num-product" name="num-product"
-											value={{quantity}} data-id={{ product.pid }}>
+											value={{quantity}} data-id={{product.pid}}>
 
-										<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" data-id={{
-											product.pid }}>
+										<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+											data-id={{product.pid}}>
 											<i class="fs-16 zmdi zmdi-plus"></i>
 										</div>
 									</div>
 
 									<button
 										class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 DeleteProduct"
-										data-id={{ product.pid }}>
+										data-id={{product.pid}}>
 										Remove
 									</button>
 									{% endif %}
 								</div>
 							</div>
 						</div>
-
+						{% else %}
+						<h3 style="text-align: center; margin-top: 40px;">OUT OF STOCK</h3>
+						{% endif %}
 						<!--  -->
 						<div class="flex-w flex-m p-l-100 p-t-40 respon7">
 							<div class="flex-m bor9 p-r-10 m-r-11">
@@ -430,53 +453,70 @@
 {% block extend_footer %}
 <script>
 
-	$('.js-addcart-detail').each(function () {
+	// $('.js-addcart-detail').each(function () {
+	// 	var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+	// 	$(this).on('click', function () {
+	// 		swal(nameProduct, "is added to cart !", "success");
+	// 		var productId = $(this).data('id');
+	// 		let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
+	// 		// AJAX request
+	// 		$.ajax({
+	// 			url: url,
+	// 			type: 'get',
+	// 			success: function (response) {
+	// 				$("#cartNum").attr("data-notify", response);
+	// 			}
+	// 		});
+	// 	});
+	// });
+
+	$('#shoppingDetails').on('click', '.js-addcart-detail', function (e) {
 		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-		$(this).on('click', function () {
+		let size = null;
+
+		if ($("#sizeSelected").length && $("#sizeSelected").val().trim().length === 0) {
+
+			swal("Oops", "Choose a size for :" + nameProduct, "error");
+		}
+		else {
 			swal(nameProduct, "is added to cart !", "success");
 			var productId = $(this).data('id');
+
+
+			let SizeOject = {}
+			if ($("#sizeSelected").length) {
+				SizeOject.size = $("#sizeSelected").val()
+			}
+
+
 			let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
 			// AJAX request
 			$.ajax({
 				url: url,
+				data: SizeOject,
 				type: 'get',
 				success: function (response) {
 					$("#cartNum").attr("data-notify", response);
+					$("#shoppingDetails").empty()
+					var addProductNumber = $(
+						'<div class="wrap-num-product flex-w m-r-20 m-tb-10">' +
+						'<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" data-id=' + productId + '>' +
+						'<i class="fs-16 zmdi zmdi-minus"></i>' +
+						'</div>' +
+						'<input class="mtext-104 cl3 txt-center num-product" type="text" name="num-product1" value=1 data-id=' + productId + '>' +
+						'<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"  data-id=' + productId + '>' +
+						'<i class="fs-16 zmdi zmdi-plus"></i>' +
+						'</div>' +
+						'</div>' +
+
+						'<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 DeleteProduct" data-id=' + productId + '>' +
+						'Remove' +
+						'</button>'
+					)
+					$("#shoppingDetails").append(addProductNumber)
 				}
 			});
-		});
-	});
-
-	$('#shoppingDetails').on('click', '.js-addcart-detail', function (e) {
-		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-		swal(nameProduct, "is added to cart !", "success");
-		var productId = $(this).data('id');
-		let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
-		// AJAX request
-		$.ajax({
-			url: url,
-			type: 'get',
-			success: function (response) {
-				$("#cartNum").attr("data-notify", response);
-				$("#shoppingDetails").empty()
-				var addProductNumber = $(
-					'<div class="wrap-num-product flex-w m-r-20 m-tb-10">' +
-					'<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" data-id=' + productId + '>' +
-					'<i class="fs-16 zmdi zmdi-minus"></i>' +
-					'</div>' +
-					'<input class="mtext-104 cl3 txt-center num-product" type="text" name="num-product1" value=1 data-id=' + productId + '>' +
-					'<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"  data-id=' + productId + '>' +
-					'<i class="fs-16 zmdi zmdi-plus"></i>' +
-					'</div>' +
-					'</div>' +
-
-					'<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 DeleteProduct" data-id=' + productId + '>' +
-					'Remove' +
-					'</button>'
-				)
-				$("#shoppingDetails").append(addProductNumber)
-			}
-		});
+		}
 	});
 
 	$('#shoppingDetails').on('click', '.DeleteProduct', function (e) {
@@ -485,9 +525,15 @@
 		e.stopImmediatePropagation();
 		var productId = $(this).data('id');
 		let url = "{% url 'ShopAPP:DeleteProduct' 'pid' %}".replace('pid', productId);
+
+		let SizeOject = {}
+		if ($("#sizeSelected").length) {
+			SizeOject.size = $("#sizeSelected").val()
+		}
 		// AJAX request
 		$.ajax({
 			url: url,
+			data: SizeOject,
 			type: 'get',
 			success: function (response) {
 				$("#cartNum").attr("data-notify", response);
@@ -510,12 +556,20 @@
 
 		var productId = $(this).data('id');
 
+		let SizeOject = {}
+
+		if ($("#sizeSelected").length) {
+			SizeOject.size = $("#sizeSelected").val()
+		}
+
+
 		let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
 
 		// // AJAX request
 		$.ajax({
 			url: url,
 			type: 'get',
+			data: SizeOject,
 			success: function (response) {
 				$("#cartNum").attr("data-notify", response);
 			}
@@ -533,9 +587,14 @@
 
 			let url = "{% url 'ShopAPP:RemoveProduct' 'pid' %}".replace('pid', productId);
 
+			let SizeOject = {}
+			if ($("#sizeSelected").length) {
+				SizeOject.size = $("#sizeSelected").val()
+			}
 			// // AJAX request
 			$.ajax({
 				url: url,
+				data: SizeOject,
 				type: 'get',
 				success: function (response) {
 					$("#cartNum").attr("data-notify", response);
@@ -559,6 +618,12 @@
 			var numProduct = 1
 		}
 
+
+		let SizeOject = {}
+		if ($("#sizeSelected").length) {
+			SizeOject.size = $("#sizeSelected").val()
+		}
+
 		var productId = $(this).data('id');
 		console.log(productId)
 		let url = "{% url 'ShopAPP:AddProducts' 'pid' 'numProduct' %}".replace('pid', productId).replace('numProduct', numProduct);
@@ -566,12 +631,64 @@
 		// // AJAX request
 		$.ajax({
 			url: url,
+			data: SizeOject,
 			type: 'get',
 			success: function (response) {
 				$("#cartNum").attr("data-notify", response);
 			}
 		});
 	});
+
+	$("#sizeSelected").change(function () {
+
+		var productId = $("#shoppingDetails").data('id');
+		let url = "{% url 'ShopAPP:UpdateVariation' 'pid' %}".replace('pid', productId);
+
+		let SizeOject = {}
+		SizeOject.size = $(this).val();
+
+		// // AJAX request
+		$.ajax({
+			url: url,
+			type: 'get',
+			data: SizeOject,
+			success: function (response) {
+
+				if (Number(response) === 0) {
+
+					$("#shoppingDetails").empty()
+					var addProductNumber = $('<button style="margin-top: 10px;" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-id=' + productId + '>' +
+						'Add to cart' +
+						'</button>'
+					)
+					$("#shoppingDetails").append(addProductNumber)
+				}
+				else {
+
+					$("#shoppingDetails").empty()
+					var addProductNumber = $(
+						'<div class="wrap-num-product flex-w m-r-20 m-tb-10">' +
+						'<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" data-id=' + productId + '>' +
+						'<i class="fs-16 zmdi zmdi-minus"></i>' +
+						'</div>' +
+						'<input class="mtext-104 cl3 txt-center num-product" type="text" name="num-product1" value=' + response + ' data-id=' + productId + '>' +
+						'<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"  data-id=' + productId + '>' +
+						'<i class="fs-16 zmdi zmdi-plus"></i>' +
+						'</div>' +
+						'</div>' +
+
+						'<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 DeleteProduct" data-id=' + productId + '>' +
+						'Remove' +
+						'</button>'
+					)
+					$("#shoppingDetails").append(addProductNumber)
+				}
+
+			}
+		});
+	});
+
+
 
 </script>
 {% endblock %}

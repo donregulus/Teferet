@@ -26,5 +26,6 @@ urlpatterns = [
      ,path('SearchProduct/<category>/<searchWord>'      ,views.SearchProduct          ,name='SearchProduct')
      ,path('WishList/'                                  ,views.WishList               ,name='WishList')
      ,path('FiltersProduct/<cid>'                       ,views.FiltersProduct         ,name='FiltersProduct')
+     ,path('UpdateVariation/<pid>'                      ,views.UpdateVariation        ,name='UpdateVariation')
     
 ]

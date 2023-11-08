@@ -22,7 +22,7 @@
 
                 <ul class="card-action-list">
 
-
+                    {% if product.details.variation_set.sizes|length == 0 and product.details.stock > 0 %}
                     <li class="card-action-item">
                         <a href="#" class="js-addcart-home" data-id={{product.details.pid}}>
                             <button class="card-action-btn" aria-labelledby="card-label-1">
@@ -33,6 +33,7 @@
                                 Add to Cart</div>
                         </a>
                     </li>
+                    {% endif %}
 
                     {% if product.wish %}
                     <li class="card-action-item">
@@ -71,7 +72,7 @@
 
                     </li>
 
-                    <li class="card-action-item">
+                    <!-- <li class="card-action-item">
                         <button class="card-action-btn" aria-labelledby="card-label-4">
                             <ion-icon name="repeat-outline" style="display: block;"></ion-icon>
                         </button>
@@ -79,7 +80,7 @@
                         <div class="card-action-tooltip" id="card-label-4"
                             style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">
                             Compare</div>
-                    </li>
+                    </li> -->
 
                 </ul>
             </figure>
@@ -118,9 +119,9 @@
 
                 <ul class="card-action-list">
 
-
+                    {% if product.variation_set.sizes|length == 0 and product.stock > 0 %}
                     <li class="card-action-item">
-                        <a href="#" class="js-addcart-home" data-id={{ product.pid }}>
+                        <a href="#" class="js-addcart-home" data-id={{product.pid}}>
                             <button class="card-action-btn" aria-labelledby="card-label-1">
                                 <ion-icon name="cart-outline" style="display: block;"></ion-icon>
                             </button>
@@ -128,12 +129,12 @@
                                 style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">
                                 Add to Cart</div>
                         </a>
-
                     </li>
+                    {% endif %}
 
 
                     <li class="card-action-item">
-                        <a href="#" class="js-show-modal1" data-id={{ product.pid }}>
+                        <a href="#" class="js-show-modal1" data-id={{product.pid}}>
                             <button class="card-action-btn" aria-labelledby="card-label-3">
                                 <ion-icon name="eye-outline" style="display: block;"></ion-icon>
                             </button>
@@ -144,7 +145,7 @@
 
                     </li>
 
-                    <li class="card-action-item">
+                    <!-- <li class="card-action-item">
                         <button class="card-action-btn" aria-labelledby="card-label-4">
                             <ion-icon name="repeat-outline" style="display: block;"></ion-icon>
                         </button>
@@ -152,7 +153,7 @@
                         <div class="card-action-tooltip" id="card-label-4"
                             style="font-family: var(--ff-josefin-sans); font-size: 10px;scroll-behavior: smooth;">
                             Compare</div>
-                    </li>
+                    </li> -->
 
                 </ul>
             </figure>

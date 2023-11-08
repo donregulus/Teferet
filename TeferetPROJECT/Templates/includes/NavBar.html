@@ -4,117 +4,121 @@
 
 {% endblock %}
 
-<header   >
-       <!-- Header desktop -->
-		<div class="container-menu-desktop">		
+<header>
+    <!-- Header desktop -->
+    <div class="container-menu-desktop">
 
 
 
 
-            <!-- Topbar -->
-			<div class="top-bar" style="box-shadow: 0 14px 28px rgba(10, 10, 10, 0.603), 0 10px 10px rgba(17, 17, 17, 0.322); text-align:center;background-image: linear-gradient(to right, rgb(73, 2, 2) , #023a0a);">
-				<div class="content-topbar flex-sb-m h-full container">
-					
-				</div>
-			</div>
+        <!-- Topbar -->
+        <div class="top-bar"
+            style="box-shadow: 0 14px 28px rgba(10, 10, 10, 0.603), 0 10px 10px rgba(17, 17, 17, 0.322); text-align:center;background-image: linear-gradient(to right, rgb(73, 2, 2) , #023a0a);">
+            <div class="content-topbar flex-sb-m h-full container">
+
+            </div>
+        </div>
 
 
 
-			<div class="wrap-menu-desktop">
-				<nav class="limiter-menu-desktop container">
-					
-					<!-- Logo desktop -->		
-					<a href="/" class="logo">
-						<img src="{% static 'images/icons/logo.png' %}" alt="IMG-LOGO">
-					</a>
-                    
-					<!-- Menu desktop -->
-					<div class="menu-desktop">
-						<ul class="main-menu">                          
+        <div class="wrap-menu-desktop">
+            <nav class="limiter-menu-desktop container">
 
-							<li  id="id_shop">
-								<a href="{% url 'ShopAPP:Products' %}">SHOP</a>
-								<ul class="sub-menu">
-									<li><a id="id_Accessories" href="{% url 'ShopAPP:AccessoriesProducts' %}">Accessories</a></li>
-									<li><a id="id_Clothes"     href="{% url 'ShopAPP:ClothesProducts' %}">Clothes</a></li>
-									<li><a id="id_Cosmetics"   href="{% url 'ShopAPP:CosmeticsProducts' %}">Cosmetics</a></li>
-								</ul>
-							</li>
+                <!-- Logo desktop -->
+                <a href="/" class="logo">
+                    <img src="{% static 'images/icons/logo.png' %}" alt="IMG-LOGO">
+                </a>
 
-							<!-- <li id="id_shop">
+                <!-- Menu desktop -->
+                <div class="menu-desktop">
+                    <ul class="main-menu">
+
+                        <li id="id_shop">
+                            <a href="{% url 'ShopAPP:Products' %}">SHOP</a>
+                            <ul class="sub-menu">
+                                <li><a id="id_Accessories"
+                                        href="{% url 'ShopAPP:AccessoriesProducts' %}">Accessories</a></li>
+                                <li><a id="id_Clothes" href="{% url 'ShopAPP:ClothesProducts' %}">Clothes</a></li>
+                                <li><a id="id_Cosmetics" href="{% url 'ShopAPP:CosmeticsProducts' %}">Cosmetics</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- <li id="id_shop">
 								<a href="{% url 'ShopAPP:Products' %}">SHOP</a>
 							</li> -->
-						
-							<li id="id_blog">
-								<a href="{% url 'BlogAPP:Blog' %}">BLOG</a>
-							</li>
 
-							<li id="id_about">
-								<a  href="{% url 'CoreAPP:About' %}">ABOUT</a>
-							</li>
+                        <li id="id_blog">
+                            <a href="{% url 'BlogAPP:Blog' %}">BLOG</a>
+                        </li>
 
-							<li id="id_contact">
-								<a href="{% url 'CoreAPP:Contact' %}">CONTACT</a>
-							</li>
-						</ul>
-					</div>	
+                        <li id="id_about">
+                            <a href="{% url 'CoreAPP:About' %}">ABOUT</a>
+                        </li>
 
-					<!-- Icon header -->
-					<div class="wrap-icon-header flex-w flex-r-m">
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-							<i class="zmdi zmdi-search"></i>
-						</div>
+                        <li id="id_contact">
+                            <a href="{% url 'CoreAPP:Contact' %}">CONTACT</a>
+                        </li>
+                    </ul>
+                </div>
 
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" id="cartNum" data-notify={{Itemscount}}>
-							<i class="zmdi zmdi-shopping-cart"></i>
-						</div>
+                <!-- Icon header -->
+                <div class="wrap-icon-header flex-w flex-r-m">
+                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+                        <i class="zmdi zmdi-search"></i>
+                    </div>
 
-						<div class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-favorite"  id="favNum" data-notify="{{WishCount}}">
-							<i class="zmdi zmdi-favorite-outline"></i>							
-                        </div>  
+                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
+                        id="cartNum" data-notify={{Itemscount}}>
+                        <i class="zmdi zmdi-shopping-cart"></i>
+                    </div>
 
-                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 account-menu">
-                            <li>                                                 
-                                {% if userProfile %}
-                                    <img src="{{userProfile.profileImg.url}}" style="width: 30px;">              
-                                    <ul class="sub-menu">
-                                        <li><a href="{% url 'UserAuthsAPP:DashBoard' %}">Dashboard</a></li>
-                                        <li><a href="{% url 'OrderAPP:ViewOrders' %}">Orders</a></li>
-                                        <li><a href="{% url 'UserAuthsAPP:Logout' %}">Logout</a></li>                                
-                                    </ul>                            
-                                {% else %}
-                                    <i class="zmdi zmdi-account-circle"></i>                                 
-                                    <ul class="sub-menu">
-                                        <li><a href="{% url 'UserAuthsAPP:Login' %}">Sign In</a></li>                                
-                                        <li><a href="{% url 'UserAuthsAPP:Register' %}">Register</a></li>
-                                    </ul>                           
-                                {% endif %}
-                            </li>                                            
-                        </div>
-					</div>
-				</nav>
-			</div>	
-		</div>
+                    <div class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-favorite"
+                        id="favNum" data-notify="{{WishCount}}">
+                        <i class="zmdi zmdi-favorite-outline"></i>
+                    </div>
+
+                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 account-menu">
+                        <li>
+                            {% if userProfile %}
+                            <img src="{{userProfile.profileImg.url}}" style="width: 30px;">
+                            <ul class="sub-menu">
+                                <li><a href="{% url 'UserAuthsAPP:DashBoard' %}">Dashboard</a></li>
+                                <li><a href="{% url 'OrderAPP:ViewOrders' %}">Orders</a></li>
+                                <li><a href="{% url 'UserAuthsAPP:Logout' %}">Logout</a></li>
+                            </ul>
+                            {% else %}
+                            <i class="zmdi zmdi-account-circle"></i>
+                            <ul class="sub-menu">
+                                <li><a href="{% url 'UserAuthsAPP:Login' %}">Sign In</a></li>
+                                <li><a href="{% url 'UserAuthsAPP:Register' %}">Register</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
 
 
-		<!-- Modal Search -->
-		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
-			<div class="container-search-header">
-				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-					<!-- <img src="images/icons/icon-close2.png" alt="CLOSE"> -->
-				</button>
+    <!-- Modal Search -->
+    <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+        <div class="container-search-header">
+            <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+                <!-- <img src="images/icons/icon-close2.png" alt="CLOSE"> -->
+            </button>
 
-				<form class="wrap-search-header flex-w p-l-15"  action="{% url 'CoreAPP:Search' %}" method="post">
-                    {% csrf_token %}
-					<button class="flex-c-m trans-04">
-						<i class="zmdi zmdi-search"></i>
-					</button>
-					<input class="plh3" type="text" name="search" placeholder="Search...">
-				</form>
-			</div>
-		</div>
+            <form class="wrap-search-header flex-w p-l-15" action="{% url 'CoreAPP:Search' %}" method="post">
+                {% csrf_token %}
+                <button class="flex-c-m trans-04">
+                    <i class="zmdi zmdi-search"></i>
+                </button>
+                <input class="plh3" type="text" name="search" placeholder="Search...">
+            </form>
+        </div>
+    </div>
 
-       
+
 
 
 
@@ -123,31 +127,31 @@
 
 
 
- <!-- WebSite messages -->
- {% if messages %}
- {% for message in messages %}
- <div class="row no-gutters fixed-bottom">
+<!-- WebSite messages -->
+{% if messages %}
+{% for message in messages %}
+<div class="row no-gutters fixed-bottom">
     <div class="col-lg-5 col-md-12">
 
-    {% if message.tags == "error" %}
+        {% if message.tags == "error" %}
         <div class="alert alert-danger fade show">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="True">&times;</span>
             </button>
             <strong>{{message}}</strong>
-        </div>        
-    {% else %}
+        </div>
+        {% else %}
         <div class="alert alert-{{message.tags}} fade show">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="True">&times;</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="True">&times;</span>
             </button>
             <strong>{{message}}</strong>
         </div>
-    {% endif %}
+        {% endif %}
 
     </div>
- </div>
- {% endfor %}
+</div>
+{% endfor %}
 {% endif %}
 
 
@@ -165,19 +169,19 @@
                 <i class="zmdi zmdi-close"></i>
             </div>
         </div>
-        
+
         <div class="header-cart-content flex-w js-pscroll">
-            <ul class="header-cart-wrapitem w-full" id="CartDetails">                
-                
+            <ul class="header-cart-wrapitem w-full" id="CartDetails">
+
             </ul>
-            
+
             <div class="w-full">
                 <div class="header-cart-total w-full p-tb-40" id="totalPrice">
-                    
+
                 </div>
 
-                <div class="header-cart-buttons flex-w w-full">    
-                                                                        
+                <div class="header-cart-buttons flex-w w-full">
+
                 </div>
             </div>
         </div>
@@ -198,19 +202,19 @@
                 <i class="zmdi zmdi-close"></i>
             </div>
         </div>
-        
+
         <div class="header-cart-content flex-w js-pscroll">
-            <ul class="header-cart-wrapitem w-full" id="FavoritesDetails">                
-                
+            <ul class="header-cart-wrapitem w-full" id="FavoritesDetails">
+
             </ul>
-            
+
             <div class="w-full">
                 <div class="header-cart-total w-full p-tb-40" id="totalPrice">
-                    
+
                 </div>
 
-                <div class="header-wish-buttons flex-w w-full">    
-                                                                        
+                <div class="header-wish-buttons flex-w w-full">
+
                 </div>
             </div>
         </div>
@@ -221,260 +225,264 @@
 
 <!-- Back to top -->
 <div class="btn-back-to-top" id="myBtn">
-	<span class="symbol-btn-back-to-top">		
-		<ion-icon name="arrow-up-outline"></ion-icon>
-	</span>	
+    <span class="symbol-btn-back-to-top">
+        <ion-icon name="arrow-up-outline"></ion-icon>
+    </span>
 </div>
 
 
 
 {% block extend_footer %}
 
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}" type="text/javascript"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+<script src="{% static 'js/jquery-3.3.1.min.js' %}" type="text/javascript"></script>
 
 <script>
 
-//Display alert in 5 seconds
-$(".alert").delay(5000).slideUp(200, function() {
-    $(this).alert('close');
-});
+    //Display alert in 5 seconds
+    $(".alert").delay(5000).slideUp(200, function () {
+        $(this).alert('close');
+    });
 
-//Input validation forgot password
+    //Input validation forgot password
 
-const about       = document.querySelector('#id_about');
-const shop        = document.querySelector('#id_shop');
-const clothes     = document.querySelector('#id_Clothes');
-const accessories = document.querySelector('#id_Accessories');
-const cosmetics   = document.querySelector('#id_Cosmetics');
-const contact     = document.querySelector('#id_contact');
-const blog        = document.querySelector('#id_blog');
+    const about = document.querySelector('#id_about');
+    const shop = document.querySelector('#id_shop');
+    const clothes = document.querySelector('#id_Clothes');
+    const accessories = document.querySelector('#id_Accessories');
+    const cosmetics = document.querySelector('#id_Cosmetics');
+    const contact = document.querySelector('#id_contact');
+    const blog = document.querySelector('#id_blog');
 
-const activeAbout = () => {
-    localStorage.clear()
-    aboutClicked= true
-    localStorage.setItem("aboutClicked", aboutClicked);  
-
-    
-}
-about.addEventListener('click', activeAbout);
-
-const activeShop = () => {
-    localStorage.clear()
-    shopClicked= true
-    localStorage.setItem("shopClicked", shopClicked);       
-    
-}
-
-shop.addEventListener('click', activeShop);
-clothes.addEventListener('click', activeShop);
-accessories.addEventListener('click', activeShop);
-cosmetics.addEventListener('click', activeShop);
-
-const activeContact = () => {
-    localStorage.clear()
-    contactClicked= true
-    localStorage.setItem("contactClicked", contactClicked); 
-    
-     
-}
-contact.addEventListener('click', activeContact);
-
-
-const activeBlog = () => {
-    localStorage.clear()
-    blogClicked= true
-    localStorage.setItem("blogClicked", blogClicked);        
-
-}
-blog.addEventListener('click', activeBlog);
-
-function onload()  {
-
-    var aboutClicked  = localStorage.getItem("aboutClicked");
-    var blogClicked  = localStorage.getItem("blogClicked");
-    var contactClicked  = localStorage.getItem("contactClicked");
-    var shopClicked  = localStorage.getItem("shopClicked");
-    
-
-    var pageUrl = window.document.URL.split("/")
-    var pageName = pageUrl[pageUrl.length-2]
-
-    if((! (pageName === "Contact")) && (! (pageName === "About")) && (! (pageName === "Products")) && (! (pageName === "Blog")) && (! (pageName === "CosmeticsProducts")) && (! (pageName === "AccessoriesProducts")) && (! (pageName === "ClothesProducts")))
-    {
-    
-        about.classList.remove('active-menu')
-        shop.classList.remove('active-menu')
-        contact.classList.remove('active-menu')
-        blog.classList.remove('active-menu')          
+    const activeAbout = () => {
         localStorage.clear()
-    }  
-
-    else if(aboutClicked === "true")
-    {
-        
-        about.classList.add('active-menu')    
-        shop.classList.remove('active-menu')
-        contact.classList.remove('active-menu')
-        blog.classList.remove('active-menu')        
-        
-    
-    }
-    else if(blogClicked === "true")
-    {
-        blog.classList.add('active-menu')            
-        about.classList.remove('active-menu')
-        shop.classList.remove('active-menu')
-        contact.classList.remove('active-menu')  
-             
-        
-    }
-    else if(contactClicked === "true")
-    {
-        contact.classList.add('active-menu')        
-        about.classList.remove('active-menu')
-        shop.classList.remove('active-menu')
-        blog.classList.remove('active-menu')   
-        
-       
-       
-    }
-    else if(shopClicked === "true")
-    {
-        shop.classList.add('active-menu')        
-        about.classList.remove('active-menu')
-        contact.classList.remove('active-menu')
-        blog.classList.remove('active-menu')     
-       
-    }
-   
-    console.log(pageName)
-    
-}
-addEventListener('load', onload);
+        aboutClicked = true
+        localStorage.setItem("aboutClicked", aboutClicked);
 
 
- /*==================================================================
-    [ Cart ]*/
-    $('.js-show-cart').on('click',function(){
+    }
+    about.addEventListener('click', activeAbout);
+
+    const activeShop = () => {
+        localStorage.clear()
+        shopClicked = true
+        localStorage.setItem("shopClicked", shopClicked);
+
+    }
+
+    shop.addEventListener('click', activeShop);
+    clothes.addEventListener('click', activeShop);
+    accessories.addEventListener('click', activeShop);
+    cosmetics.addEventListener('click', activeShop);
+
+    const activeContact = () => {
+        localStorage.clear()
+        contactClicked = true
+        localStorage.setItem("contactClicked", contactClicked);
+
+
+    }
+    contact.addEventListener('click', activeContact);
+
+
+    const activeBlog = () => {
+        localStorage.clear()
+        blogClicked = true
+        localStorage.setItem("blogClicked", blogClicked);
+
+    }
+    blog.addEventListener('click', activeBlog);
+
+    function onload() {
+
+        var aboutClicked = localStorage.getItem("aboutClicked");
+        var blogClicked = localStorage.getItem("blogClicked");
+        var contactClicked = localStorage.getItem("contactClicked");
+        var shopClicked = localStorage.getItem("shopClicked");
+
+
+        var pageUrl = window.document.URL.split("/")
+        var pageName = pageUrl[pageUrl.length - 2]
+
+        if ((!(pageName === "Contact")) && (!(pageName === "About")) && (!(pageName === "Products")) && (!(pageName === "Blog")) && (!(pageName === "CosmeticsProducts")) && (!(pageName === "AccessoriesProducts")) && (!(pageName === "ClothesProducts"))) {
+
+            about.classList.remove('active-menu')
+            shop.classList.remove('active-menu')
+            contact.classList.remove('active-menu')
+            blog.classList.remove('active-menu')
+            localStorage.clear()
+        }
+
+        else if (aboutClicked === "true") {
+
+            about.classList.add('active-menu')
+            shop.classList.remove('active-menu')
+            contact.classList.remove('active-menu')
+            blog.classList.remove('active-menu')
+
+
+        }
+        else if (blogClicked === "true") {
+            blog.classList.add('active-menu')
+            about.classList.remove('active-menu')
+            shop.classList.remove('active-menu')
+            contact.classList.remove('active-menu')
+
+
+        }
+        else if (contactClicked === "true") {
+            contact.classList.add('active-menu')
+            about.classList.remove('active-menu')
+            shop.classList.remove('active-menu')
+            blog.classList.remove('active-menu')
+
+
+
+        }
+        else if (shopClicked === "true") {
+            shop.classList.add('active-menu')
+            about.classList.remove('active-menu')
+            contact.classList.remove('active-menu')
+            blog.classList.remove('active-menu')
+
+        }
+
+        console.log(pageName)
+
+    }
+    addEventListener('load', onload);
+
+
+    /*==================================================================
+       [ Cart ]*/
+    $('.js-show-cart').on('click', function () {
         $('.js-panel-cart').addClass('show-header-cart');
-		
-		
-		let url = "{% url 'ShopAPP:ShowCartDetails' %}";
-		// AJAX request
-		$.ajax({
-			url: url,
-			type: 'get',
-            dataType: 'json', 		
-			success: function(data){   					
-                    
-                    $('#CartDetails').empty();   
-                    var items = $.parseJSON(data.items);
-                    if($.isEmptyObject(items) || items=== null ){             
-                        
-                        var details = $('<h4>YOUR CART IS  EMPTY</h4>')
-                        $('#CartDetails').append(details);                           
-                        
-                    }
-                    else{
-                        $('#totalPrice').html('Total: $'+data.total);    
-                        $('.header-cart-buttons').empty()
-                            
-                            var details = ""
-                                details += '<a href="/Shop/ShoppingDetails/"'					
-                                details += ' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >'
-                                details += 'View Cart'
-                                details += '</a>'	
 
-                            $(".header-cart-buttons").append(details);  
 
-                            $.each(items, function(index, item) {                  
-                                
-                                let url = "{% url 'ShopAPP:ProductDetails' 'pid' %}".replace('pid', item.fields.product);
-                                $.ajax({
-                                        url: url,
-                                        type: 'get',
-                                        dataType: 'json', 		
-                                        success: function(data){  				                                                                               
+        let url = "{% url 'ShopAPP:ShowCartDetails' %}";
+        // AJAX request
+        $.ajax({
+            url: url,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
 
-                                            var details = $( '<li class="header-cart-item flex-w flex-t m-b-12">'+
-                                                            '<div class="header-cart-item-img">'+
-                                                                '<img src='+'"'+data.image+'"'+ 'alt="IMG">'+
-                                                            '</div>'+
+                $('#CartDetails').empty();
+                var items = $.parseJSON(data.items);
+                if ($.isEmptyObject(items) || items === null) {
 
-                                                            '<div class="header-cart-item-txt p-t-8">'+
-                                                                '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">'+
-                                                                    data.name+
-                                                                '</a>'+
-                                                                '<span class="header-cart-item-info">'+
-                                                                    item.fields.quantity+ 'x $'+data.price+
-                                                                '</span>'+
-                                                            '</div>'+
-                                                        '</li>')                                                
-                                            $('#CartDetails').append(details);                                    
-                                        }                              
+                    $('#totalPrice').empty()
+                    var details = $('<h4>YOUR CART IS  EMPTY</h4>')
+                    $('#CartDetails').append(details);
 
-                                    });
-                            });
-                        }   
-			}
-		});
+                }
+                else {
+                    $('#totalPrice').html('Total: $' + data.total);
+                    $('.header-cart-buttons').empty()
+
+                    var details = ""
+                    details += '<a href="/Shop/ShoppingDetails/"'
+                    details += ' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >'
+                    details += 'View Cart'
+                    details += '</a>'
+
+                    $(".header-cart-buttons").append(details);
+
+                    $.each(items, function (index, item) {
+
+                        let url = "{% url 'ShopAPP:ProductDetails' 'pid' %}".replace('pid', item.fields.product);
+                        $.ajax({
+                            url: url,
+                            type: 'get',
+                            dataType: 'json',
+                            success: function (data) {
+
+                                var variationTag = ""
+                                if (data.variation.length == 0) {
+                                    variationTag = '<div class="header-cart-item-txt p-t-8">' +
+                                        '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">' +
+                                        data.name +
+                                        '</a>'
+                                }
+                                else {
+                                    variationTag = '<div class="header-cart-item-txt p-t-8">' +
+                                        '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">' +
+                                        data.name + ' - Size: ' + item.fields.variation +
+                                        '</a>'
+                                }
+
+                                var details = $('<li class="header-cart-item flex-w flex-t m-b-12">' +
+                                    '<div class="header-cart-item-img">' +
+                                    '<img src=' + '"' + data.image + '"' + 'alt="IMG">' +
+                                    '</div>' + variationTag +
+                                    '<span class="header-cart-item-info">' +
+                                    item.fields.quantity + 'x $' + data.price +
+                                    '</span>' +
+                                    '</div>' +
+                                    '</li>')
+                                $('#CartDetails').append(details);
+                            }
+
+                        });
+                    });
+                }
+            }
+        });
     });
 
 
 
- /*==================================================================
-    [ favorite ]*/
-    $('.js-show-favorite').on('click',function(){
+    /*==================================================================
+       [ favorite ]*/
+    $('.js-show-favorite').on('click', function () {
         $('.js-panel-favorite').addClass('show-header-cart');
-		
-		
-		let url = "{% url 'ShopAPP:WishList' %}";
-		// AJAX request
-		$.ajax({
-			url: url,
-			type: 'get',
-            dataType: 'json', 		
-			success: function(data){				
+
+
+        let url = "{% url 'ShopAPP:WishList' %}";
+        // AJAX request
+        $.ajax({
+            url: url,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
 
                 $('#FavoritesDetails').empty();
                 // var items = $.parseJSON(data);
-                if(data.length ===0 || data=== null )
-                {
+                if (data.length === 0 || data === null) {
                     var details = $('<h4>YOUR WISHLIST IS EMPTY</h4>')
-                    $('#FavoritesDetails').append(details);                        
+                    $('#FavoritesDetails').append(details);
                 }
-                else{     
-                    
+                else {
+
                     $('.header-wish-buttons').empty()
-                            
+
                     var details = ""
-                        details += '<a href="/Shop/WishList/"'					
-                        details += ' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >'
-                        details += 'View WishList'
-                        details += '</a>'	
+                    details += '<a href="/Shop/WishList/"'
+                    details += ' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" >'
+                    details += 'View WishList'
+                    details += '</a>'
 
-                    $(".header-wish-buttons").append(details);  
-                    
-                            $.each(data, function(index, item) {       
-                                var details = $( '<li class="header-cart-item flex-w flex-t m-b-12">'+
-                                                '<div class="header-cart-item-img">'+
-                                                    '<img src='+'"'+item.productImage+'"'+ 'alt="IMG">'+
-                                                '</div>'+
+                    $(".header-wish-buttons").append(details);
 
-                                                '<div class="header-cart-item-txt p-t-8">'+
-                                                    '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">'+
-                                                        item.productName+
-                                                    '</a>'+                                                   
-                                                '</div>'+
-                                            '</li>')                                                
-                                $('#FavoritesDetails').append(details);                                   
-                            });
-                        }   
-			}
-		});
+                    $.each(data, function (index, item) {
+                        var details = $('<li class="header-cart-item flex-w flex-t m-b-12">' +
+                            '<div class="header-cart-item-img">' +
+                            '<img src=' + '"' + item.productImage + '"' + 'alt="IMG">' +
+                            '</div>' +
+
+                            '<div class="header-cart-item-txt p-t-8">' +
+                            '<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">' +
+                            item.productName +
+                            '</a>' +
+                            '</div>' +
+                            '</li>')
+                        $('#FavoritesDetails').append(details);
+                    });
+                }
+            }
+        });
     });
 
 </script>

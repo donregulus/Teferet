@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block extend_head %}
-	<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <title>Teferet | Sign In - Register</title>
+<link href="{% static 'css/sign.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<title>Teferet | Sign In - Register</title>
 {% endblock %}
 
 
@@ -13,136 +13,137 @@
 
 <!-- Title page -->
 <div style="margin-top: 150px;">
-<section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover" style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
-    <h2 class="ltext-105 cl0 txt-center">
-        SIGN IN  /  REGISTER
-    </h2>
-</section>	
+    <section class="bg-img1 txt-center p-lr-15 p-tb-92  ContactCover"
+        style="background-image: url('{% static './images/banners/Contact.jpg' %}');">
+        <h2 class="ltext-105 cl0 txt-center">
+            SIGN IN / REGISTER
+        </h2>
+    </section>
 
-<section class="section-content ">
-<div class="containerSign" id="containerSign" >
-	<div class="form-container sign-up-container">
+    <section class="section-content ">
+        <div class="containerSign" id="containerSign">
+            <div class="form-container sign-up-container">
 
-        
-		<form id="signup" action="{% url 'UserAuthsAPP:Register' %}" method="post"  >
-			<h1>Create Account</h1>
-			<div class="social-container">
-                <a href="#" class="social-link">
-                    <ion-icon name="logo-facebook"></ion-icon>
-                </a>
-                <a href="#" class="social-link">
-                    <ion-icon name="logo-google"></ion-icon>
-                </a>
-                <a href="#" class="social-link">
-                    <ion-icon name="logo-linkedin"></ion-icon>
-                </a>
-			</div>
-			<span>or use your email for registration</span>
 
-            {% csrf_token %}       
-            
-            <div class="input-control">                
-                {{form.first_name}}  
-                <div class="error"></div>
+                <form id="signup" action="{% url 'UserAuthsAPP:Register' %}" method="post">
+                    <h1>Create Account</h1>
+                    <div class="social-container">
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                        </a>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-google"></ion-icon>
+                        </a>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-linkedin"></ion-icon>
+                        </a>
+                    </div>
+                    <span>or use your email for registration</span>
+
+                    {% csrf_token %}
+
+                    <div class="input-control">
+                        {{form.first_name}}
+                        <div class="error"></div>
+                    </div>
+
+
+                    <div class="input-control">
+                        {{form.last_name}}
+                        <div class="error"></div>
+                    </div>
+
+                    <div class="input-control">
+                        {{form.email}}
+                        <div class="error"></div>
+                    </div>
+
+                    <div class="input-control">
+                        {{form.username}}
+                        <div class="error"></div>
+                    </div>
+
+                    <div class="input-control">
+                        {{form.password1}}
+                        <i class="far fa-eye" id="togglePasswordSignup"></i>
+                        <div class="error"></div>
+                    </div>
+
+                    <div class="input-control">
+                        {{form.password2}}
+                        <i class="far fa-eye" id="togglePasswordConfirm"></i>
+                        <div class="error"></div>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary dropdown" id="SignupButton" style="margin-top: 10px;">
+                        Register
+                    </button>
+
+                </form>
             </div>
-            
 
-            <div class="input-control">                
-                {{form.last_name}}    
-                <div class="error"></div>
+
+            <div class="form-container sign-in-container">
+                <form action="{% url 'UserAuthsAPP:Login' %}" method="post">
+                    {% csrf_token %}
+
+
+                    <h1>Sign in</h1>
+                    <div class="social-container">
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                        </a>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-google"></ion-icon>
+                        </a>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-linkedin"></ion-icon>
+                        </a>
+                    </div>
+                    <span>or use your account</span>
+
+                    <div class="input-control">
+                        {{loginForm.username}}
+                        <div class="error"></div>
+                    </div>
+
+                    <div class="input-control">
+                        {{loginForm.password}}
+                        <i class="far fa-eye" id="togglePasswordLogin"></i>
+                        <div class="error"></div>
+                    </div>
+                    <a href="{% url 'UserAuthsAPP:ForgotPassword' %}">Forgot your password?</a>
+
+
+                    <button type="submit" class="btn btn-primary dropdown" id="SigninButton" style="margin-top: 30px;">
+                        Sign In
+                    </button>
+                </form>
             </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>To keep connected with us please login with your personal info</p>
 
-            <div class="input-control">                
-                {{form.email}}      
-                <div class="error"></div>
+                        <button type="button" class="btn btn-primary dropdown " id="signIn">
+                            SIGN IN
+                        </button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hello, Friend!</h1>
+                        <p>Enter your personal details and start journey with us</p>
+
+                        <button type="button" class="btn btn-primary dropdown" id="signUp">
+                            REGISTER
+                        </button>
+                    </div>
+                </div>
             </div>
-
-            <div class="input-control">                
-                {{form.username}}        
-                <div class="error"></div>
-            </div>
-
-            <div class="input-control">                
-                {{form.password1}}   
-                <i class="far fa-eye" id="togglePasswordSignup"></i>
-                <div class="error"></div>
-            </div>
-
-            <div class="input-control">                
-                {{form.password2}}                
-                <i class="far fa-eye" id="togglePasswordConfirm"></i>
-                <div class="error"></div>
-            </div>              
-            <br>
-            <button type="submit"  class="btn btn-primary dropdown" id="SignupButton" style="margin-top: 10px;">
-                Register
-            </button>
-
-		</form>
-	</div>
+        </div>
 
 
-	<div class="form-container sign-in-container">
-		<form action="{% url 'UserAuthsAPP:Login' %}" method="post">
-            {% csrf_token %}
-
-           
-			<h1>Sign in</h1>
-			<div class="social-container">
-                <a href="#" class="social-link">
-                    <ion-icon name="logo-facebook"></ion-icon>
-                </a>
-                <a href="#" class="social-link">
-                    <ion-icon name="logo-google"></ion-icon>
-                </a>
-                <a href="#" class="social-link">
-                    <ion-icon name="logo-linkedin"></ion-icon>
-                </a>
-			</div>
-			<span>or use your account</span>
-            
-            <div class="input-control">      
-                {{loginForm.username}}                
-                <div class="error"></div>
-            </div>			
-			
-            <div class="input-control">                                
-                {{loginForm.password}}
-                <i class="far fa-eye" id="togglePasswordLogin"></i>             
-                <div class="error"></div>   
-            </div>    
-			<a href="{% url 'UserAuthsAPP:ForgotPassword' %}">Forgot your password?</a>
-			
-            
-            <button type="submit" class="btn btn-primary dropdown" id="SigninButton" style="margin-top: 30px;">
-                Sign In
-            </button>
-		</form>
-	</div>
-	<div class="overlay-container">
-		<div class="overlay">
-			<div class="overlay-panel overlay-left">
-				<h1>Welcome Back!</h1>
-				<p>To keep connected with us please login with your personal info</p>
-				
-                <button type="button" class="btn btn-primary dropdown "  id="signIn">
-                    Sign In
-                </button>
-			</div>
-			<div class="overlay-panel overlay-right">
-				<h1>Hello, Friend!</h1>
-				<p>Enter your personal details and start journey with us</p>
-				
-                <button type="button" class="btn btn-primary dropdown"  id="signUp">
-                    REGISTER
-                </button>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-</section>
+    </section>
 
 </div>
 
@@ -153,13 +154,12 @@
 
 
 <script>
-        var signUpView     = "{{signUpView|safe}}";
-        if(signUpView)
-        {
-            const container = document.getElementById('containerSign');
-	        container.classList.add("right-panel-active");
+    var signUpView = "{{signUpView|safe}}";
+    if (signUpView) {
+        const container = document.getElementById('containerSign');
+        container.classList.add("right-panel-active");
 
-        }
+    }
 </script>
 
 
