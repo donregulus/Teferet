@@ -146,8 +146,21 @@ def ViewOrders(request):
 
     #Get current user orders
     orders = Order.objects.filter(user=LoggedUser)
+    ordersParsed = []
+    for item in orders:
+        lDeliveredStatus=str()
+        match item.DeliveredStatus:
+             case 1:
+                lDeliveredStatus = "IN PREPARATION"
+             case 2:
+                lDeliveredStatus = "IN DELIVERY"
+             case 3:
+                lDeliveredStatus = "RECEIVED"
+        itemParsed = {"details":item,"status":lDeliveredStatus}
+        ordersParsed.append(itemParsed)
+
     context = {                    
-                        "OrderList": orders,
+                        "OrderList": ordersParsed,
                     }
     return render(request, 'OrderAPP/ViewOrders.html',context)
 

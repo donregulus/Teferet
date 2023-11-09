@@ -6,9 +6,9 @@ import uuid
 # Create your models here.
 
 ORDERSTATUS = (
-    (1,'Preparation'),    
-    (2,'Deliver'),    
-    (3,'Receive')        
+    (1,'IN PREPARATION'),    
+    (2,'IN DELIVERY'),    
+    (3,'RECEIVED')        
 )
 
 class Order(models.Model):
