@@ -9,17 +9,8 @@ from django.urls import  reverse
 
 
 
-from ShopAPP.models import Cart, CartItem
+from ShopAPP.models import Cart, CartItem, Product,Variation
 from OrderAPP.models import Order
-
-from ShopAPP.views import __cart_id__
-
-# Create your views here. 
-
-
-
-
-
 
 
 import stripe
@@ -67,7 +58,7 @@ def CreditCardPayment(request):
                                             'product_data': {
                                                             'name': item.product.name,
                                                             },
-                                            'unit_amount': int(item.product.price*100),
+                                            'unit_amount': int(item.product.price*100),#conversion from cent to dollar
                                         },
                         "quantity" : item.quantity            
                     }
@@ -80,14 +71,13 @@ def CreditCardPayment(request):
     cancel_url = urlBase + '/Order/CancelPayment',
     
   )
-
     return redirect(session.url, code=303)
     
 
 
 def CreditCardSuccess(request):
   session = stripe.checkout.Session.retrieve(request.GET['session_id'])
-  total = session.amount_total/100
+  total = session.amount_total/100 #conversion from cent to dollar
   return redirect("OrderAPP:RegisterOrderPayment",paymentMode="CreditCard",totalAmout=total)
 
 
@@ -103,7 +93,25 @@ def RegisterOrderPayment(request,paymentMode,totalAmout):
         #Get the current cart
         cart = None
         if Cart.objects.filter(isActive=True,user=LoggedUser).exists() :
-            cart = Cart.objects.get(isActive=True,user=LoggedUser)   
+            cart = Cart.objects.get(isActive=True,user=LoggedUser)
+
+            #update stocks
+            cart_items = CartItem.objects.all().filter(cart=cart)
+            for item in cart_items:
+                if len(item.variation.strip()) == 0:                    
+                    #Update  the product stock                    
+                    item.product.stock -= item.quantity
+                    item.product.save()
+                else:
+                    #Update  the variation product quantity
+                    productVariation = Variation.objects.get(product=item.product,variation_value=item.variation)
+                    productVariation.quantity -= item.quantity
+                    productVariation.save()
+                    
+                    #Update  the product stock                    
+                    item.product.stock -= item.quantity
+                    item.product.save()
+
             cart.isActive=False   
             cart.save()         
             #Save Order
@@ -155,6 +163,4 @@ def ViewOrderDetails(request,pid):
                         "Products": cartItems,
                         "Total": order.totalAmout,
                     }
-
-
     return render(request, 'OrderAPP/ViewOrderDetails.html',context)
