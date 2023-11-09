@@ -36,6 +36,13 @@ COLORS = (
     (4,'🟡'),        
     (5,'🔵'),        
     (6,'⚪'),    
+    (7,'🟠'),    
+)
+
+GENDERS = (
+    (1,'👨'),
+    (2,'👩'),
+    (3,'👶'),
 )
 
 
@@ -72,6 +79,7 @@ class Product(models.Model):
     createdDate = models.DateTimeField(auto_now_add=True )
     updatedDate = models.DateTimeField(auto_now=True)    
     color       = models.IntegerField(choices=COLORS,default=1,null=True)
+    gender      = models.IntegerField(choices=GENDERS,default=1,null=True)
 
     # product_status = models.CharField(choices=STATUS, max_length=10, default="inReview")
     # status = models.BooleanField(default=True)

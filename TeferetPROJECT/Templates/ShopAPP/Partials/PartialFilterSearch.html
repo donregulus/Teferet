@@ -25,31 +25,7 @@
 
 
 <div class="flex-w flex-sb-m p-b-52">
-    <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-            All Products
-        </button>
 
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-            Women
-        </button>
-
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-            Men
-        </button>
-
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-            Bag
-        </button>
-
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-            Shoes
-        </button>
-
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-            Watches
-        </button>
-    </div>
 
     <div class="flex-w flex-c-m m-tb-10">
         <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
@@ -133,7 +109,7 @@
 
                     <input id="rangePrice" type="range" list="ticks" style="width: 100%; margin-top: 31px;"
                         min="{{min_max_price.price__min|floatformat:1}}"
-                        max="{{min_max_price.price__max|floatformat:1}}" value="{{min_max_price.price__min}}"
+                        max="{{min_max_price.price__max|floatformat:1}}" value="{{min_max_price.price__max}}"
                         oninput="max_price.value=this.value" />
 
                     <datalist id="ticks" style="width: 100%;">
@@ -150,7 +126,7 @@
 
                     <input class="mtext-104 cl3 txt-center num-product" id="max_price"
                         min="{{min_max_price.price__min}}" max="{{min_max_price.price__max}}"
-                        value="{{min_max_price.price__min}}" placeholder="Max Price"
+                        value="{{min_max_price.price__max}}" placeholder="Max Price"
                         style="margin-left: 35%;  width:25%; margin-top: 13px;" onkeyup="rangePrice.value=this.value" />
 
                 </section>
@@ -167,9 +143,9 @@
 
                     {% for item in colorsAvaillable %}
                     <li class="p-b-6" style="margin-left: 23%;margin-top:5%; ">
-                        <input type="checkbox" class="filter-checkbox"
+                        <input type="checkbox" class="filter-checkbox-color"
                             style="display: inline-block; size: 45px; width: 21px; height: 21px; accent-color: rgb(2, 71, 30);"
-                            , value="{{item.id}}" />
+                            , value="{{item.id}}" data-filter="color" />
 
                         <span class="fs-15 lh-12 m-r-6" style="color:{{item.color}};" style="display: inline-block;">
                             <i class="zmdi zmdi-circle" style="font-size: 30px; margin-left: 10%;"></i>
@@ -186,30 +162,22 @@
 
             <div class="filter-col4 p-b-27">
                 <div class="mtext-102 cl2 p-b-15">
-                    Tags
+                    Gender
                 </div>
 
-                <div class="flex-w p-t-4 m-r--5">
-                    <a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-                        Fashion
-                    </a>
+                <ul>
+                    {% for item in gendersAvaillable %}
+                    <li class="p-b-6" style="margin-left: 23%;margin-top:5%; ">
+                        <input type="checkbox" class="filter-checkbox-gender"
+                            style="display: inline-block; size: 45px; width: 21px; height: 21px; accent-color: rgb(2, 71, 30);"
+                            , value="{{item.id}}" data-filter="gender" />
 
-                    <a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-                        Lifestyle
-                    </a>
-
-                    <a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-                        Denim
-                    </a>
-
-                    <a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-                        Streetstyle
-                    </a>
-
-                    <a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-                        Crafts
-                    </a>
-                </div>
+                        <h5 style="display: inline-block;">
+                            {{item.name}}
+                        </h5>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
 
@@ -261,14 +229,21 @@
             let url = "{% url 'ShopAPP:FiltersProduct' 'cid'  %}".replace('cid', cid)
 
 
-            $(".filter-checkbox").each(function () {
-
+            $(".filter-checkbox-color").each(function () {
                 let filter_value = $(this).val()
-                filterOject["color"] = Array.from(document.querySelectorAll('input:checked')).map(function (elt) {
+                filterOject["color"] = Array.from(document.querySelectorAll('input[data-filter=color]:checked')).map(function (elt) {
                     return elt.value
                 })
-
             })
+
+
+            $(".filter-checkbox-gender").each(function () {
+                let filter_value = $(this).val()
+                filterOject["gender"] = Array.from(document.querySelectorAll('input[data-filter=gender]:checked')).map(function (elt) {
+                    return elt.value
+                })
+            })
+
 
             $.ajax({
                 url: url,
@@ -294,6 +269,7 @@
                         $('#NotFoundProduct').append(details);
 
                     }
+                    console.log(response.data)
                     $("#ProductListFiltered").html(response.data)
                 }
             })
@@ -317,7 +293,8 @@
             e.preventDefault();
 
             var searchWord = $("[name='search-product']").val();
-            let url = "{% url 'ShopAPP:SearchProduct' 'ALL' 'searchWord'  %}".replace('searchWord', searchWord);
+            let cid = $("#priceSlider").data('cid');
+            let url = "{% url 'ShopAPP:SearchProduct' 'cid' 'searchWord'  %}".replace('searchWord', searchWord).replace('cid', cid);
 
             // AJAX request
             $.ajax({
