@@ -453,22 +453,6 @@
 {% block extend_footer %}
 <script>
 
-	// $('.js-addcart-detail').each(function () {
-	// 	var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-	// 	$(this).on('click', function () {
-	// 		swal(nameProduct, "is added to cart !", "success");
-	// 		var productId = $(this).data('id');
-	// 		let url = "{% url 'ShopAPP:AddProduct' 'pid' %}".replace('pid', productId);
-	// 		// AJAX request
-	// 		$.ajax({
-	// 			url: url,
-	// 			type: 'get',
-	// 			success: function (response) {
-	// 				$("#cartNum").attr("data-notify", response);
-	// 			}
-	// 		});
-	// 	});
-	// });
 
 	$('#shoppingDetails').on('click', '.js-addcart-detail', function (e) {
 		var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
@@ -572,6 +556,10 @@
 			data: SizeOject,
 			success: function (response) {
 				$("#cartNum").attr("data-notify", response);
+			},
+			error: function (response) {
+				$(".num-product").val(response.responseJSON.prodNumCart);
+				swal("Oops", response.responseJSON.error, "error");
 			}
 		});
 	});
@@ -618,6 +606,7 @@
 			var numProduct = 1
 		}
 
+		let currentNumIndex = $(this)
 
 		let SizeOject = {}
 		if ($("#sizeSelected").length) {
@@ -635,6 +624,10 @@
 			type: 'get',
 			success: function (response) {
 				$("#cartNum").attr("data-notify", response);
+			},
+			error: function (response) {
+				currentNumIndex.val(response.responseJSON.prodNumCart);
+				swal("Oops", response.responseJSON.error, "error");
 			}
 		});
 	});

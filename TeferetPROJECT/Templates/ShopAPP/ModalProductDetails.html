@@ -187,7 +187,6 @@
     $(".js-modal1").removeClass("show-modal1");
   });
 
-
   $('#shoppingDetails').on('click', '.js-addcart-detail', function (e) {
     var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
     let size = null;
@@ -291,6 +290,10 @@
       data: SizeOject,
       success: function (response) {
         $("#cartNum").attr("data-notify", response);
+      },
+      error: function (response) {
+        $(".num-product").val(response.responseJSON.prodNumCart);
+        swal("Oops", response.responseJSON.error, "error");
       }
     });
   });
@@ -354,6 +357,10 @@
       type: 'get',
       success: function (response) {
         $("#cartNum").attr("data-notify", response);
+      },
+      error: function (response) {
+        $(".num-product").val(response.responseJSON.prodNumCart);
+        swal("Oops", response.responseJSON.error, "error");
       }
     });
   });

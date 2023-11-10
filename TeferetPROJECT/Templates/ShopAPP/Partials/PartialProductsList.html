@@ -267,6 +267,10 @@
                 type: 'get',
                 success: function (response) {
                     $("#cartNum").attr("data-notify", response);
+                },
+                error: function (response) {
+                    // $(".num-product").val(response.responseJSON.prodNumCart);
+                    swal("Oops", response.responseJSON.error, "error");
                 }
             });
 
