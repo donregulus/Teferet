@@ -100,11 +100,11 @@ if prod == "True":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME':  os.environ.get('TEF_DB_NAME'),
-            'USER':  os.environ.get('TEF_USERNAME'),
-            'PASSWORD':  os.environ.get('TEF_PASSWORD'),
-            'HOST':  os.environ.get('TEF_HOSTNAME'),
-            'PORT':  os.environ.get('TEF_PORT'),
+            'NAME':  os.environ.get('MYSQLDATABASE'),
+            'USER':  os.environ.get('MYSQLUSER'),
+            'PASSWORD':  os.environ.get('MYSQLPASSWORD'),
+            'HOST':  os.environ.get('MYSQLHOST'),
+            'PORT':  os.environ.get('MYSQLPORT'),
         }
     }
 else:
