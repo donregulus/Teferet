@@ -97,16 +97,26 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 prod = os.environ.get('PROD_MODE')  
 if prod == "True":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME':  os.environ.get('MYSQLDATABASE'),
-            'USER':  os.environ.get('MYSQLUSER'),
-            'PASSWORD':  os.environ.get('MYSQLPASSWORD'),
-            'HOST':  os.environ.get('MYSQLHOST'),
-            'PORT':  os.environ.get('MYSQLPORT'),
+   DATABASES = {
+
+    #  'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
+
+    'default': {
+        'ENGINE': 'djongo',
+        # 'NAME':environ.get('MONGO_DB_NAME'),
+        'CLIENT' : {
+            'host':environ.get('MONGOHOST'),
+            'port':int(environ.get('MONGOPORT')),
+            'username':environ.get('MONGOUSER'),
+            'password':environ.get('MONGOPASSWORD'),
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
         }
     }
+}
 else:
     DATABASES = {
         'default': {
