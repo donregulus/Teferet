@@ -34,7 +34,7 @@ def Register(request):
                     'signUpView' : True
                 }
                 messages.error(request,"Email already used")
-                return render(request,'UserAuthsAPP/Sign-up.html',context)   
+                return render(request,'UserAuthsAPP/SignUp.html',context)   
                 
             form.save()            
             userCreatedName     = form.cleaned_data.get("username")            
@@ -58,7 +58,7 @@ def Register(request):
                     'signUpView' : True
             }
             messages.error(request,form.errors)
-            return render(request,'UserAuthsAPP/Sign-up.html',context)   
+            return render(request,'UserAuthsAPP/SignUp.html',context)   
                 
     else :         
         print("---------------Can not registered user")
@@ -69,7 +69,7 @@ def Register(request):
                     'loginForm' : loginForm,
                     'signUpView' : True
         }
-        return render(request,'UserAuthsAPP/Sign-up.html',context)
+        return render(request,'UserAuthsAPP/SignUp.html',context)
 
 def Login(request):    
 
@@ -135,10 +135,10 @@ def Login(request):
                 return redirect("CoreAPP:Index")
             else:
                 messages.error(request,"Credential Failed: Enter a correct username and password")    
-                return render(request,'UserAuthsAPP/Sign-up.html',context)
+                return render(request,'UserAuthsAPP/SignUp.html',context)
         else:                      
             messages.error(request,"Credential Failed: Enter a correct username and password")                
-            return render(request,'UserAuthsAPP/Sign-up.html',context)   
+            return render(request,'UserAuthsAPP/SignUp.html',context)   
     else:    
         form      = RegisterForm(data=None)        
         loginForm = LoginForm(data= request.POST or None)
@@ -147,7 +147,7 @@ def Login(request):
                         'loginForm' : loginForm,
                         
             }
-        return render(request,'UserAuthsAPP/Sign-up.html',context)
+        return render(request,'UserAuthsAPP/SignUp.html',context)
 
 @login_required(login_url="UserAuthsAPP:Login")
 def Logout(request):        
