@@ -96,26 +96,18 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 prod = os.environ.get('PROD_MODE')  
-if prod == "True":
-    DATABASES = {
-        #  'default': {
-        #     'ENGINE': 'django.db.backends.sqlite3',
-        #     'NAME': BASE_DIR / 'db.sqlite3',
-        # },
+if prod == "True":   
 
-        'default': {
-            'ENGINE': 'djongo',
-            'NAME':os.environ.get('MONGODBNAME'),
-            'CLIENT' : {
-                'host':os.environ.get('MONGOHOST'),
-                'port':int(os.environ.get('MONGOPORT')),
-                'username':os.environ.get('MONGOUSER'),
-                'password':os.environ.get('MONGOPASSWORD'),
-                'authSource': 'admin',
-                'authMechanism': 'SCRAM-SHA-1',
-            }
-        }
+    DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': os.environ["MONGODBNAME"],
+        'USER': os.environ["MONGOUSER"],
+        'PASSWORD': os.environ["MONGOPASSWORD"],
+        'HOST': os.environ["MONGOHOST"],
+        'PORT': os.environ["MONGOPORT"],
     }
+}
 
     print("Using Mongo database")
 
