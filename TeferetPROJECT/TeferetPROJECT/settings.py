@@ -99,31 +99,30 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 prod = os.environ.get('PROD_MODE')  
 if prod == "True":
 
-    DATABASE_URL=os.environ.get("MONGO_PRIVATE_URL")
-    DATABASES={
-    "default":dj_database_url.config(default=DATABASE_URL,ssl_require=True,conn_max_age=1800),
-        }
-
-
-
-    # DATABASES = {
-    #     #  'default': {
-    #     #     'ENGINE': 'django.db.backends.sqlite3',
-    #     #     'NAME': BASE_DIR / 'db.sqlite3',
-    #     # },
-
-    #     'default': {
-    #         'ENGINE': 'djongo',
-    #         'NAME':os.environ.get('MONGODBNAME'),
-    #         'CLIENT' : {
-    #             'host':os.environ.get('MONGOHOST'),
-    #             'port':int(os.environ.get('MONGOPORT')),
-    #             'username':os.environ.get('MONGOUSER'),
-    #             'password':os.environ.get('MONGOPASSWORD'),
-                
-    #         }
+    # DATABASE_URL=os.environ.get("MONGO_PRIVATE_URL")
+    # DATABASES={
+    # "default":dj_database_url.config(default=DATABASE_URL,ssl_require=True,conn_max_age=1800),
     #     }
-    # }
+
+
+
+    DATABASES = {
+        #  'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': BASE_DIR / 'db.sqlite3',
+        # },
+
+        'default': {
+            'ENGINE': 'djongo',            
+            'CLIENT' : {
+                'host':os.environ.get('MONGO_PRIVATE_URL'),
+                # 'port':int(os.environ.get('MONGOPORT')),
+                # 'username':os.environ.get('MONGOUSER'),
+                # 'password':os.environ.get('MONGOPASSWORD'),
+                
+            }
+        }
+    }
 
     # DATABASES = {
     # 'default': {
