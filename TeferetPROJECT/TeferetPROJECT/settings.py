@@ -98,25 +98,27 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 prod = os.environ.get('PROD_MODE')  
 if prod == "True":
    DATABASES = {
+        #  'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': BASE_DIR / 'db.sqlite3',
+        # },
 
-    #  'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # },
-
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME':environ.get('MONGODBNAME'),
-        'CLIENT' : {
-            'host':environ.get('MONGOHOST'),
-            'port':int(environ.get('MONGOPORT')),
-            'username':environ.get('MONGOUSER'),
-            'password':environ.get('MONGOPASSWORD'),
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1',
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME':environ.get('MONGODBNAME'),
+            'CLIENT' : {
+                'host':environ.get('MONGOHOST'),
+                'port':int(environ.get('MONGOPORT')),
+                'username':environ.get('MONGOUSER'),
+                'password':environ.get('MONGOPASSWORD'),
+                'authSource': 'admin',
+                'authMechanism': 'SCRAM-SHA-1',
+            }
         }
     }
-}
+
+    print("Using Mongo database")
+
 else:
     DATABASES = {
         'default': {
@@ -124,6 +126,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print("Using Sqlite database")
 
 
 # Password validation
