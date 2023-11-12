@@ -106,7 +106,7 @@ if prod == "True":
 
     'default': {
         'ENGINE': 'djongo',
-        # 'NAME':environ.get('MONGO_DB_NAME'),
+        'NAME':environ.get('MONGODBNAME'),
         'CLIENT' : {
             'host':environ.get('MONGOHOST'),
             'port':int(environ.get('MONGOPORT')),
