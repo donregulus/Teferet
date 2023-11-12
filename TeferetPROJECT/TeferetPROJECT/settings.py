@@ -105,12 +105,12 @@ if prod == "True":
 
         'default': {
             'ENGINE': 'djongo',
-            'NAME':environ.get('MONGODBNAME'),
+            'NAME':os.environ.get('MONGODBNAME'),
             'CLIENT' : {
-                'host':environ.get('MONGOHOST'),
-                'port':int(environ.get('MONGOPORT')),
-                'username':environ.get('MONGOUSER'),
-                'password':environ.get('MONGOPASSWORD'),
+                'host':os.environ.get('MONGOHOST'),
+                'port':int(os.environ.get('MONGOPORT')),
+                'username':os.environ.get('MONGOUSER'),
+                'password':os.environ.get('MONGOPASSWORD'),
                 'authSource': 'admin',
                 'authMechanism': 'SCRAM-SHA-1',
             }
