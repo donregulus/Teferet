@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 prod = os.environ.get('PROD_MODE')  
 if prod == "True":
-   DATABASES = {
+    DATABASES = {
         #  'default': {
         #     'ENGINE': 'django.db.backends.sqlite3',
         #     'NAME': BASE_DIR / 'db.sqlite3',
