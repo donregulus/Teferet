@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 #Load .env path
 load_dotenv()
@@ -97,35 +98,43 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 prod = os.environ.get('PROD_MODE')  
 if prod == "True":
-    DATABASES = {
-        #  'default': {
-        #     'ENGINE': 'django.db.backends.sqlite3',
-        #     'NAME': BASE_DIR / 'db.sqlite3',
-        # },
 
-        'default': {
-            'ENGINE': 'djongo',
-            'NAME':os.environ.get('MONGODBNAME'),
-            'CLIENT' : {
-                'host':os.environ.get('MONGOHOST'),
-                'port':int(os.environ.get('MONGOPORT')),
-                'username':os.environ.get('MONGOUSER'),
-                'password':os.environ.get('MONGOPASSWORD'),
-                
-            }
+    DATABASE_URL=os.environ.get("MONGO_PRIVATE_URL")
+    DATABASES={
+    "default":dj_database_url.config(default=DATABASE_URL,ssl_require=True,conn_max_age=1800),
         }
-    }
 
-    DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': os.environ["MONGODBNAME"],
-        'USER': os.environ["MONGOUSER"],
-        'PASSWORD': os.environ["MONGOPASSWORD"],
-        'HOST': os.environ["MONGOHOST"],
-        'PORT': os.environ["MONGOPORT"],
-    }
-}
+
+
+    # DATABASES = {
+    #     #  'default': {
+    #     #     'ENGINE': 'django.db.backends.sqlite3',
+    #     #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     # },
+
+    #     'default': {
+    #         'ENGINE': 'djongo',
+    #         'NAME':os.environ.get('MONGODBNAME'),
+    #         'CLIENT' : {
+    #             'host':os.environ.get('MONGOHOST'),
+    #             'port':int(os.environ.get('MONGOPORT')),
+    #             'username':os.environ.get('MONGOUSER'),
+    #             'password':os.environ.get('MONGOPASSWORD'),
+                
+    #         }
+    #     }
+    # }
+
+    # DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': os.environ["MONGODBNAME"],
+    #     'USER': os.environ["MONGOUSER"],
+    #     'PASSWORD': os.environ["MONGOPASSWORD"],
+    #     'HOST': os.environ["MONGOHOST"],
+    #     'PORT': os.environ["MONGOPORT"],
+    # }
+# }
 
     print("Using Mongo database")
 
