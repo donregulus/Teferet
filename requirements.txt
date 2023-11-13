@@ -14,6 +14,7 @@ idna==3.4
 packaging==23.2
 phonenumberslite==8.13.6
 Pillow==9.4.0
+psycopg2==2.9.9
 py-unused-deps==0.4.0
 pymongo==4.6.0
 python-dotenv==1.0.0
