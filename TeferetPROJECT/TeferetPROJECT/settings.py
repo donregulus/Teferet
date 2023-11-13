@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ["teferet-production.up.railway.app","teferet.pythonanywhere.com","localhost","127.0.0.1"]
-CSRF_TRUSTED_ORIGINS = ["https://teferet-production.up.railway.app/User/Login"]
+CSRF_TRUSTED_ORIGINS = ["https://teferet-production.up.railway.app"]
 
 
 
