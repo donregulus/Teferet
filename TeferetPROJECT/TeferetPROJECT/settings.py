@@ -98,65 +98,22 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 prod = os.environ.get('PROD_MODE')  
 if prod == "True":
+    # DATABASE_URL=os.environ.get("MONGO_PRIVATE_URL")
+    # DATABASES={
+    # "default":dj_database_url.config(default=DATABASE_URL,ssl_require=True,conn_max_age=1800),
+    #     }
 
-    DATABASE_URL=os.environ.get("MONGO_PRIVATE_URL")
-    DATABASES={
-    "default":dj_database_url.config(default=DATABASE_URL,ssl_require=True,conn_max_age=1800),
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ["PGDATABASE"],
+        'USER': os.environ["PGUSER"],
+        'PASSWORD': os.environ["PGPASSWORD"],
+        'HOST': os.environ["PGHOST"],
+        'PORT': os.environ["PGPORT"],
         }
-
-
-
-    # DATABASES = {
-    #     #  'default': {
-    #     #     'ENGINE': 'django.db.backends.sqlite3',
-    #     #     'NAME': BASE_DIR / 'db.sqlite3',
-    #     # },
-
-    #     'default': {
-    #         'ENGINE': 'djongo',            
-    #         'CLIENT' : {
-    #             'host':os.environ.get('MONGO_PRIVATE_URL'),
-    #             # 'port':int(os.environ.get('MONGOPORT')),
-    #             # 'username':os.environ.get('MONGOUSER'),
-    #             # 'password':os.environ.get('MONGOPASSWORD'),
-                
-    #         }
-    #     }
-    # }
-
-    # DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': os.environ["MONGODBNAME"],
-    #     'USER': os.environ["MONGOUSER"],
-    #     'PASSWORD': os.environ["MONGOPASSWORD"],
-    #     'HOST': os.environ["MONGOHOST"],
-    #     'PORT': os.environ["MONGOPORT"],
-    # }
-# }
-
-
-    # DATABASES = {
-
-    #     'default': {
-
-    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-    #         'NAME': ,
-
-    #         'USER': '<db_username>',
-
-    #         'PASSWORD': '<password>',
-
-    #         'HOST': '<db_hostname_or_ip>',
-
-    #         'PORT': '<db_port>',
-
-    #     }
-
-    # }
-
-    print("Using Postgresql database")
+    }
+    print("Using Postgresql database -- Production")
 
 else:
     DATABASES = {
@@ -165,7 +122,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    print("Using Sqlite database")
+    print("Using Sqlite database -- Dev")
 
 
 # Password validation
@@ -218,7 +175,7 @@ SESSION_ENGINE  = "django.contrib.sessions.backends.signed_cookies"
 STATIC_URL       = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 STATIC_ROOT      = os.path.join(BASE_DIR,'staticfiles')
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files (mp4, mp3, Images)
 MEDIA_URL        = '/media/'
