@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["teferet.pythonanywhere.com","localhost","127.0.0.1"]
+ALLOWED_HOSTS = ["teferet-production.up.railway.app","teferet.pythonanywhere.com","localhost","127.0.0.1"]
 
 
 # Application definition
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -96,16 +97,19 @@ WSGI_APPLICATION = 'TeferetPROJECT.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 prod = os.environ.get('PROD_MODE')  
 if prod == "True":
+   
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME':  os.environ.get('TEF_DB_NAME'),
-            'USER':  os.environ.get('TEF_USERNAME'),
-            'PASSWORD':  os.environ.get('TEF_PASSWORD'),
-            'HOST':  os.environ.get('TEF_HOSTNAME'),
-            'PORT':  os.environ.get('TEF_PORT'),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ["PGDATABASE"],
+        'USER': os.environ["PGUSER"],
+        'PASSWORD': os.environ["PGPASSWORD"],
+        'HOST': os.environ["PGHOST"],
+        'PORT': os.environ["PGPORT"],
         }
     }
+    print("Using Postgresql database -- Production")
+
 else:
     DATABASES = {
         'default': {
@@ -113,6 +117,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print("Using Sqlite database -- Dev")
 
 
 # Password validation
@@ -163,8 +168,8 @@ SESSION_ENGINE  = "django.contrib.sessions.backends.signed_cookies"
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL       = '/static/'
-STATIC_ROOT      = os.path.join(BASE_DIR,'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+STATIC_ROOT      = os.path.join(BASE_DIR,'staticfiles')
 
 # Media files (mp4, mp3, Images)
 MEDIA_URL        = '/media/'
